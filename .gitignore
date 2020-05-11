@@ -34,3 +34,20 @@ vignettes/*.pdf
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
+
+# Scheme ignored files
+
+*.ss~
+*.ss#*
+.#*.ss
+
+*.scm~
+*.scm#*
+.#*.scm
+
+# Data files (created by scripts)
+chez-docs-data.scm
+R/CSUG.tsv
+R/TSPL.tsv
+
+.DS_Store
