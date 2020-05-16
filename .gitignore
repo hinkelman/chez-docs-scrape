@@ -51,3 +51,9 @@ R/CSUG.tsv
 R/TSPL.tsv
 
 .DS_Store
+
+.akku
+
+*.manifest~
+*.manifest#*
+.#*.manifest
