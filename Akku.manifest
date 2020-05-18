@@ -2,7 +2,8 @@
 (import (akku format manifest))
 
 (akku-package ("chez-docs-scrape" "0.0.0-alpha.0")
-  (synopsis Scrape Chez Scheme User's Guide to extract data for use in chez-docs.")
+  (synopsis
+   "Scrape Chez Scheme User's Guide to extract data for use in chez-docs.")
   (authors "Travis Hinkelman")
   (license "MIT")
   (depends ("chez-stats" "^0.1.0"))
