@@ -15,6 +15,10 @@ chez_table_list <- read_html(chez_url) %>%
   html_nodes("table") %>% 
   html_table()
 
+# for some reason, the strsplit line wasn't working on Ubuntu
+# I could split the same text when typed manually, 
+# but not when extracting that same element from the data frame
+# It works as written on macOS
 chez_table <- chez_table_list[[1]] %>% 
   filter(Form != "") %>%          # drop empty first row
   mutate(URL = chez_links,
