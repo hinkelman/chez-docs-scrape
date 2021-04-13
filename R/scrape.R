@@ -30,7 +30,7 @@ chez_table <- chez_table_list[[1]] %>%
          URL = gsub(pattern = "^\\.", 
                     replacement = "https://cisco.github.io/ChezScheme/csug9.5", 
                     x = URL),
-         Key = sapply(strsplit(Form, "\\s"), "[[", 1),
+         Key = sapply(strsplit(Form, "\\xa0|\\s"), "[[", 1), # split on either &nbsp or regular space
          Key = gsub("\\(|\\)", "", Key),
          Source = ifelse(substr(Page, 1, 1) == "t", "TSPL", "CSUG")) %>% 
   select(Key, Form, Source, URL) 
