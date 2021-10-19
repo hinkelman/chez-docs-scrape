@@ -1,26 +1,23 @@
 # Extract table from Summary of Forms page of Chez User's Guide
 
-library(tidyverse)
+# library(tidyverse)
 library(rvest)
+library(dplyr)
 
 chez_url = "https://cisco.github.io/ChezScheme/csug9.5/summary.html"
 
-chez_links <- read_html(chez_url) %>% 
-  html_nodes("table") %>% 
-  html_nodes("tr") %>% 
-  html_nodes("a") %>% 
+chez_links <- read_html(chez_url) |> 
+  html_nodes("table") |> 
+  html_nodes("tr") |> 
+  html_nodes("a") |> 
   html_attr("href")
 
-chez_table_list <- read_html(chez_url) %>% 
-  html_nodes("table") %>% 
+chez_table_list <- read_html(chez_url) |> 
+  html_nodes("table") |> 
   html_table()
 
-# for some reason, the strsplit line wasn't working on Ubuntu
-# I could split the same text when typed manually, 
-# but not when extracting that same element from the data frame
-# It works as written on macOS
-chez_table <- chez_table_list[[1]] %>% 
-  filter(Form != "") %>%          # drop empty first row
+chez_table <- chez_table_list[[1]] |> 
+  filter(Form != "") |>          # drop empty first row
   mutate(URL = chez_links,
          # clean up extracted links to TSPL
          URL = gsub(pattern = "http://scheme.com/tspl4/./",
@@ -32,7 +29,7 @@ chez_table <- chez_table_list[[1]] %>%
                     x = URL),
          Key = sapply(strsplit(Form, "\\xa0|\\s"), "[[", 1), # split on either &nbsp or regular space
          Key = gsub("\\(|\\)", "", Key),
-         Source = ifelse(substr(Page, 1, 1) == "t", "TSPL", "CSUG")) %>% 
+         Source = ifelse(substr(Page, 1, 1) == "t", "TSPL", "CSUG")) |> 
   select(Key, Form, Source, URL) 
 
 source_list <- list()
@@ -62,9 +59,9 @@ for (j in c("CSUG", "TSPL")){
 out <- bind_rows(source_list)
 
 for (j in c("CSUG", "TSPL")){
-  out %>% 
-    filter(Source == j) %>% 
-    select(-Source) %>% 
+  out |> 
+    filter(Source == j) |> 
+    select(-Source) |> 
     write_tsv(paste0(j, ".tsv"))
 }
 

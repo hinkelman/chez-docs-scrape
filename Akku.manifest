@@ -6,5 +6,5 @@
    "Scrape Chez Scheme User's Guide to extract data for use in chez-docs.")
   (authors "Travis Hinkelman")
   (license "MIT")
-  (depends ("chez-stats" "^0.1.0"))
+  (depends ("wak-htmlprag" "^0.19.0") ("chez-stats" "^0.1.2"))
 )

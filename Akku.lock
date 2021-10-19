@@ -3,10 +3,26 @@
 (import (akku format lockfile))
 (projects
   ((name "chez-srfi")
-    (location (git "https://github.com/arcfide/chez-srfi"))
-    (revision "ad3b9f9020cf3b65f209866aca0b10cfc10556f3"))
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/c/chez-srfi_0.0.0-akku.181.7879b52_repack.tar.xz"))
+    (content
+      (sha256
+        "f002bc7fc669b5980c885a5fb6770f8e016b06761e8e9755154bfa3a4f578fcb")))
+  ((name "wak-common")
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/w/wak-common_0.1.0-akku.15.6d495fc_repack.tar.xz"))
+    (content
+      (sha256
+        "9c5170c85c885d9e35ce62dcf829597d31cc0b3697b79fe544640bf828c5a22d")))
+  ((name "wak-htmlprag")
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/w/wak-htmlprag_0.19.0_repack.tar.xz"))
+    (content
+      (sha256
+        "e1432301b0a2b8e2facfab0f3e1951ddd2ce1f00d755c8e3e587c5fbf10919ba")))
   ((name "chez-stats")
     (location
-      (git "https://github.com/hinkelman/chez-stats.git"))
-    (tag "v0.1.0")
-    (revision "6e62123f3042e0576fe52087c674db8d53b2bf04")))
+      (url "https://archive.akkuscm.org/archive/pkg/c/chez-stats_0.1.2_repack.tar.xz"))
+    (content
+      (sha256
+        "11d568d7424dd90f0c5e72c8127eb0134c2b50d2ac8f3fb50938d0a392613e89"))))
