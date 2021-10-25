@@ -14,15 +14,27 @@
     (content
       (sha256
         "9c5170c85c885d9e35ce62dcf829597d31cc0b3697b79fe544640bf828c5a22d")))
+  ((name "wak-ssax")
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/w/wak-ssax_5.1.0-akku.4.1f7fad4_repack.tar.xz"))
+    (content
+      (sha256
+        "dba5d065a8dcea8155b9444fbe5949d2eba6ffe82549ba2bb921d9314c59d04d")))
+  ((name "wak-irregex")
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/w/wak-irregex_0.8.1_repack.tar.xz"))
+    (content
+      (sha256
+        "097677fcd0d3a7a741729d4b3bad04ea083fff0fc2cd9b0332b44d1e067a9eca")))
+  ((name "wak-sxml-tools")
+    (location
+      (url "https://archive.akkuscm.org/archive/pkg/w/wak-sxml-tools_0.0.0-akku.1.5c14730_repack.tar.xz"))
+    (content
+      (sha256
+        "828bfc298d6d26dc6b9b5d2e59b51c1facbad03f4ac48d805d13786e64cf8813")))
   ((name "wak-htmlprag")
     (location
       (url "https://archive.akkuscm.org/archive/pkg/w/wak-htmlprag_0.19.0_repack.tar.xz"))
     (content
       (sha256
-        "e1432301b0a2b8e2facfab0f3e1951ddd2ce1f00d755c8e3e587c5fbf10919ba")))
-  ((name "chez-stats")
-    (location
-      (url "https://archive.akkuscm.org/archive/pkg/c/chez-stats_0.1.2_repack.tar.xz"))
-    (content
-      (sha256
-        "11d568d7424dd90f0c5e72c8127eb0134c2b50d2ac8f3fb50938d0a392613e89"))))
+        "e1432301b0a2b8e2facfab0f3e1951ddd2ce1f00d755c8e3e587c5fbf10919ba"))))
