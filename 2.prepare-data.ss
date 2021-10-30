@@ -55,3 +55,7 @@
 
 ;; (with-output-to-file "chez-docs-data.scm"
 ;;   (lambda () (write `(define data ',data))))
+
+(define numeric-matcher (sxpath '(// html body p)))
+(define numeric-data
+  (numeric-matcher (html->sxml (open-input-file "html-csug/numeric.html"))))
