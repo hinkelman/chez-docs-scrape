@@ -5,14 +5,6 @@
         (only (wak sxml-tools sxml-tools)
               sxml:content))
 
-(import (wak irregex)
-        (only (wak htmlprag)
-              html->sxml)
-        (only (wak ssax parsing)
-              ssax:xml->sxml)
-        (wak sxml-tools sxpath)
-        (wak sxml-tools sxml-tools))
-
 ;; Get HTML files for scraping ---------------------------------------------
 
 ;; CSUG and TSPL did not have sitemap.xml files

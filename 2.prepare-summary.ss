@@ -6,7 +6,7 @@
         (wak sxml-tools sxpath)
         (wak sxml-tools sxml-tools))
 
-;; Process data in CSUG Summary page -----------------------------------------
+;; Process data from CSUG Summary page -----------------------------------------
 
 ;; https://lists.gnu.org/archive/html/guile-user/2012-01/msg00049.html
 (define summary-matcher (sxpath '(// html body p table tr)))
@@ -34,28 +34,44 @@
          [url-expand (irregex-replace '(: bos #\.) url expand-text)])
     (if url-expand url-expand url)))
 
+(define (extract-anchor url)
+  (car (reverse (irregex-split #\/ url))))
+
 (define (extract-row-data row)
   (let* ([tds (sxml:content row)]
          [row0 (list-ref tds 0)]
          [form (extract-form (list-ref row0 2))]
          [key (extract-key form)]
-         [category (cadr (list-ref tds 1))]
          [a-tag (assoc 'a (sxml:content (list-ref tds 2)))]
          [page (list-ref a-tag 2)]
          [source (if (irregex-search "t" page) "TSPL" "CSUG")] 
          [url-raw (cadadr (list-ref a-tag 1))]
-         [url (expand-url url-raw)])
-    (list key form category page source url)))
+         [url (expand-url url-raw)]
+         [anchor (extract-anchor url)])
+    (list source key anchor url)))
 
 (define summary (map extract-row-data summary-rows))
 
-;; summary data is mostly processed
-;; at the point of dealing with multiple forms, which might not be relevant with the new approach of scrping full docs
-;; may only end up using this for keys and urls
+;; alias appears twice in CSUG as both a procedure and keyword for `import`
+;; choosing to drop the keyword version (syntax:s22)
+;; maybe append keyword info to end of rest of `alias` docs
+(define summary-csug
+  (filter (lambda (y) (not (and (string=? (car y) "alias")
+                                (string=? (cadr y) "syntax:s22"))))
+          (map cdr (filter (lambda (x) (string=? "CSUG" (car x))) summary))))
 
-;; (with-output-to-file "chez-docs-data.scm"
-;;   (lambda () (write `(define data ',data))))
+;; let occurs twice; changing one reference to "named let"
+;; won't work as expected for a user in `doc` procedure but will work with `find-proc` 
+(define summary-tspl
+  (map (lambda (y) (if (and (string=? (car y) "let")
+                            (string=? (cadr y) "control:s20"))
+                       (cons "named let" (cdr y))
+                       y))
+       (map cdr (filter (lambda (x) (string=? "TSPL" (car x))) summary))))
 
-(define numeric-matcher (sxpath '(// html body p)))
-(define numeric-data
-  (numeric-matcher (html->sxml (open-input-file "html-csug/numeric.html"))))
+(define summary-data (list (cons 'CSUG summary-csug)
+                           (cons 'TSPL summary-tspl)))
+
+(with-output-to-file "summary-data.scm"
+  (lambda () (write `(define summary-data ',summary-data))))
+
