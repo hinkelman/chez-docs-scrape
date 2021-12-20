@@ -23,9 +23,9 @@
                       [else (cadr x)]))
     (sxml:content tt))))
 
-(define numeric-matcher (sxpath '(// html body p)))
-(define numeric-data
-  (numeric-matcher (html->sxml (open-input-file "html-csug/numeric.html"))))
+(define p-matcher (sxpath '(// html body p)))
+(define p-data
+  (p-matcher (html->sxml (open-input-file "html-csug/numeric.html"))))
 
 
 ;; text strings may have spaces and line breaks embedded, e.g.,
@@ -40,5 +40,81 @@
 
 ;; The <dt> tag defines a term/name in a description list.
 ;; The <dt> tag is used in conjunction with <dl> (defines a description list) and <dd> (describes each term/name).
+
+;; pattern is `(p "\n" (a` or `(p (a`
+;; for now, the only information that we want (i.e., procedure, returns, libraries)
+;; most of those will be contained in the list headed by that `p`
+;; but, if there is text following libraries, need to grab that, too
+;; `(p "\n" "\n")` or `(p "\n")` might a reliable 'separator before' code examples
+;; not current planning to include code examples in doc output
+;; resist temptation to complicate this by adding ANSI escape codes; that could come later
+
+;; might be able to ignore "\n"; don't seem to mean #\newline in most of this SXML
+;; need to efficiently pull the "\n" out of text blocks (standalone are easy to deal with)
+
+(define ex-formdef
+  '(p "\n" (a (^ (name "./numeric:s15")))
+      (span
+       (^ (class "formdef"))
+       (b "procedure")
+       ": "
+       (tt "(fx=" (& nbsp) (i "fixnum" (sub "1")) (& nbsp)
+           (i "fixnum" (sub "2")) (& nbsp) "...)"))
+      "\n" (br)
+      (span
+       (^ (class "formdef"))
+       (b "procedure")
+       ": "
+       (tt "(fx<" (& nbsp) (i "fixnum" (sub "1")) (& nbsp)
+           (i "fixnum" (sub "2")) (& nbsp) "...)"))
+      "\n" (br)
+      (span
+       (^ (class "formdef"))
+       (b "procedure")
+       ": "
+       (tt "(fx>" (& nbsp) (i "fixnum" (sub "1")) (& nbsp)
+           (i "fixnum" (sub "2")) (& nbsp) "...)"))
+      "\n" (br)
+      (span
+       (^ (class "formdef"))
+       (b "procedure")
+       ": "
+       (tt "(fx<=" (& nbsp) (i "fixnum" (sub "1")) (& nbsp)
+           (i "fixnum" (sub "2")) (& nbsp) "...)"))
+      "\n" (br)
+      (span
+       (^ (class "formdef"))
+       (b "procedure")
+       ": "
+       (tt "(fx>=" (& nbsp) (i "fixnum" (sub "1")) (& nbsp)
+           (i "fixnum" (sub "2")) (& nbsp) "...)"))
+      "\n" (br) "\n" (b "returns: ") (tt "#t")
+      " if the relation holds, " (tt "#f") " otherwise\n" (br)
+      "\n" (b "libraries: ") (tt "(chezscheme)") "\n" "\n"))
+
+(define ex-desc1
+  '(p "The predicate " (tt "fx=") " returns " (tt "#t")
+      " if its arguments are equal.\n" "The predicate " (tt "fx<")
+      " returns " (tt "#t")
+      " if its arguments are monotonically\n"
+      "increasing, i.e., each argument is greater than the preceding ones,\n"
+      "while " (tt "fx>") " returns " (tt "#t")
+      " if its arguments are monotonically decreasing.\n"
+      "The predicate " (tt "fx<=") " returns " (tt "#t")
+      " if its arguments are monotonically\n"
+      "nondecreasing, i.e., each argument is not less than the preceding ones,\n"
+      "while " (tt "fx>=") " returns " (tt "#t")
+      " if its arguments are monotonically nonincreasing.\n"
+      "When passed only one argument, each of these predicates returns "
+      (tt "#t") ".\n" "\n"))
+
+(define ex-desc2
+  '(p "\n" "These procedures are similar to the Revised"
+      (sup "6") " Report procedures\n" (tt "fx=?") ", "
+      (tt "fx<?") ", " (tt "fx>?") ", " (tt "fx<=?") ",\n" "and "
+      (tt "fx>=?") " except that the Revised" (sup "6")
+      " Report procedures\n"
+      "require two or more arguments, and their names have the \""
+      (tt "?") "\"\n" "suffix.\n" "\n"))
 
 

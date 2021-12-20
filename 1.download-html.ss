@@ -1,3 +1,6 @@
+;; recommend running this script from terminal (rather than emacs)
+;; because feedback is provided on download process
+
 (import (only (wak irregex)
               irregex-split)
         (only (wak ssax parsing)
