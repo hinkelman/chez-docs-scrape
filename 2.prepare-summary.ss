@@ -38,6 +38,24 @@
 (define (extract-anchor url)
   (car (reverse (irregex-split #\/ url))))
 
+(define (extract-category row)
+  (let ([tds (sxml:content row)])
+    (cadr (list-ref tds 1))))
+
+(define (extract-unique-categories summary-rows)
+  (let ([categories (map extract-category summary-rows)])
+    (let loop ([lst categories]
+               [out '()])
+      (if (null? lst)
+          out
+          (if (member (car lst) out)
+              (loop (cdr lst) out)
+              (loop (cdr lst) (cons (car lst) out)))))))
+
+(define unique-categories (extract-unique-categories summary-rows))
+(with-output-to-file "unique-categories.scm"
+  (lambda () (write `(define unique-categories ',unique-categories))))
+    
 (define (extract-row-data row)
   (let* ([tds (sxml:content row)]
          [row0 (list-ref tds 0)]
