@@ -31,6 +31,7 @@
 
 (define (expand-url url)
   (let* ([expand-text "https://cisco.github.io/ChezScheme/csug9.5"]
+         ;; bos = beginning of string; colon creates sre 
          [url-expand (irregex-replace '(: bos #\.) url expand-text)])
     (if url-expand url-expand url)))
 
