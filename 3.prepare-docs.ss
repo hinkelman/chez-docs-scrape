@@ -12,8 +12,11 @@
         (else (append (flatten (car x))
                       (flatten (cdr x))))))
 
+(define (replace-newline str replacement)
+  (irregex-replace/all "\n" str replacement))
+
 (define (remove-newline str)
-  (irregex-replace/all "\n" str ""))
+  (replace-newline str ""))
 
 (define (remove-dotslash str)
   ;; removes "./" at beginning of string
@@ -35,16 +38,22 @@
                [else ""]))
        lst))
 
+(include "unique-categories.scm")
+
+;; words/phrases used for splitting string (see add-splitters)
+(define split-words (append unique-categories '("returns: " "libraries: ")))
+
 (define (add-splitters lst)
   ;; using qqq as string to add and subsequently split on)
   (map (lambda (x)
          (cond [(string=? x "formdef") ""]
-               [(member x '("procedure" "returns: " "libraries: "))
+               [(member x split-words)
                 (string-append "qqq" x)]
                [else (remove-dotslash x)]))
        lst))
 
 ;; prl below refers to p-tag blocks that contain procedure/returns/libraries info
+;; prl is most common but can also include syntax, param, etc.
 ;; prl elements are nested lists of strings and symbols
 (define (process-prl prl)
   (let* ([str-lst (replace (flatten prl))]
@@ -52,12 +61,17 @@
     (irregex-split "qqq" str)))
 ;; process-prl currently works correctly for the 3 examples that i've tried
 
+;; prl-desc is a nested list of strings and symbols following a prl element
+;; replacing newline elements with spaces based
+(define (process-prl-desc prl-desc)
+  (let ([str-lst (replace (flatten prl-desc))])
+    (replace-newline (apply string-append str-lst) " ")))
+
 ;; TODO
-;; (1) process text descriptions that follow prl
-;; (2) classify all p-tag elems as either prl, prl-desc, or reject
-;; (3) combine the anchor/key (currently car of prl) with prl and prl-desc
+;; (1) classify all p-tag elems as either prl, prl-desc, or reject
+;; (2) combine the anchor/key (currently car of prl) with prl and prl-desc
 ;;     for searching with assoc and subsequent display
-;; (4) apply the above steps to one CSUG and one TSPL file
+;; (3) apply the above steps to one CSUG and one TSPL file
          
 ;; need to have reasonable rule to know that these can be discarded
 (list-ref p-data 15) ;; maybe that there wasn't a formdef in the last few list elements
@@ -66,20 +80,24 @@
 ;; maybe keep a formdef proximity counter in loop
 
 (define ex-simple (list-ref p-data 18))
-(process-prl ex-simple)
-(for-each (lambda (x) (display x) (newline)) (cdr (process-prl ex-simple)))
 
 ;; can we discard if first tag is tt --> yes
 (list-ref p-data 20)
 
 (define ex-multi-ret (list-ref p-data 29))
-(for-each (lambda (x) (display x) (newline)) (cdr (process-prl ex-multi-ret)))
 (define ex-multi (list-ref p-data 31))
-(apply string-append (replace (flatten ex-multi)))
-;; (extract-name ex-multi)
-(count-string (flatten ex-multi) "returns: ")
 
 (define ex-multi-desc1 (list-ref p-data 32))
 (define ex-multi-desc2 (list-ref p-data 33))
 
 
+(for-each (lambda (x) (display x) (newline))
+          (append
+           (list "\n")
+           (cdr (process-prl ex-multi))
+           (list "\n")
+           (list (process-prl-desc ex-multi-desc1))
+           (list "\n")
+           (list (process-prl-desc ex-multi-desc2))))
+
+(exit)
