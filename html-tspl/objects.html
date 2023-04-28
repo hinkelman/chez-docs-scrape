@@ -5409,7 +5409,7 @@ e.g., <tt>"a&nbsp;\\slash"</tt>.
 Various special characters can be inserted
 with other two-character sequences, e.g., <tt>\n</tt> for newline, <tt>\r</tt>
 for carriage return, and <tt>\t</tt> for tab.
-Any Unicode character may be inserted with the syntax <tt>#\x<i>n</i>;</tt>,
+Any Unicode character may be inserted with the syntax <tt>\x<i>n</i>;</tt>,
 where <tt><i>n</i></tt> consists of one or more hexadecimal digits and represents
 a valid Unicode scalar value.
 A grammar defining the precise syntax of strings is given on
@@ -7213,7 +7213,7 @@ Parentheses, double quotes, spaces, and most other characters with a
 special meaning to the Scheme reader are not allowed within the printed
 representation of a symbol.
 These and any other Unicode character may appear anywhere within the
-printed representation of a symbol with the syntax <tt>#\x<i>n</i>;</tt>,
+printed representation of a symbol with the syntax <tt>\x<i>n</i>;</tt>,
 where <tt><i>n</i></tt> consists of one or more hexadecimal digits and represents
 a valid Unicode scalar value.
 
@@ -7280,8 +7280,8 @@ The effect of modifying a string after it is used as an argument to
 
 <p>The string returned by <tt>symbol-&gt;string</tt> should be treated as
 immutable.
-Unpredictable behavior can result if a string passed to
-<tt>string-&gt;symbol</tt> is altered with
+Unpredictable behavior can result if a string returned from
+<tt>symbol-&gt;string</tt> is altered with
 <tt>string-set!</tt> or by any other means.
 
 <p>

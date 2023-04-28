@@ -3680,7 +3680,7 @@ Then try out the examples given earlier in this section.
 
 <p><tt>(let&nbsp;([value&nbsp;(proc)]&nbsp;[ticks&nbsp;(stop-timer)])<br>
 
-&nbsp;&nbsp;(do-complete&nbsp;value&nbsp;ticks))</tt>
+&nbsp;&nbsp;(do-complete&nbsp;ticks&nbsp;value))</tt>
 <p>Why is this not correct?
 
 <p>
@@ -3694,7 +3694,7 @@ with the following.
 
 <p><tt>(let&nbsp;([value&nbsp;(proc)])<br>
 
-&nbsp;&nbsp;(do-complete&nbsp;value&nbsp;(stop-timer)))</tt>
+&nbsp;&nbsp;(do-complete&nbsp;(stop-timer)&nbsp;value))</tt>
 <p>Why?
 
 <p>
