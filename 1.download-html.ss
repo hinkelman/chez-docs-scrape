@@ -1,5 +1,6 @@
 ;; recommend running this script from terminal (rather than emacs)
 ;; because feedback is provided on download process
+;; curl will overwite files by default (which is preferred behavior in this case
 
 (import (only (wak irregex)
               irregex-split)
