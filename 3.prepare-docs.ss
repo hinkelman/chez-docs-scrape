@@ -35,12 +35,13 @@
 (define (replace lst)
   ;; replace elements (symbols and strings) of flat lst with strings
   (map (lambda (x)
-         ;; dropping newlines because those will be added elsewhere
+         ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
+         ;; ignored for now (not common)
          (cond [(member x '("<graphic>")) ""]
                [(member x '("formdef")) "\n\n"]
                [(member x '(nbsp)) " "]
                [(member x '("math/csug/0.gif")) "-->"]
-               [(symbol? x) ""]
+               [(or (number? x) (symbol? x)) ""]
                [else x]))
        lst))
 
@@ -57,7 +58,7 @@
     (list (apply string-append str-lst))))
 
 (define (check-formdef p-elem)
-    (member "formdef" (flatten p-elem)))
+  (member "formdef" (flatten p-elem)))
 
 (define (check-headers p-elem)
   (let* ([flat (flatten p-elem)]
@@ -75,28 +76,44 @@
              [final '()])
     (cond [(null? lst)
            (reverse (cons (apply append (reverse tmp)) final))]
-           [(and (= flag 0) (check-formdef (car lst)))
-            (loop (cdr lst) 1 (cons (process-formdef (car lst)) '()) final)]
-           [(and (= flag 1) (check-formdef (car lst)))
-            (loop (cdr lst) 1
-                  (cons (process-formdef (car lst)) '())
-                  (cons (apply append (reverse tmp)) final))]
-           [(and (= flag 1) (or (check-headers (car lst)) (check-footer (car lst))))
-            (loop (cdr lst) 0 '() (cons (apply append (reverse tmp)) final))]
-           [(= flag 1)
-            (loop (cdr lst) flag (cons (process-p-elem (car lst)) tmp) final)]
-           [else
-            (loop (cdr lst) flag tmp final)])))
-                        
-(define (display-str-list str-list)
-  (for-each (lambda (x) (display x)) str-list))             
-                   
-(define p-list
-  (p-matcher (html->sxml (open-input-file "html-csug/test-numeric.html"))))
+          [(and (= flag 0) (check-formdef (car lst)))
+           (loop (cdr lst) 1 (cons (process-formdef (car lst)) '()) final)]
+          [(and (= flag 1) (check-formdef (car lst)))
+           (loop (cdr lst) 1
+                 (cons (process-formdef (car lst)) '())
+                 (cons (apply append (reverse tmp)) final))]
+          [(and (= flag 1) (or (check-headers (car lst)) (check-footer (car lst))))
+           (loop (cdr lst) 0 '() (cons (apply append (reverse tmp)) final))]
+          [(= flag 1)
+           (loop (cdr lst) flag (cons (process-p-elem (car lst)) tmp) final)]
+          [else
+           (loop (cdr lst) flag tmp final)])))
 
-(define test (process-p-list p-list))
-;; for some reason this test ends up with an empty list at the end
-;; not trying to fix it now (or ever?) b/c has no effect on lookup process
-(display-str-list (cdr (assoc "numeric:s16" test)))
+(define (get-p-list dir file)
+  (p-matcher
+   (html->sxml
+    (open-input-file (string-append dir (string (directory-separator)) file)))))
 
-;; procedure for getting list of files, e.g., (directory-list "html-csug")
+(define (process-html-file dir file)
+  (process-p-list (get-p-list dir file)))
+
+(define (process-html-dir dir)
+  ;; some files contain only text and no documentation used in chez-docs
+  ;; filtering out those empty lists
+  (filter (lambda (x) (not (null? x)))
+          (apply append (map (lambda (file) (process-html-file dir file))
+                             (directory-list dir)))))
+
+(let ([file "chez-docs-data.scm"])
+  (when (file-exists? file) (delete-file file))
+  (let ([data (list (cons 'CSUG (process-html-dir "html-csug"))
+                    (cons 'TSPL (process-html-dir "html-tspl")))])
+    (with-output-to-file file
+      (lambda () (write `(define chez-docs-data ',data))))))
+
+
+;; (display-str-list (cdr (assoc "numeric:s16" test)))
+
+
+
+
