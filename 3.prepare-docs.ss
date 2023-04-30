@@ -6,17 +6,23 @@
         (wak sxml-tools sxpath)
         (wak sxml-tools sxml-tools))
 
+(include "unique-categories.scm")
+
+(define p-matcher (sxpath '(// html body p)))
+
 (define (flatten x)
   (cond ((null? x) '())
         ((not (pair? x)) (list x))
         (else (append (flatten (car x))
                       (flatten (cdr x))))))
 
-(define (replace-newline str replacement)
-  (irregex-replace/all "\n" str replacement))
+;; procedure for getting list of files, e.g., (directory-list "html-csug")
 
-(define (remove-newline str)
-  (replace-newline str ""))
+;; (define (replace-newline str replacement)
+;;   (irregex-replace/all "\n" str replacement))
+
+;; (define (remove-newline str)
+;;   (replace-newline str ""))
 
 (define (remove-dotslash str)
   ;; removes "./" at beginning of string
@@ -24,80 +30,98 @@
     ;; if "./" is not present returns #f
     (if out out str)))
 
-(define p-matcher (sxpath '(// html body p)))
-(define p-data
-  (p-matcher (html->sxml (open-input-file "html-csug/test-numeric.html"))))
+;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
+;; assuming one anchor for each prl block (see below)
+(define (extract-anchor p-elem)
+  (let* ([name-matcher (sxpath '(// a ^ name))]
+         [name (cadar (name-matcher p-elem))])
+    (cons name (remove-dotslash name))))
+
+(define (remove-anchor anchor str)
+  (irregex-replace/all anchor str ""))
 
 (define (replace lst)
-  ;; replace elements of lst with strings
-  ;; ignoring all tags and just pulling out strings and 'nbsp
+  ;; replace elements (symbols and strings) of flat lst with strings
   (map (lambda (x)
          ;; dropping newlines because those will be added elsewhere
-         (cond [(string? x) (if (string=? x "\n") "" x)]
-               [(and (symbol? x) (symbol=? x 'nbsp)) " "]
-               [else ""]))
+         (cond [(member x '("<graphic>")) ""]
+               [(member x '("formdef")) "\n\n"]
+               [(member x '(nbsp)) " "]
+               [(member x '("math/csug/0.gif")) "-->"]
+               [(symbol? x) ""]
+               [else x]))
        lst))
-
-(include "unique-categories.scm")
 
 ;; words/phrases used for splitting string (see add-splitters)
-(define split-words (append unique-categories '("returns: " "libraries: ")))
+;; (define split-words (append unique-categories '("returns: " "libraries: ")))
 
-(define (add-splitters lst)
-  ;; using qqq as string to add and subsequently split on)
-  (map (lambda (x)
-         (cond [(string=? x "formdef") ""]
-               [(member x split-words)
-                (string-append "qqq" x)]
-               [else (remove-dotslash x)]))
-       lst))
+;; (define (add-splitters lst)
+;;   ;; lst should only contain strings
+;;   ;; using qqq as string to add and subsequently split on)
+;;   (map (lambda (x)
+;;          (cond [(string=? x "formdef") ""]
+;;                [(member x split-words)
+;;                 (string-append "qqq" x)]
+;;                [else (remove-dotslash x)]))
+;;        lst))
 
-;; prl below refers to p-tag blocks that contain procedure/returns/libraries info
-;; prl is most common but can also include syntax, param, etc.
-;; prl elements are nested lists of strings and symbols
-(define (process-prl prl)
-  (let* ([str-lst (replace (flatten prl))]
-         [str (remove-newline (apply string-append (add-splitters str-lst)))])
-    (irregex-split "qqq" str)))
-;; process-prl currently works correctly for the 3 examples that i've tried
+(define (process-formdef p-elem)
+  (let* ([anchor-pair (extract-anchor p-elem)]
+         [str-lst (replace (flatten p-elem))]
+         [str (apply string-append (cdr str-lst))])
+    (list (cdr anchor-pair) (remove-anchor (car anchor-pair) str))))
 
-;; prl-desc is a nested list of strings and symbols following a prl element
-;; replacing newline elements with spaces based
-(define (process-prl-desc prl-desc)
-  (let ([str-lst (replace (flatten prl-desc))])
-    (replace-newline (apply string-append str-lst) " ")))
+;; currently have 3 groups: formdefs, retained other p-elem, and rejected p-elem
+;; process-p-elem handles group 2
+(define (process-p-elem p-elem)
+  (let ([str-lst (replace (flatten p-elem))])
+    (list (apply string-append str-lst))))
 
-;; TODO
-;; (1) classify all p-tag elems as either prl, prl-desc, or reject
-;; (2) combine the anchor/key (currently car of prl) with prl and prl-desc
-;;     for searching with assoc and subsequent display
-;; (3) apply the above steps to one CSUG and one TSPL file
-         
-;; need to have reasonable rule to know that these can be discarded
-(list-ref p-data 15) ;; maybe that there wasn't a formdef in the last few list elements
-(list-ref p-data 16) ;; h3 tag could be the excluder
-(list-ref p-data 17) ;; probably need formdef counter again
-;; maybe keep a formdef proximity counter in loop
+(define (check-formdef p-elem)
+    (member "formdef" (flatten p-elem)))
 
-(define ex-simple (list-ref p-data 18))
+;; tt tags indicate blocks of example code which are excluded from chez-docs
+;; prl blocks also include tt tags so need to check formdef first
+;; (define (check-tt p-elem)
+;;   (member 'tt (flatten p-elem)))
 
-;; can we discard if first tag is tt --> yes
-(list-ref p-data 20)
+(define (check-headers p-elem)
+  (let* ([flat (flatten p-elem)]
+         [hs '(h1 h2 h3 h4 h5 h6)]
+         [mask (map (lambda (x) (member x flat)) hs)])
+    (> (length (filter (lambda (x) x) mask)) 0)))
 
-(define ex-multi-ret (list-ref p-data 29))
-(define ex-multi (list-ref p-data 31))
+(define (check-footer p-elem)
+  (member "copyright" (flatten p-elem)))
 
-(define ex-multi-desc1 (list-ref p-data 32))
-(define ex-multi-desc2 (list-ref p-data 33))
+(define (process-p-list p-list)
+  (let loop ([lst p-list]
+             [flag 0]
+             [tmp '()]
+             [final '()])
+    (cond [(null? lst)
+           (reverse (cons (apply append (reverse tmp)) final))]
+           [(and (= flag 0) (check-formdef (car lst)))
+            (loop (cdr lst) 1 (cons (process-formdef (car lst)) '()) final)]
+           [(and (= flag 1) (check-formdef (car lst)))
+            (loop (cdr lst) 1
+                  (cons (process-formdef (car lst)) '())
+                  (cons (apply append (reverse tmp)) final))]
+           [(and (= flag 1) (or (check-headers (car lst)) (check-footer (car lst))))
+            (loop (cdr lst) 0 '() (cons (apply append (reverse tmp)) final))]
+           [(= flag 1)
+            (loop (cdr lst) flag (cons (process-p-elem (car lst)) tmp) final)]
+           [else
+            (loop (cdr lst) flag tmp final)])))
+                        
+(define (display-str-list str-list)
+  (for-each (lambda (x) (display x)) str-list))             
+                   
+(define p-list
+  (p-matcher (html->sxml (open-input-file "html-csug/test-numeric.html"))))
 
+(define test (process-p-list p-list))
+;; for some reason this test ends up with an empty list at the end
+;; not trying to fix it now (or ever?) b/c has no effect on lookup process
+(display-str-list (cdr (assoc "numeric:s16" test)))
 
-(for-each (lambda (x) (display x) (newline))
-          (append
-           (list "\n")
-           (cdr (process-prl ex-multi))
-           (list "\n")
-           (list (process-prl-desc ex-multi-desc1))
-           (list "\n")
-           (list (process-prl-desc ex-multi-desc2))))
-
-(exit)
