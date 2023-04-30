@@ -16,14 +16,6 @@
         (else (append (flatten (car x))
                       (flatten (cdr x))))))
 
-;; procedure for getting list of files, e.g., (directory-list "html-csug")
-
-;; (define (replace-newline str replacement)
-;;   (irregex-replace/all "\n" str replacement))
-
-;; (define (remove-newline str)
-;;   (replace-newline str ""))
-
 (define (remove-dotslash str)
   ;; removes "./" at beginning of string
   (let ([out (irregex-replace '(: bos "./") str)])
@@ -52,19 +44,6 @@
                [else x]))
        lst))
 
-;; words/phrases used for splitting string (see add-splitters)
-;; (define split-words (append unique-categories '("returns: " "libraries: ")))
-
-;; (define (add-splitters lst)
-;;   ;; lst should only contain strings
-;;   ;; using qqq as string to add and subsequently split on)
-;;   (map (lambda (x)
-;;          (cond [(string=? x "formdef") ""]
-;;                [(member x split-words)
-;;                 (string-append "qqq" x)]
-;;                [else (remove-dotslash x)]))
-;;        lst))
-
 (define (process-formdef p-elem)
   (let* ([anchor-pair (extract-anchor p-elem)]
          [str-lst (replace (flatten p-elem))]
@@ -79,11 +58,6 @@
 
 (define (check-formdef p-elem)
     (member "formdef" (flatten p-elem)))
-
-;; tt tags indicate blocks of example code which are excluded from chez-docs
-;; prl blocks also include tt tags so need to check formdef first
-;; (define (check-tt p-elem)
-;;   (member 'tt (flatten p-elem)))
 
 (define (check-headers p-elem)
   (let* ([flat (flatten p-elem)]
@@ -125,3 +99,4 @@
 ;; not trying to fix it now (or ever?) b/c has no effect on lookup process
 (display-str-list (cdr (assoc "numeric:s16" test)))
 
+;; procedure for getting list of files, e.g., (directory-list "html-csug")
