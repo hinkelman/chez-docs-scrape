@@ -8,9 +8,6 @@
 *.scm#*
 .#*.scm
 
-# Data files (created by scripts)
-chez-docs-data.scm
-
 .DS_Store
 
 .akku
