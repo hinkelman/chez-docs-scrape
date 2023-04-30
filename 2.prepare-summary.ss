@@ -52,9 +52,12 @@
               (loop (cdr lst) out)
               (loop (cdr lst) (cons (car lst) out)))))))
 
-(define unique-categories (extract-unique-categories summary-rows))
-(with-output-to-file "unique-categories.scm"
-  (lambda () (write `(define unique-categories ',unique-categories))))
+;; unique-categories used in 3.prepare-docs.ss
+(let ([file "unique-categories.scm"]
+      [uc (extract-unique-categories summary-rows)])
+  (when (file-exists? file) (delete-file file))
+  (with-output-to-file file
+    (lambda () (write `(define unique-categories ',uc)))))
     
 (define (extract-row-data row)
   (let* ([tds (sxml:content row)]
@@ -91,6 +94,8 @@
 (define summary-data (list (cons 'CSUG summary-csug)
                            (cons 'TSPL summary-tspl)))
 
-(with-output-to-file "summary-data.scm"
-  (lambda () (write `(define summary-data ',summary-data))))
+(let ([file "summary-data.scm"])
+  (when (file-exists? file) (delete-file file))
+  (with-output-to-file file
+    (lambda () (write `(define summary-data ',summary-data)))))
 
