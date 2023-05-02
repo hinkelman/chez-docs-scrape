@@ -16,6 +16,9 @@
         (else (append (flatten (car x))
                       (flatten (cdr x))))))
 
+(define (halve-newlines str)
+  (irregex-replace/all "\n\n" str "\n"))
+  
 (define (remove-dotslash str)
   ;; removes "./" at beginning of string
   (let ([out (irregex-replace '(: bos "./") str)])
@@ -42,7 +45,7 @@
          ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
          ;; ignored for now (not common)
          (cond [(member x '("<graphic>")) ""]
-               [(member x '("formdef")) "\n\n"]
+               [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
                [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "-->"]
                [(or (number? x) (symbol? x) (dotslash? x)) ""]
@@ -52,14 +55,14 @@
 (define (process-formdef p-elem)
   (let* ([anchor-pair (extract-anchor p-elem)]
          [str-lst (replace (flatten p-elem))]
-         [str (apply string-append (cdr str-lst))])
+         [str (halve-newlines (apply string-append (cdr str-lst)))])
     (list (cdr anchor-pair) (remove-anchor (car anchor-pair) str))))
 
 ;; currently have 3 groups: formdefs, retained other p-elem, and rejected p-elem
 ;; process-p-elem handles group 2
 (define (process-p-elem p-elem)
   (let ([str-lst (replace (flatten p-elem))])
-    (list (apply string-append str-lst))))
+    (list (halve-newlines (apply string-append str-lst)))))
 
 (define (check-formdef p-elem)
   (member "formdef" (flatten p-elem)))
