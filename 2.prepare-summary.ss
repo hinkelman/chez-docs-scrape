@@ -66,7 +66,7 @@
          [key (extract-key form)]
          [a-tag (assoc 'a (sxml:content (list-ref tds 2)))]
          [page (list-ref a-tag 2)]
-         [source (if (irregex-search "t" page) "TSPL" "CSUG")] 
+         [source (if (irregex-search "t" page) "tspl" "csug")] 
          [url-raw (cadadr (list-ref a-tag 1))]
          [url (expand-url url-raw)]
          [anchor (extract-anchor url)])
@@ -80,7 +80,7 @@
 (define summary-csug
   (filter (lambda (y) (not (and (string=? (car y) "alias")
                                 (string=? (cadr y) "syntax:s22"))))
-          (map cdr (filter (lambda (x) (string=? "CSUG" (car x))) summary))))
+          (map cdr (filter (lambda (x) (string=? "csug" (car x))) summary))))
 
 ;; let occurs twice; changing one reference to "named let"
 ;; won't work as expected for a user in `doc` procedure but will work with `find-proc` 
@@ -89,10 +89,10 @@
                             (string=? (cadr y) "control:s20"))
                        (cons "named let" (cdr y))
                        y))
-       (map cdr (filter (lambda (x) (string=? "TSPL" (car x))) summary))))
+       (map cdr (filter (lambda (x) (string=? "tspl" (car x))) summary))))
 
-(define summary-data (list (cons 'CSUG summary-csug)
-                           (cons 'TSPL summary-tspl)))
+(define summary-data (list (cons 'csug summary-csug)
+                           (cons 'tspl summary-tspl)))
 
 (let ([file "summary-data.scm"])
   (when (file-exists? file) (delete-file file))
