@@ -22,6 +22,10 @@
     ;; if "./" is not present returns #f
     (if out out str)))
 
+(define (dotslash? obj)
+  ;; check if object is a string that starts with "./"
+  (and (string? obj) (irregex-search '(: bos "./") obj)))
+
 ;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
 ;; assuming one anchor for each prl block (see below)
 (define (extract-anchor p-elem)
@@ -40,8 +44,8 @@
          (cond [(member x '("<graphic>")) ""]
                [(member x '("formdef")) "\n\n"]
                [(member x '(nbsp)) " "]
-               [(member x '("math/csug/0.gif")) "-->"]
-               [(or (number? x) (symbol? x)) ""]
+               [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "-->"]
+               [(or (number? x) (symbol? x) (dotslash? x)) ""]
                [else x]))
        lst))
 

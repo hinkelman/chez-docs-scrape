@@ -83,7 +83,6 @@
           (map cdr (filter (lambda (x) (string=? "csug" (car x))) summary))))
 
 ;; let occurs twice; changing one reference to "named let"
-;; won't work as expected for a user in `doc` procedure but will work with `find-proc` 
 (define summary-tspl
   (map (lambda (y) (if (and (string=? (car y) "let")
                             (string=? (cadr y) "control:s20"))
