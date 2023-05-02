@@ -106,13 +106,12 @@
 
 (let ([file "chez-docs-data.scm"])
   (when (file-exists? file) (delete-file file))
-  (let ([data (list (cons 'CSUG (process-html-dir "html-csug"))
-                    (cons 'TSPL (process-html-dir "html-tspl")))])
+  (let ([data (list (cons 'csug (process-html-dir "html-csug"))
+                    (cons 'tspl (process-html-dir "html-tspl")))])
     (with-output-to-file file
       (lambda () (write `(define chez-docs-data ',data))))))
 
 
-;; (display-str-list (cdr (assoc "numeric:s16" test)))
 
 
 
