@@ -29,6 +29,10 @@
   ;; check if object is a string that starts with "./"
   (and (string? obj) (irregex-search '(: bos "./") obj)))
 
+(define (gif? obj)
+  ;; check if object is a string that contains ".gif"
+  (and (string? obj) (irregex-search "\\.gif" obj)))
+
 ;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
 ;; assuming one anchor for each prl block (see below)
 (define (extract-anchor p-elem)
@@ -44,10 +48,38 @@
   (map (lambda (x)
          ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
          ;; ignored for now (not common)
+         ;; using member to avoid type checks, e.g., (and (string? x) (string=? ...))
          (cond [(member x '("<graphic>")) ""]
                [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
-               [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "-->"]
+               ;; fragile, manual approach to handling all of these gifs
+               ;; not all of these gifs will be picked up as part of chez-docs
+               [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
+               [(member x '("math/csug/2.gif" "math/tspl/8.gif")) "-->"]
+               [(member x '("math/csug/4.gif" "math/tspl/9.gif")) "->"]
+               [(member x '("math/csug/5.gif")) "min(max(g+1, min-tg), max-tg)"]
+               [(member x '("math/tspl/27.gif")) "1/2 x (1 2 3) = (1/2 1 3/2)"]
+               [(member x '("math/csug/3.gif" "math/tspl/25.gif"))
+                (string (integer->char 955))] ;; lambda
+               [(member x '("math/tspl/3.gif"))
+                (string (integer->char 8942))] ;; vertical ellipsis
+               [(member x '("math/tspl/13.gif"))
+                (string (integer->char 8734))] ;; infinity
+               [(member x '("math/tspl/20.gif"))
+                (string (integer->char 962))] ;; final sigma
+               [(member x '("math/tspl/21.gif"))
+                (string (integer->char 931))] ;; big sigma
+               [(member x '("math/tspl/22.gif"))
+                (string (integer->char 963))] ;; small sigma
+               [(member x '("math/tspl/11.gif"))
+                (string-append "-" (string (integer->char 8734)))] ;; negative infinity
+               [(member x '("math/tspl/12.gif"))
+                (string-append "+" (string (integer->char 8734)))] ;; positive infinity
+               [(member x '("math/tspl/14.gif"))
+                (string-append "-" (string (integer->char 960)))] ;; negative infinity
+               [(member x '("math/tspl/15.gif"))
+                (string-append "+" (string (integer->char 960)))] ;; positive infinity
+               [(gif? x) "[image not available]"]  
                [(or (number? x) (symbol? x) (dotslash? x)) ""]
                [else x]))
        lst))
