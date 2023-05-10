@@ -37,6 +37,11 @@
   ;; check if object is a string that contains ".gif"
   (and (string? obj) (irregex-search "\\.gif" obj)))
 
+(define (citation? obj)
+  ;; check if object is string that contains the word "citation"
+  ;; assuming that the word citation will not be used much (or at all) outside of parenthetical references
+  (and (string? obj) (irregex-search "citation" obj)))
+
 ;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
 ;; assuming one anchor for each prl block (see below)
 (define (extract-anchor p-elem)
@@ -84,7 +89,8 @@
                [(member x '("math/tspl/15.gif"))
                 (string-append "+" (string (integer->char 960)))] ;; positive infinity
                [(gif? x) "[image not available]"]  
-               [(or (number? x) (symbol? x) (dotslash? x) (defn? x)) ""]
+               [(or (number? x) (symbol? x) (dotslash? x) (defn? x) (citation? x))
+                ""]
                [else x]))
        lst))
 
