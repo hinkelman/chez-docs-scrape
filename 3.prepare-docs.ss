@@ -24,10 +24,14 @@
   (let ([out (irregex-replace '(: bos "./") str)])
     ;; if "./" is not present returns #f
     (if out out str)))
-
+  
 (define (dotslash? obj)
   ;; check if object is a string that starts with "./"
   (and (string? obj) (irregex-search '(: bos "./") obj)))
+
+(define (defn? obj)
+  ;; check if object is a string that starts with "defn"
+  (and (string? obj) (irregex-search '(: bos "defn:") obj)))
 
 (define (gif? obj)
   ;; check if object is a string that contains ".gif"
@@ -80,7 +84,7 @@
                [(member x '("math/tspl/15.gif"))
                 (string-append "+" (string (integer->char 960)))] ;; positive infinity
                [(gif? x) "[image not available]"]  
-               [(or (number? x) (symbol? x) (dotslash? x)) ""]
+               [(or (number? x) (symbol? x) (dotslash? x) (defn? x)) ""]
                [else x]))
        lst))
 
