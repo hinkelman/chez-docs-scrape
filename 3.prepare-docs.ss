@@ -65,6 +65,7 @@
                [(member x '(le)) "<="]
                [(member x '(gt)) ">"]
                [(member x '(ge)) ">="]
+               [(member x '(sup)) "^"]
                ;; fragile, manual approach to handling all of these gifs
                ;; not all of these gifs will be picked up as part of chez-docs
                [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
