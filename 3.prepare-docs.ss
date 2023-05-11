@@ -61,6 +61,10 @@
          (cond [(member x '("<graphic>")) ""]
                [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
+               [(member x '(lt)) "<"]
+               [(member x '(le)) "<="]
+               [(member x '(gt)) ">"]
+               [(member x '(ge)) ">="]
                ;; fragile, manual approach to handling all of these gifs
                ;; not all of these gifs will be picked up as part of chez-docs
                [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
