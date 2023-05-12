@@ -1,3 +1,5 @@
+;; this code is not very fast, but will be run infrequently
+
 (import (wak irregex)
         (only (wak htmlprag)
               html->sxml)
@@ -30,8 +32,12 @@
   (and (string? obj) (irregex-search '(: bos "./") obj)))
 
 (define (defn? obj)
-  ;; check if object is a string that starts with "defn"
+  ;; check if object is a string that starts with "defn:"
   (and (string? obj) (irregex-search '(: bos "defn:") obj)))
+
+(define (http? obj)
+  ;; check if object is a string that starts with "http:"
+  (and (string? obj) (irregex-search '(: bos "http:") obj)))
 
 (define (gif? obj)
   ;; check if object is a string that contains ".gif"
@@ -57,7 +63,8 @@
   (map (lambda (x)
          ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
          ;; ignored for now (not common)
-         ;; using member to avoid type checks, e.g., (and (string? x) (string=? ...))
+         ;; using member to avoid explicit type checks, e.g.,
+         ;; (and (string? x) (string=? ...))
          (cond [(member x '("<graphic>")) ""]
                [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
@@ -76,25 +83,35 @@
                [(member x '("math/csug/3.gif" "math/tspl/25.gif"))
                 (string (integer->char 955))] ;; lambda
                [(member x '("math/tspl/3.gif"))
-                (string (integer->char 8942))] ;; vertical ellipsis
+                ;; vertical ellipsis; doesn't work on Windows
+                (string (integer->char 8942))] 
                [(member x '("math/tspl/13.gif"))
-                (string (integer->char 8734))] ;; infinity
+                ;; infinity
+                (string (integer->char 8734))]
                [(member x '("math/tspl/20.gif"))
-                (string (integer->char 962))] ;; final sigma
+                ;; final sigma
+                (string (integer->char 962))]
                [(member x '("math/tspl/21.gif"))
-                (string (integer->char 931))] ;; big sigma
+                ;; big sigma
+                (string (integer->char 931))]
                [(member x '("math/tspl/22.gif"))
-                (string (integer->char 963))] ;; small sigma
+                ;; small sigma
+                (string (integer->char 963))]
                [(member x '("math/tspl/11.gif"))
-                (string-append "-" (string (integer->char 8734)))] ;; negative infinity
+                ;; negative infinity
+                (string-append "-" (string (integer->char 8734)))] 
                [(member x '("math/tspl/12.gif"))
-                (string-append "+" (string (integer->char 8734)))] ;; positive infinity
+                ;; positive infinity
+                (string-append "+" (string (integer->char 8734)))] 
                [(member x '("math/tspl/14.gif"))
-                (string-append "-" (string (integer->char 960)))] ;; negative infinity
+                ;; negative pi
+                (string-append "-" (string (integer->char 960)))]
                [(member x '("math/tspl/15.gif"))
-                (string-append "+" (string (integer->char 960)))] ;; positive infinity
+                ;; positive pi
+                (string-append "+" (string (integer->char 960)))]
                [(gif? x) "[image not available]"]  
-               [(or (number? x) (symbol? x) (dotslash? x) (defn? x) (citation? x))
+               [(or (number? x) (symbol? x) (dotslash? x) (defn? x)
+                    (http? x) (citation? x))
                 ""]
                [else x]))
        lst))
