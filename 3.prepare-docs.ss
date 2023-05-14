@@ -122,10 +122,15 @@
          [str (halve-newlines (apply string-append (cdr str-lst)))])
     (list (cdr anchor-pair) (remove-anchor (car anchor-pair) str))))
 
-;; currently have 3 groups: formdefs, retained other p-elem, and rejected p-elem
-;; process-p-elem handles group 2
+(define (check-table p-elem)
+  (member 'table (flatten p-elem)))
+
+;; process-p-elem handles p-elems that aren't formdefs
 (define (process-p-elem p-elem)
-  (let ([str-lst (replace (flatten p-elem))])
+  (let ([str-lst (if (check-table p-elem)
+                     ;; for simplicity, choosing not to display tables
+                     '("\n" "[table not shown]" "\n")
+                     (replace (flatten p-elem)))])
     (list (halve-newlines (apply string-append str-lst)))))
 
 (define (check-formdef p-elem)
@@ -181,9 +186,6 @@
                     (cons 'tspl (process-html-dir "html-tspl")))])
     (with-output-to-file file
       (lambda () (write `(define chez-docs-data ',data))))))
-
-
-
 
 
 
