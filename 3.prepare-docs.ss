@@ -35,6 +35,10 @@
   ;; check if object is a string that starts with "defn:"
   (and (string? obj) (irregex-search '(: bos "defn:") obj)))
 
+(define (page? obj)
+  ;; check if object is a string that starts with "page:"
+  (and (string? obj) (irregex-search '(: bos "page:") obj)))
+
 (define (http? obj)
   ;; check if object is a string that starts with "http:"
   (and (string? obj) (irregex-search '(: bos "http:") obj)))
@@ -111,7 +115,7 @@
                 (string-append "+" (string (integer->char 960)))]
                [(gif? x) "[image not available]"]  
                [(or (number? x) (symbol? x) (dotslash? x) (defn? x)
-                    (http? x) (citation? x))
+                    (page? x) (http? x) (citation? x))
                 ""]
                [else x]))
        lst))
