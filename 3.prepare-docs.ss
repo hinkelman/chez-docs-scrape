@@ -69,7 +69,7 @@
          ;; ignored for now (not common)
          ;; using member to avoid explicit type checks, e.g.,
          ;; (and (string? x) (string=? ...))
-         (cond [(member x '("<graphic>")) ""]
+         (cond [(member x '("<graphic>" "gifs/ghostRightarrow.gif")) ""]
                [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
                [(member x '(lt)) "<"]
