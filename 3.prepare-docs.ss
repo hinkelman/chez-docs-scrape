@@ -69,7 +69,9 @@
          ;; ignored for now (not common)
          ;; using member to avoid explicit type checks, e.g.,
          ;; (and (string? x) (string=? ...))
-         (cond [(member x '("<graphic>" "gifs/ghostRightarrow.gif")) ""]
+         (cond [(member x '("<graphic>" "g24" "g25" "g26" "g27")) ""]
+               ;; representing ghostRightarrow with 2 spaces
+               [(member x '("gifs/ghostRightarrow.gif")) "  "]
                [(member x '("formdef")) "\n"]
                [(member x '(nbsp)) " "]
                [(member x '(lt)) "<"]
@@ -77,6 +79,7 @@
                [(member x '(gt)) ">"]
                [(member x '(ge)) ">="]
                [(member x '(sup)) "^"]
+               [(member x '(li)) "* "]
                ;; fragile, manual approach to handling all of these gifs
                ;; not all of these gifs will be picked up as part of chez-docs
                [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
