@@ -105,7 +105,7 @@
             [(member x '(gt)) ">"]
             [(member x '(ge)) ">="]
             [(member x '(sup)) "^"]
-            [(member x '(li)) "* "]
+            [(member x '(li)) "\n* "]
             [(member x '(eacute)) (string (integer->char 233))]
             ;; fragile, manual approach to handling all of these gifs
             ;; not all of these gifs will be picked up as part of chez-docs
