@@ -31,7 +31,7 @@
   (let ([out (irregex-replace '(: bos "./") str)])
     ;; if "./" is not present returns #f
     (if out out str)))
-  
+
 (define (dotslash? obj)
   ;; check if object is a string that starts with "./"
   (and (string? obj) (irregex-search '(: bos "./") obj)))
@@ -61,6 +61,15 @@
   ;; assuming that the word citation will not be used much (or at all) outside of parenthetical references
   (and (string? obj) (irregex-search "citation" obj)))
 
+(define (tt? lst ref sub)
+  ;; check if earlier list elements are 'tt
+  ;; hack to try to decide what to do with newlines
+  (let ([ref-sub (- ref sub)])
+    (if (negative? ref-sub)
+        #f
+        (let ([x (list-ref lst ref-sub)])
+          (and (symbol? x) (symbol=? x 'tt))))))
+
 ;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
 ;; assuming one anchor for each prl block (see below)
 (define (extract-anchor p-elem)
@@ -73,69 +82,73 @@
 
 (define (replace lst)
   ;; replace elements (symbols and strings) of flat lst with strings
-  (map (lambda (y)
+  (map (lambda (y i)
          ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
          ;; ignored for now (not common)
          ;; using member to avoid explicit type checks, e.g.,
          ;; (and (string? x) (string=? ...))
-         (let ([x (replace-newlines y)])
-           (cond [(member x '("\n" "formdef" "<graphic>"
-                              "g24" "g25" "g26" "g27"))
-                  ""]
-                 ;; representing ghostRightarrow with 2 spaces
-                 [(member x '("gifs/ghostRightarrow.gif")) "  "]
-                 [(member x '(nbsp)) " "]
-                 [(member x '(br)) "\n"]
-                 [(member x '(dd)) "\n    "]
-                 [(member x '(lt)) "<"]
-                 [(member x '(le)) "<="]
-                 [(member x '(gt)) ">"]
-                 [(member x '(ge)) ">="]
-                 [(member x '(sup)) "^"]
-                 [(member x '(li)) "* "]
-                 [(member x '(eacute)) (string (integer->char 233))]
-                 ;; fragile, manual approach to handling all of these gifs
-                 ;; not all of these gifs will be picked up as part of chez-docs
-                 [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
-                 [(member x '("math/csug/2.gif" "math/tspl/8.gif")) "-->"]
-                 [(member x '("math/csug/4.gif" "math/tspl/9.gif")) "->"]
-                 [(member x '("math/csug/5.gif")) "min(max(g+1, min-tg), max-tg)"]
-                 [(member x '("math/tspl/27.gif")) "1/2 x (1 2 3) = (1/2 1 3/2)"]
-                 [(member x '("math/csug/3.gif" "math/tspl/25.gif"))
-                  (string (integer->char 955))] ;; lambda
-                 [(member x '("math/tspl/3.gif"))
-                  ;; vertical ellipsis; doesn't work on Windows
-                  (string (integer->char 8942))] 
-                 [(member x '("math/tspl/13.gif"))
-                  ;; infinity
-                  (string (integer->char 8734))]
-                 [(member x '("math/tspl/20.gif"))
-                  ;; final sigma
-                  (string (integer->char 962))]
-                 [(member x '("math/tspl/21.gif"))
-                  ;; big sigma
-                  (string (integer->char 931))]
-                 [(member x '("math/tspl/22.gif"))
-                  ;; small sigma
-                  (string (integer->char 963))]
-                 [(member x '("math/tspl/11.gif"))
-                  ;; negative infinity
-                  (string-append "-" (string (integer->char 8734)))] 
-                 [(member x '("math/tspl/12.gif"))
-                  ;; positive infinity
-                  (string-append "+" (string (integer->char 8734)))] 
-                 [(member x '("math/tspl/14.gif"))
-                  ;; negative pi
-                  (string-append "-" (string (integer->char 960)))]
-                 [(member x '("math/tspl/15.gif"))
-                  ;; positive pi
-                  (string-append "+" (string (integer->char 960)))]
-                 [(gif? x) "[image not available]"]  
-                 [(or (number? x) (symbol? x) (dotslash? x) (desc? x)
-                      (defn? x) (page? x) (http? x) (citation? x))
-                  ""]
-                 [else x])))
-       lst))
+         (let ([x (replace-newlines y)]) ;; doesn't replace standalone \n
+           (cond
+            ;; hack to try to replace some of the newlines with a space
+            ;; see https://github.com/hinkelman/chez-docs-scrape/issues/8
+            [(and (member x '("\n")) (or (tt? lst i 2) (tt? lst i 3))) " "]
+            [(member x '("\n" "formdef" "<graphic>"
+                         "g24" "g25" "g26" "g27"))
+             ""]
+            ;; representing ghostRightarrow with 2 spaces
+            [(member x '("gifs/ghostRightarrow.gif")) "  "]
+            [(member x '(nbsp)) " "]
+            [(member x '(br)) "\n"]
+            [(member x '(dd)) "\n    "]
+            [(member x '(lt)) "<"]
+            [(member x '(le)) "<="]
+            [(member x '(gt)) ">"]
+            [(member x '(ge)) ">="]
+            [(member x '(sup)) "^"]
+            [(member x '(li)) "* "]
+            [(member x '(eacute)) (string (integer->char 233))]
+            ;; fragile, manual approach to handling all of these gifs
+            ;; not all of these gifs will be picked up as part of chez-docs
+            [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
+            [(member x '("math/csug/2.gif" "math/tspl/8.gif")) "-->"]
+            [(member x '("math/csug/4.gif" "math/tspl/9.gif")) "->"]
+            [(member x '("math/csug/5.gif")) "min(max(g+1, min-tg), max-tg)"]
+            [(member x '("math/tspl/27.gif")) "1/2 x (1 2 3) = (1/2 1 3/2)"]
+            [(member x '("math/csug/3.gif" "math/tspl/25.gif"))
+             (string (integer->char 955))] ;; lambda
+            [(member x '("math/tspl/3.gif"))
+             ;; vertical ellipsis; doesn't work on Windows
+             (string (integer->char 8942))] 
+            [(member x '("math/tspl/13.gif"))
+             ;; infinity
+             (string (integer->char 8734))]
+            [(member x '("math/tspl/20.gif"))
+             ;; final sigma
+             (string (integer->char 962))]
+            [(member x '("math/tspl/21.gif"))
+             ;; big sigma
+             (string (integer->char 931))]
+            [(member x '("math/tspl/22.gif"))
+             ;; small sigma
+             (string (integer->char 963))]
+            [(member x '("math/tspl/11.gif"))
+             ;; negative infinity
+             (string-append "-" (string (integer->char 8734)))] 
+            [(member x '("math/tspl/12.gif"))
+             ;; positive infinity
+             (string-append "+" (string (integer->char 8734)))] 
+            [(member x '("math/tspl/14.gif"))
+             ;; negative pi
+             (string-append "-" (string (integer->char 960)))]
+            [(member x '("math/tspl/15.gif"))
+             ;; positive pi
+             (string-append "+" (string (integer->char 960)))]
+            [(gif? x) "[image not available]"]  
+            [(or (number? x) (symbol? x) (dotslash? x) (desc? x)
+                 (defn? x) (page? x) (http? x) (citation? x))
+             ""]
+            [else x])))
+       lst (enumerate lst)))
 
 (define (process-formdef p-elem)
   (let* ([anchor-pair (extract-anchor p-elem)]
