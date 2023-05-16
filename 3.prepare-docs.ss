@@ -98,7 +98,7 @@
             ;; representing ghostRightarrow with 2 spaces
             [(member x '("gifs/ghostRightarrow.gif")) "  "]
             [(member x '(nbsp)) " "]
-            [(member x '(br)) "\n"]
+            [(member x '(br dt)) "\n"]
             [(member x '(dd)) "\n    "]
             [(member x '(lt)) "<"]
             [(member x '(le)) "<="]
