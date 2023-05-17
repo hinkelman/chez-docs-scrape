@@ -106,6 +106,7 @@
             [(member x '(li)) "\n* "]
             [(member x '(eacute)) (string (integer->char 233))]
             [(member x '(middot)) (string (integer->char 183))]
+            [(member x '(szlig)) (string (integer->char 223))]
             ;; hex codes, e.g., &#x130 -> 304, are translated into integers by html->sxml
             [(integer? x) (string (integer->char x))]            
             ;; fragile, manual approach to handling all of these gifs
