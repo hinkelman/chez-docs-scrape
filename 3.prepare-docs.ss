@@ -83,8 +83,6 @@
 (define (replace lst)
   ;; replace elements (symbols and strings) of flat lst with strings
   (map (lambda (y i)
-         ;; unicode hex codes come in as numbers, e.g., &#x130; becomes (& 304)
-         ;; ignored for now (not common)
          ;; using member to avoid explicit type checks, e.g.,
          ;; (and (string? x) (string=? ...))
          (let ([x (replace-newlines y)]) ;; doesn't replace standalone \n
@@ -108,6 +106,8 @@
             [(member x '(li)) "\n* "]
             [(member x '(eacute)) (string (integer->char 233))]
             [(member x '(middot)) (string (integer->char 183))]
+            ;; hex codes, e.g., &#x130 -> 304, are translated into integers by html->sxml
+            [(integer? x) (string (integer->char x))]            
             ;; fragile, manual approach to handling all of these gifs
             ;; not all of these gifs will be picked up as part of chez-docs
             [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
