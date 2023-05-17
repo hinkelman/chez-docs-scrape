@@ -61,14 +61,14 @@
   ;; assuming that the word citation will not be used much (or at all) outside of parenthetical references
   (and (string? obj) (irregex-search "citation" obj)))
 
-(define (tt? lst ref sub)
-  ;; check if earlier list elements are 'tt
+(define (check-sym lst ref sub sym)
+  ;; check if earlier list elements are sym
   ;; hack to try to decide what to do with newlines
   (let ([ref-sub (- ref sub)])
     (if (negative? ref-sub)
         #f
         (let ([x (list-ref lst ref-sub)])
-          (and (symbol? x) (symbol=? x 'tt))))))
+          (and (symbol? x) (symbol=? x sym))))))
 
 ;; there is also an extract-anchor procedure in 2.prepare-summary.ss that does something different
 ;; assuming one anchor for each prl block (see below)
@@ -89,7 +89,13 @@
            (cond
             ;; hack to try to replace some of the newlines with a space
             ;; see https://github.com/hinkelman/chez-docs-scrape/issues/8
-            [(and (member x '("\n")) (or (tt? lst i 2) (tt? lst i 3))) " "]
+            [(and (member x '("\n")) (or (check-sym lst i 2 'tt)
+                                         (check-sym lst i 3 'tt)))
+             " "]
+            ;; some page bottoms don't include <p> before <hr class=copyright align=left>
+            ;; removing these strings only when preceded by 'class and 'align
+            [(and (member x '("copyright")) (check-sym lst i 1 'class)) ""]
+            [(and (member x '("left")) (check-sym lst i 1 'align)) ""]
             [(member x '("\n" "formdef" "<graphic>"
                          "g24" "g25" "g26" "g27"))
              ""]
@@ -179,7 +185,7 @@
     (> (length (filter (lambda (x) x) mask)) 0)))
 
 (define (check-footer p-elem)
-  (member "copyright" (flatten p-elem)))
+  (member "Copyright " (flatten p-elem)))
 
 (define (process-p-list p-list)
   (let loop ([lst p-list]
