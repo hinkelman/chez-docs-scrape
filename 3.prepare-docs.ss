@@ -107,6 +107,7 @@
             [(member x '(sup)) "^"]
             [(member x '(li)) "\n* "]
             [(member x '(eacute)) (string (integer->char 233))]
+            [(member x '(middot)) (string (integer->char 183))]
             ;; fragile, manual approach to handling all of these gifs
             ;; not all of these gifs will be picked up as part of chez-docs
             [(member x '("math/csug/0.gif" "math/tspl/0.gif")) "=>"]
