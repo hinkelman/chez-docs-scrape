@@ -96,6 +96,7 @@
             ;; removing these strings only when preceded by 'class and 'align
             [(and (member x '("copyright")) (check-sym lst i 1 'class)) ""]
             [(and (member x '("left")) (check-sym lst i 1 'align)) ""]
+            [(and (member x '("property-lists")) (check-sym lst i 1 'name)) ""]
             [(member x '("\n" "formdef" "<graphic>"
                          "g24" "g25" "g26" "g27"))
              ""]
