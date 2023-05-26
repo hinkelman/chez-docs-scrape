@@ -32,38 +32,12 @@
     ;; if "./" is not present returns #f
     (if out out str)))
 
-(define (dotslash? obj)
-  ;; check if object is a string that starts with "./"
-  (and (string? obj) (irregex-search '(: bos "./") obj)))
-
-(define (desc? obj)
-  ;; check if object is a string that starts with "desc:"
-  (and (string? obj) (irregex-search '(: bos "desc:") obj)))
-
-(define (defn? obj)
-  ;; check if object is a string that starts with "defn:"
-  (and (string? obj) (irregex-search '(: bos "defn:") obj)))
-
-(define (page? obj)
-  ;; check if object is a string that starts with "page:"
-  (and (string? obj) (irregex-search '(: bos "page:") obj)))
-
-(define (http? obj)
-  ;; check if object is a string that starts with "http:"
-  (and (string? obj) (irregex-search '(: bos "http:") obj)))
-
 (define (gif? obj)
   ;; check if object is a string that contains ".gif"
   (and (string? obj) (irregex-search "\\.gif" obj)))
 
-(define (citation? obj)
-  ;; check if object is string that contains the word "citation"
-  ;; assuming that the word citation will not be used much (or at all) outside of parenthetical references
-  (and (string? obj) (irregex-search "citation" obj)))
-
 (define (check-sym lst ref sub sym)
   ;; check if earlier list elements are sym
-  ;; hack to try to decide what to do with newlines
   (let ([ref-sub (- ref sub)])
     (if (negative? ref-sub)
         #f
@@ -92,14 +66,7 @@
             [(and (member x '("\n")) (or (check-sym lst i 2 'tt)
                                          (check-sym lst i 3 'tt)))
              " "]
-            ;; some page bottoms don't include <p> before <hr class=copyright align=left>
-            ;; removing these strings only when preceded by 'class and 'align
-            [(and (member x '("copyright")) (check-sym lst i 1 'class)) ""]
-            [(and (member x '("left")) (check-sym lst i 1 'align)) ""]
-            [(and (member x '("property-lists")) (check-sym lst i 1 'name)) ""]
-            [(member x '("\n" "formdef" "<graphic>"
-                         "g24" "g25" "g26" "g27"))
-             ""]
+            [(member x '("\n")) ""]
             ;; representing ghostRightarrow with 2 spaces
             [(member x '("gifs/ghostRightarrow.gif")) "  "]
             [(member x '(nbsp)) " "]
@@ -152,10 +119,14 @@
             [(member x '("math/tspl/15.gif"))
              ;; positive pi
              (string-append "+" (string (integer->char 960)))]
-            [(gif? x) "[image not available]"]  
-            [(or (number? x) (symbol? x) (dotslash? x) (desc? x)
-                 (defn? x) (page? x) (http? x) (citation? x))
+            [(gif? x) "[image not available]"]
+            ;; remove any strings preceded by class, align, name, href, alt, src
+            ;; important that this cleanup step happens after all replacements above
+            [(and (string? x)
+                  (member #t (map (lambda (sym) (check-sym lst i 1 sym))
+                                  '(class align name href alt src))))
              ""]
+            [(or (number? x) (symbol? x)) ""]
             [else x])))
        lst (enumerate lst)))
 
