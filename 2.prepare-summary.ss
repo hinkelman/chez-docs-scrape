@@ -30,7 +30,7 @@
     (if key1 key1 key0)))
 
 (define (expand-url url)
-  (let* ([expand-text "https://cisco.github.io/ChezScheme/csug9.5"]
+  (let* ([expand-text "https://cisco.github.io/ChezScheme/csug10.0"]
          ;; bos = beginning of string; colon creates sre 
          [url-expand (irregex-replace '(: bos #\.) url expand-text)])
     (if url-expand url-expand url)))
@@ -66,9 +66,9 @@
          [key (extract-key form)]
          [a-tag (assoc 'a (sxml:content (list-ref tds 2)))]
          [page (list-ref a-tag 2)]
-         [source (if (irregex-search "t" page) "tspl" "csug")] 
          [url-raw (cadadr (list-ref a-tag 1))]
          [url (expand-url url-raw)]
+         [source (if (irregex-search "/tspl4/" url-raw) "tspl" "csug")]
          [anchor (extract-anchor url)])
     (list source key anchor url)))
 

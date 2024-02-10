@@ -351,7 +351,7 @@ This may be accomplished by setting the
 <p><tt>echo&nbsp;'(reset-handler&nbsp;abort)&nbsp;(compile-file&nbsp;"<i>filename</i>")'&nbsp;|&nbsp;scheme&nbsp;-q</tt>
 <p>One can also redefine the
 <a name="./use:s8"></a><tt>base-exception-handler</tt>
-(Section&nbsp;<a href="./system.html#g112">12.1</a>) to achieve a similar effect
+(Section&nbsp;<a href="./system.html#g115">12.1</a>) to achieve a similar effect
 while exercising more control over the format of the messages that
 are produced.
 
@@ -418,7 +418,7 @@ are shown separated by commas.
 
 <p>
 Detailed descriptions of the editing commands are given in
-Chapter&nbsp;<a href="./expeditor.html#g132">14</a>, which also describes parameters that allow
+Chapter&nbsp;<a href="./expeditor.html#g137">14</a>, which also describes parameters that allow
 control over the expression editor, mechanisms for adding or changing key
 bindings, and mechanisms for creating new commands.
 
@@ -951,6 +951,8 @@ Otherwise, the expander loads the source file.
 (Loading the source file actually causes the code to be compiled,
 assuming the default value of <tt>current-eval</tt>, but the compiled
 code is not saved to an object file.)
+The <tt>library-timestamp-mode</tt> parameter controls the meaning of "older"
+for comparing library sources and object files.
 An exception is raised during this process if a
 source or object file exists but is not readable or if an object
 file cannot be created.
@@ -1161,7 +1163,7 @@ replaced with <tt>/usr/bin/petite</tt>.
 <p>
 <a name="./use:s33"></a><a name="./use:s34"></a>The <tt>--program</tt> command-line option is like <tt>--script</tt>
 except that the script file is treated as an RNRS top-level program
-(Chapter&nbsp;<a href="./libraries.html#g90">10</a>).
+(Chapter&nbsp;<a href="./libraries.html#g93">10</a>).
 The following RNRS top-level program implements the traditional Unix
 <tt>echo</tt> command, as with the script above.
 
@@ -1363,13 +1365,14 @@ program, e.g.:
 control parameters and also with the storage manager's run-time
 operation.
 The compiler-control parameters, including <tt>optimize-level</tt>, are
-described in Section&nbsp;<a href="./system.html#g117">12.6</a>, and the storage manager
-control parameters are described in Section&nbsp;<a href="./smgmt.html#g129">13.1</a>.
+described in Section&nbsp;<a href="./system.html#g120">12.6</a>, and the storage manager
+control parameters are described in Section&nbsp;<a href="./smgmt.html#g132">13.1</a>.
 
 <p>
 <a name="./use:s51"></a>Finally, it is often useful to "profile" your code to determine that
 parts of the code that are executed most frequently.
-While this will not help the system optimize your code, it can help
+While this may help the system optimize your code, the primary
+benefit is to help
 you identify "hot spots" where you need to concentrate your own
 hand-optimization efforts.
 In these hot spots, consider using more efficient operators, like
@@ -1381,8 +1384,8 @@ These operators can make code more readable when used judiciously,
 but they can slow down time-critical code.
 
 <p>
-Section&nbsp;<a href="./system.html#g118">12.7</a> describes how to use the compiler's support
-for automatic profiling.
+Section&nbsp;<a href="./system.html#g121">12.7</a> describes how to use the compiler's support
+for automatic profiling and profile-directed optimization.
 Be sure that profiling is not enabled when you compile your production
 code, since the code introduced into the generated code to perform the
 profiling adds significant run-time overhead.
@@ -1424,7 +1427,7 @@ as a subordinate program within another program, i.e., for use as
 an extension language.
 
 <p>
-These entry points are described in Section&nbsp;<a href="./foreign.html#g34">4.8</a>,
+These entry points are described in Section&nbsp;<a href="./foreign.html#g35">4.9</a>,
 along with other entry points for accessing and modifying Scheme
 data structures and calling Scheme procedures.
 
@@ -1581,7 +1584,7 @@ application and packaged in shared libraries (also known as shared
 objects or, on Windows, dynamic link libraries).
 The following assumes that any shared-library source code has been
 converted into object form; how to do this varies by platform.
-(Some hints are given in Section&nbsp;<a href="./foreign.html#g32">4.6</a>.)
+(Some hints are given in Section&nbsp;<a href="./foreign.html#g33">4.7</a>.)
 The result is a set of one or more shared libraries that are loaded
 explicitly by the Scheme source code during program initialization.
 
@@ -1610,7 +1613,7 @@ it may be necessary to make some adjustments to a file to be
 compiled if the file contains expressions or definitions that
 affect the compilation of subsequent forms in the file.
 This can be accomplished via <tt>eval-when</tt>
-(Section&nbsp;<a href="./system.html#g115">12.4</a>).
+(Section&nbsp;<a href="./system.html#g118">12.4</a>).
 This is not typically necessary or desirable if the application consists
 of a set of RNRS libraries and programs.
 
@@ -1891,7 +1894,7 @@ shortcuts to run the executable.
 
 
 <p>
-<a name="./use:s71"></a><a name="./use:s72"></a><a name="./use:s73"></a><a name="./use:s74"></a><a name="./use:s75"></a><a name="./use:s76"></a><a name="./use:s77"></a><a name="./use:s78"></a><a name="./use:s79"></a><a name="./use:s80"></a><a name="./use:s81"></a><a name="./use:s82"></a><a name="./use:s83"></a><a name="./use:s84"></a><a name="./use:s85"></a><a name="./use:s86"></a><a name="./use:s87"></a><a name="./use:s88"></a><a name="./use:s89"></a><a name="./use:s90"></a><a name="./use:s91"></a><i>Chez&nbsp;Scheme</i> recognizes the following command-line options.
+<a name="./use:s71"></a><a name="./use:s72"></a><a name="./use:s73"></a><a name="./use:s74"></a><a name="./use:s75"></a><a name="./use:s76"></a><a name="./use:s77"></a><a name="./use:s78"></a><a name="./use:s79"></a><a name="./use:s80"></a><a name="./use:s81"></a><a name="./use:s82"></a><a name="./use:s83"></a><a name="./use:s84"></a><a name="./use:s85"></a><a name="./use:s86"></a><a name="./use:s87"></a><a name="./use:s88"></a><a name="./use:s89"></a><a name="./use:s90"></a><a name="./use:s91"></a><a name="./use:s92"></a><a name="./use:s93"></a><i>Chez&nbsp;Scheme</i> recognizes the following command-line options.
 
 <p>
 <TABLE><TR><TD nowrap align="left">
@@ -1907,6 +1910,8 @@ shortcuts to run the executable.
     </TD><TD nowrap align="left"> &nbsp;&nbsp;set library extensions</TD></TR><TR><TD nowrap align="left">
 <tt>--compile-imported-libraries</tt>
     </TD><TD nowrap align="left"> &nbsp;&nbsp;compile libraries before loading</TD></TR><TR><TD nowrap align="left">
+<tt>--disable-library-timestamps</tt>
+    </TD><TD nowrap align="left"> &nbsp;&nbsp;do not check modification dates on library sources</TD></TR><TR><TD nowrap align="left">
 <tt>--import-notify</tt>
     </TD><TD nowrap align="left"> &nbsp;&nbsp;enable import search messages</TD></TR><TR><TD nowrap align="left">
 <tt>--optimize-level&nbsp;0&nbsp;|&nbsp;1&nbsp;|&nbsp;2&nbsp;|&nbsp;3</tt>
@@ -1923,6 +1928,8 @@ shortcuts to run the executable.
     </TD><TD nowrap align="left"> &nbsp;&nbsp;keep reloc info for compute-size, etc.</TD></TR><TR><TD nowrap align="left">
 <tt>-b&nbsp;<i>path</i></tt>, <tt>--boot&nbsp;<i>path</i></tt>
     </TD><TD nowrap align="left"> &nbsp;&nbsp;load boot file</TD></TR><TR><TD nowrap align="left">
+<tt>-B&nbsp;<i>path</i></tt>, <tt>--Boot&nbsp;<i>path</i></tt>
+    </TD><TD nowrap align="left"> &nbsp;&nbsp;load boot file relative to the current directory</TD></TR><TR><TD nowrap align="left">
 <tt>--verbose</tt>
     </TD><TD nowrap align="left"> &nbsp;&nbsp;trace boot-file search process</TD></TR><TR><TD nowrap align="left">
 <tt>--version</tt>
@@ -1934,7 +1941,7 @@ shortcuts to run the executable.
 </TD></TR></TABLE>
 
 <p>
-<a name="./use:s92"></a><a name="./use:s93"></a><a name="./use:s94"></a><a name="./use:s95"></a><a name="./use:s96"></a><a name="./use:s97"></a>The following options are recognized but cause the system to print an
+<a name="./use:s94"></a><a name="./use:s95"></a><a name="./use:s96"></a><a name="./use:s97"></a><a name="./use:s98"></a><a name="./use:s99"></a>The following options are recognized but cause the system to print an
 error message and exit because saved heaps are no longer supported.
 
 <p>
@@ -1962,15 +1969,16 @@ The remainder pertain to the loading of boot files at system start-up
 time and are described below.
 
 <p>
-<a name="./use:s98"></a><a name="./use:s99"></a>When <i>Chez&nbsp;Scheme</i> is run, it looks for one or more boot files
+<a name="./use:s100"></a><a name="./use:s101"></a>When <i>Chez&nbsp;Scheme</i> is run, it looks for one or more boot files
 to load.
 Boot files contain the compiled Scheme code that implements most of
 the Scheme system, including the interpreter, compiler, and most
 libraries.
 Boot
 files may be specified explicitly on the command
-line via <tt>-b</tt>
-options or implicitly.
+line via <tt>-b</tt> (relative to installation directory unless absolute or
+starting with a <tt>.</tt> or <tt>..</tt> path element) or <tt>-B</tt>
+(relative to current directory unless absolute) options or implicitly.
 In the simplest case, no <tt>-b</tt>
 options
 are given and the necessary boot
@@ -2001,13 +2009,14 @@ arguments for which search tracing is desired.
 <p>
 Ordinarily, the search for
 boot files is limited to a set of
-installation directories, but this may be overridden by setting
-the environment variable <a name="./use:s100"></a><tt>SCHEMEHEAPDIRS</tt>.
+installation directories relative to the executable, but this may be overridden by setting
+the environment variable <a name="./use:s102"></a><tt>SCHEMEHEAPDIRS</tt>.
 <tt>SCHEMEHEAPDIRS</tt> should be a colon-separated list of directories, listed in
 the order in which they should be searched.
-Within each directory, the two-character escape sequence "<tt>%v</tt>"
-is replaced by the current version, and the two-character escape sequence
-"<tt>%m</tt>" is replaced by the machine type.
+Within each directory, the two-character escape sequence "<tt>%v</tt>" is
+replaced by the current version, the two-character escape sequence "<tt>%m</tt>"
+is replaced by the machine type, and the two-character escape sequence "<tt>%x</tt>"
+is replaced by the directory in which the executable file resides.
 A percent followed by any other character is replaced by the second
 character; in particular, "<tt>%%</tt>" is replaced by "<tt>%</tt>", and
 "<tt>%:</tt>" is replaced by "<tt>:</tt>".
@@ -2016,9 +2025,7 @@ searched after those in <tt>SCHEMEHEAPDIRS</tt>; otherwise, only those listed in
 <tt>SCHEMEHEAPDIRS</tt> are searched.
 
 <p>
-Under Windows, semi-colons are used in place of colons, and one additional
-escape is recognized: "<tt>%x</tt>," which is replaced by the directory in
-which the executable file resides.
+Under Windows, semi-colons are used in place of colons.
 The default search path under Windows consists of "<tt>%x</tt>"
 and "<tt>%x\..\..\boot\%m</tt>."
 The registry key <tt>HeapSearchPath</tt> in
@@ -2035,18 +2042,16 @@ source files.
 See Section&nbsp;<a href="./use.html#g13">2.8</a> for instructions on how to create
 boot files.
 
-<p>
-
 
 
 
 <hr class=copyright align=left>
 <p>
-<a class=plain href="index.html">Chez Scheme Version 9 User's Guide</a><br>
-Copyright &copy; 2022 Cisco Systems, Inc.<br>
+<a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
+Copyright &copy; 2024 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised April 2022 for Chez Scheme Version 9.5.8<br>
+Revised February 2024 for Chez Scheme Version 10.0.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

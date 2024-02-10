@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g42"></a>
+<a name="g43"></a>
 <a name="./control:h0"></a>
 
 <h1>Chapter 6. Control Structures<a name="CHPTCONTROL"></a></h1>
@@ -26,7 +26,7 @@ on Scheme for a description of standard control structures.
 
 <p>
 
-<h3><a name="g43"></a><a name="./control:h1"></a>Section 6.1. Conditionals</h3>
+<h3><a name="g44"></a><a name="./control:h1"></a>Section 6.1. Conditionals</h3>
 
 
 
@@ -43,7 +43,7 @@ from <tt>cond</tt> in that the tests embedded within the clauses
 are assumed to be exclusive in the sense that if one of the tests
 is true, the others are not.
 This allows the implementation to reorder clauses when profiling
-information is available at expansion time (Section&nbsp;<a href="./system.html#g118">12.7</a>).
+information is available at expansion time (Section&nbsp;<a href="./system.html#g121">12.7</a>).
 
 <p>
 The <tt>(<i>test</i>)</tt> form of clause is not supported.
@@ -203,7 +203,7 @@ is present, the value is unspecified.
 
 (calc&nbsp;'(div&nbsp;3&nbsp;4))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3/4</tt>
 <p>
-<h3><a name="g44"></a><a name="./control:h2"></a>Section 6.2. Mapping and Folding</h3>
+<h3><a name="g45"></a><a name="./control:h2"></a>Section 6.2. Mapping and Folding</h3>
 
 
 
@@ -228,7 +228,7 @@ is present, the value is unspecified.
 
 <p>
 
-<h3><a name="g45"></a><a name="./control:h3"></a>Section 6.3. Continuations</h3>
+<h3><a name="g46"></a><a name="./control:h3"></a>Section 6.3. Continuations</h3>
 
 
 
@@ -238,6 +238,23 @@ multi-shot continuations obtainable via <tt>call/cc</tt>.
 One-shot continuations are continuations that may be invoked at most
 once, whether explicitly or implicitly.
 They are obtained with <tt>call/1cc</tt>.
+
+<p>
+Continuation <i>marks</i> support efficient annotation of continuations
+and inspection of those annotations. Each continuation has a table of
+marks, where each mark is a key-value pair.  This table is updated using
+the <tt>with-continuation-mark</tt> form to associate a key with a value,
+replacing any existing association for that key.  Although each
+continuation has a single immediate table of marks, a continuation may
+extend another continuation that has its own marks.  The
+<tt>current-continuation-marks</tt> function captures the sequence of mark
+tables for a continuation and all continuations that it extends. Functions such as
+<tt>continuation-marks-first</tt>,
+<tt>continuation-marks-&gt;list</tt>, and
+<tt>continuation-marks-&gt;iterator</tt> can be used to inspect mark
+sequences. When a continuation is captured with <tt>call/cc</tt>, only the
+marks of the rest of the continuation are captured, and
+<tt>continuation-next-marks</tt> returns the captured marks.
 
 <p>
 <a name="./control:s9"></a><span class=formdef><b>procedure</b>: <tt>(call/1cc&nbsp;<i>procedure</i>)</tt></span>
@@ -275,7 +292,7 @@ transparently in many applications.
 One-shot continuations may be more efficient for some applications than
 multishot continuations.
 See the paper "Representing control in the presence of one-shot
-continuations"&nbsp;[<a class=citation href="./bibliography.html#g154">3</a>] for more information about
+continuations"&nbsp;[<a class=citation href="./bibliography.html#g160">3</a>] for more information about
 one-shot continuations, including how they are implemented in
 <i>Chez&nbsp;Scheme</i>.
 
@@ -343,19 +360,366 @@ since an error or long-running computation can leave interrupts
 and automatic garbage collection disabled.
 
 <p>
+<a name="./control:s12"></a><a name="with-continuation-mark"></a>
+<span class=formdef><b>syntax</b>: <tt>(with-continuation-mark&nbsp;<i>key</i>&nbsp;<i>val</i>&nbsp;<i>body</i>)</tt></span>
+<br>
+<b>returns: </b>the value of the <tt><i>body</i></tt> expression
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
 
-<h3><a name="g46"></a><a name="./control:h4"></a>Section 6.4. Engines<a name="SECTENGINES"></a></h3>
+<p><tt>with-continuation-mark</tt> updates the table of marks
+on the current continuation to map the result of the <tt><i>key</i></tt>
+expression to the result of the <tt><i>val</i></tt> expression. If the current
+continuation's table of marks already has a mapping for <tt><i>key</i></tt>
+(based on <tt>eq?</tt> comparison), then the mark's value is replaced
+with <tt><i>val</i></tt>, otherwise a mapping from <tt><i>key</i></tt> to <tt><i>val</i></tt> is
+added to the table.
+
+<p>
+
+<p><tt>(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;"hello")&nbsp;;&nbsp;=&gt;&nbsp;"hello"
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key))&nbsp;;&nbsp;=&gt;&nbsp;"val"
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'other-key))&nbsp;;&nbsp;=&gt;&nbsp;#f
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key)))&nbsp;;&nbsp;=&gt;&nbsp;"val2"
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;(continuation-marks-&gt;list&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key)))&nbsp;;&nbsp;=&gt;&nbsp;("val2")
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(values<br>
+
+&nbsp;&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;&nbsp;(continuation-marks-&gt;list&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key))))&nbsp;;&nbsp;=&gt;&nbsp;("val2"&nbsp;"val")</tt>
+<p><a name="./control:s13"></a><span class=formdef><b>procedure</b>: <tt>(continuation-marks?&nbsp;<i>obj</i>)</tt></span>
+<br>
+<b>returns: </b>boolean
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>A predicate that recognizes a continuation mark sequence, which
+can be produced by the functions <tt>current-continuation-marks</tt> and
+<tt>continuation-next-marks</tt>.
+
+<p>
+<a name="./control:s14"></a><span class=formdef><b>procedure</b>: <tt>(current-continuation-marks)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(continuation-next-marks&nbsp;<i>cont</i>)</tt></span>
+<br>
+<b>returns: </b>a continuation mark sequence
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Returns a captured sequence of mark tables, either the
+current continuation's marks in the case of
+<tt>current-continuation-marks</tt> or the marks of the rest of
+<tt><i>cont</i></tt> in the case of <tt>continuation-next-marks</tt>. In the
+latter case, <tt><i>cont</i></tt> must be a continuation.
+
+<p>
+This function takes constant time. The size of the resulting mark sequence
+is proportional to the number of distinct key-value mappings in the
+overall mark-table sequence; that size is bounded by the length of the
+continuation times the number of distinct values used as keys, but
+since many continuations have no keys or fewer than all possible keys
+in their tables, the size tends to be much less than the bound.
+
+<p>
+
+<p><tt>(continuation-marks?&nbsp;(current-continuation-marks))&nbsp;;&nbsp;=&gt;&nbsp;#t<br>
+
+(continuation-marks?&nbsp;(continuation-next-marks<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(call/cc&nbsp;(lambda&nbsp;(k)&nbsp;k))))&nbsp;;&nbsp;=&gt;&nbsp;#t</tt>
+<p><a name="./control:s15"></a><span class=formdef><b>procedure</b>: <tt>(continuation-marks-first&nbsp;<i>marks</i>&nbsp;<i>key</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(continuation-marks-first&nbsp;<i>marks</i>&nbsp;<i>key</i>&nbsp;<i>none-val</i>)</tt></span>
+<br>
+<b>returns: </b>the value for <tt><i>key</i></tt> in <tt><i>marks</i></tt> or <tt><i>none-val</i></tt>
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Extracts the first value found for <tt><i>key</i></tt> in
+<tt><i>marks</i></tt>, checking the mark table of a continuation before
+checking the table of the continuation that it extends (if any). Keys are
+compared using <tt>eq?</tt>. If no mark for <tt><i>key</i></tt> is found,
+<tt><i>none-val</i></tt> is returned; if <tt><i>none-val</i></tt> is not provided, it
+defaults to <tt>#f</tt>.
+
+<p>
+This function takes amortized time proportional to the number of
+distinct values used as keys in <tt><i>marks</i></tt>. Typically the number of
+keys used in an application is bounded, which makes the computation
+amortized constant-time for those applications.
+
+<p>
+
+<p><tt>(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(values<br>
+
+&nbsp;&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key))))&nbsp;;&nbsp;=&gt;&nbsp;"val2"
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'other<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"nope"))&nbsp;;&nbsp;=&gt;&nbsp;"nope"</tt>
+<p><a name="./control:s16"></a><span class=formdef><b>procedure</b>: <tt>(continuation-marks-&gt;list&nbsp;<i>marks</i>&nbsp;<i>key</i>)</tt></span>
+<br>
+<b>returns: </b>a list
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Returns the list of all values associated with <tt><i>key</i></tt> in
+<tt><i>marks</i></tt>, with the value from a continuation's mark
+table appearing before the values from the mark tables of any other
+continuation that it extends.  Keys are compared using
+<tt>eq?</tt>.
+
+<p>
+This function takes time proportional to the size of the captured mark
+sequence.
+
+<p>
+
+<p><tt>(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(values<br>
+
+&nbsp;&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;&nbsp;(continuation-marks-&gt;list&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'key))))&nbsp;;&nbsp;=&gt;&nbsp;("val2"&nbsp;"val")
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(continuation-marks-&gt;list&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'other))&nbsp;;&nbsp;=&gt;&nbsp;()</tt>
+<p><a name="./control:s17"></a><span class=formdef><b>procedure</b>: <tt>(continuation-marks-&gt;iterator&nbsp;<i>marks</i>&nbsp;<i>key-vector</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(continuation-marks-&gt;iterator&nbsp;<i>marks</i>&nbsp;<i>key-vector</i>&nbsp;<i>none-val</i>)</tt></span>
+<br>
+<b>returns: </b>a procedure
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Generalizes the mark sequence traversal of
+<tt>continuation-marks-&gt;list</tt> to a functional iterator. The
+<tt><i>marks</i></tt> argument must be a continuation mark sequence, and the
+<tt><i>key-vector</i></tt> argument must be a vector of values to be used as
+keys. The result is an iterator procedure of zero arguments.
+
+<p>
+Calling the result iterator procedure (with no arguments) returns two values:
+
+<p>
+<ul>
+
+<p>
+<li>The first result is either a vector of values, one for each key in
+  <tt><i>key-vector</i></tt> (in the order given in <tt><i>key-vector</i></tt>) and drawn from
+  a single continuation's mark table, or <tt>#f</tt> if no more values for
+  any keys are available. The given <tt><i>none-val</i></tt>, which defaults to
+  <tt>#f</tt>, is used for each key that has no value in the table. Only
+  mark tables with mappings for at least one of the keys in
+  <tt><i>key-vector</i></tt> are represented in the iteration, so a result vector
+  will never consist solely of <tt><i>none-val</i></tt> values (unless one or more of the keys
+  is explicitly mapped to <tt><i>none-val</i></tt>).
+
+<p>
+<li>The second result is a new iterator procedure to obtain
+the next vector of values, and so on. When the first result is
+<tt>#f</tt>, the second result is an iterator procedure that will still
+return <tt>#f</tt> as its first result (and a procedure functionally
+equivalent to itself as the second result).
+
+<p>
+</ul>
+<p>
+
+<p>
+Obtaining an iterator from <tt>continuation-marks-&gt;iterator</tt> takes
+constant time. Each call to an iterator takes time proportional to the
+size of continuation mark tables that are traversed to find one of the
+keys in <tt><i>key-vector</i></tt>.
+
+<p>
+
+<p><tt>(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;'other&nbsp;"also"<br>
+
+&nbsp;&nbsp;(values<br>
+
+&nbsp;&nbsp;&nbsp;(with-continuation-mark<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;'key&nbsp;"val2"<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([iter&nbsp;(continuation-marks-&gt;iterator<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(current-continuation-marks)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'#(key&nbsp;other))])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(let-values&nbsp;([(vec&nbsp;iter)&nbsp;(iter)])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(if&nbsp;vec<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(cons&nbsp;vec&nbsp;(loop&nbsp;iter))<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'())))))))&nbsp;;&nbsp;=&gt;&nbsp;(#("val2"&nbsp;#f)&nbsp;#("val"&nbsp;"also"))</tt>
+<p><a name="./control:s18"></a><span class=formdef><b>procedure</b>: <tt>(call-with-immediate-continuation-mark&nbsp;<i>key</i>&nbsp;<i>proc</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(call-with-immediate-continuation-mark&nbsp;<i>key</i>&nbsp;<i>none-val</i>&nbsp;<i>proc</i>)</tt></span>
+<br>
+<b>returns: </b>the value produced by calling <tt><i>proc</i></tt>
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Similar to
+
+<p><tt>&nbsp;(continuation-marks-first&nbsp;(current-continuation-marks)&nbsp;<i>key</i>&nbsp;<i>none-val</i>)</tt>
+<p>but only the immediate continuation's mark table is checked, and the result is
+delivered to <tt><i>proc</i></tt> instead of returned. The <tt><i>proc</i></tt>, which must be
+a procedure that accepts one argument, is called
+in tail position, so its continuation is the same as the one whose
+table is checked.
+
+<p>
+
+<p><tt>(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(call-with-immediate-continuation-mark&nbsp;'key&nbsp;list))&nbsp;;&nbsp;=&gt;&nbsp;("val")
+<br>
+<br>
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(vector&nbsp;(call-with-immediate-continuation-mark&nbsp;'key&nbsp;list)))&nbsp;;&nbsp;=&gt;&nbsp;#((#f))<br>
+
+(with-continuation-mark<br>
+
+&nbsp;'key&nbsp;"val"<br>
+
+&nbsp;(vector&nbsp;(call-with-immediate-continuation-mark&nbsp;'key&nbsp;'no&nbsp;list)))&nbsp;;&nbsp;=&gt;&nbsp;#((no))</tt>
+<p><a name="./control:s19"></a><span class=formdef><b>procedure</b>: <tt>(call-in-continuation&nbsp;<i>continuation</i>&nbsp;<i>procedure</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(call-in-continuation&nbsp;<i>continuation</i>&nbsp;<i>marks</i>&nbsp;<i>procedure</i>)</tt></span>
+<br>
+<b>returns: </b>does not return
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>continuation</i></tt> must be a continuation,
+<tt><i>procedure</i></tt> must be a procedure that accepts zero arguments, and
+<tt><i>marks</i></tt> (if provided) must be a continuation mark sequence.
+
+<p>
+Applies <tt><i>procedure</i></tt> to zero arguments with <tt><i>continuation</i></tt> as
+the continuation of the call, escaping from the current continuation.
+This operation is similar to applying <tt><i>continuation</i></tt> to values,
+except that the values delivered to the continuation are the ones
+produced by <tt><i>procedure</i></tt> as it runs within the applied
+continuation.
+
+<p>
+If <tt><i>marks</i></tt> is not provided, then <tt><i>procedure</i></tt> starts with no
+immediate mark table. Otherwise, <tt><i>marks</i></tt> must be
+consistent with the result of <tt>continuation-next-marks</tt> on
+<tt><i>continuation</i></tt>: either the same content or one additional mark
+table, and the additional mark table becomes the immediate mark table
+when calling <tt><i>procedure</i></tt>.
+
+
+<p>
+
+<h3><a name="g47"></a><a name="./control:h4"></a>Section 6.4. Engines<a name="SECTENGINES"></a></h3>
 
 
 
 <p>
-<a name="./control:s12"></a>Engines are a high-level process abstraction supporting
-<a name="./control:s13"></a><i>timed preemption</i>&nbsp;[<a class=citation href="./bibliography.html#g166">15</a>,<a class=citation href="./bibliography.html#g175">24</a>].
-Engines may be used to simulate <a name="./control:s14"></a>multiprocessing, implement operating
-system kernels, and perform <a name="./control:s15"></a>nondeterministic computations.
+<a name="./control:s20"></a>Engines are a high-level process abstraction supporting
+<a name="./control:s21"></a><i>timed preemption</i>&nbsp;[<a class=citation href="./bibliography.html#g172">15</a>,<a class=citation href="./bibliography.html#g181">24</a>].
+Engines may be used to simulate <a name="./control:s22"></a>multiprocessing, implement operating
+system kernels, and perform <a name="./control:s23"></a>nondeterministic computations.
 
 <p>
-<a name="./control:s16"></a><span class=formdef><b>procedure</b>: <tt>(make-engine&nbsp;<i>thunk</i>)</tt></span>
+<a name="./control:s24"></a><span class=formdef><b>procedure</b>: <tt>(make-engine&nbsp;<i>thunk</i>)</tt></span>
 <br>
 <b>returns: </b>an engine
 <br>
@@ -369,7 +733,7 @@ An engine itself is a procedure of three arguments:
 <p>
 <dl compact>
 <dt><tt><i>ticks</i></tt>:<dd>
-<a name="./control:s17"></a>a positive integer that specifies
+<a name="./control:s25"></a>a positive integer that specifies
 the amount of <i>fuel</i> to be given
 to the engine.
 An engine executes until this fuel runs out or until its computation
@@ -377,7 +741,7 @@ finishes.
 
 <p>
 <dt><tt><i>complete</i></tt>:<dd>
-<a name="./control:s18"></a>a procedure of one or more
+<a name="./control:s26"></a>a procedure of one or more
 arguments that
 specifies what to do if the computation finishes.
 Its arguments are the amount of fuel left over and the
@@ -385,7 +749,7 @@ values produced by the computation.
 
 <p>
 <dt><tt><i>expire</i></tt>:<dd>
-<a name="./control:s19"></a>a procedure of one argument that
+<a name="./control:s27"></a>a procedure of one argument that
 specifies what to do if the fuel runs
 out before the computation finishes.
 Its argument is a new engine capable of continuing the computation
@@ -395,7 +759,7 @@ from the point of interruption.
 <p>
 When an engine is applied to its arguments, it sets up a timer
 to fire in <tt><i>ticks</i></tt> time units.
-(See <tt>set-timer</tt> on page&nbsp;<a href="./system.html#desc:set-timer">330</a>.)
+(See <tt>set-timer</tt> on page&nbsp;<a href="./system.html#desc:set-timer">359</a>.)
 If the engine computation completes before the timer expires, the
 system invokes <tt><i>complete</i></tt>, passing 
 it the number of <tt><i>ticks</i></tt> left over and
@@ -412,7 +776,7 @@ in Section&nbsp;<a href="http://scheme.com/tspl4/./examples.html#g208">12.11</a>
 of <i>The Scheme Programming Language, 4th Edition</i>.
 
 <p>
-Do not use the timer interrupt (see <a name="./control:s20"></a><tt>set-timer</tt>) and <a name="./control:s21"></a>engines
+Do not use the timer interrupt (see <a name="./control:s28"></a><tt>set-timer</tt>) and <a name="./control:s29"></a>engines
 at the same time, since engines are implemented in terms of the timer.
 
 <p>
@@ -459,7 +823,7 @@ Your mileage may vary.)
 
 <p>
 Typically, the engine computation does not finish in one try.
-<a name="./control:s22"></a>The following example displays the use of an engine to
+<a name="./control:s30"></a>The following example displays the use of an engine to
 compute the 10th Fibonacci number in steps.
 
 <p>
@@ -590,8 +954,8 @@ The complete procedure performs the base case, returning the empty
 list, and the expire procedure performs the recursion.
 
 <p>
-The next procedure, <a name="./control:s23"></a><tt>round-robin</tt>, could be the basis for a simple
-time-sharing <a name="./control:s24"></a>operating system.
+The next procedure, <a name="./control:s31"></a><tt>round-robin</tt>, could be the basis for a simple
+time-sharing <a name="./control:s32"></a>operating system.
 <tt>round-robin</tt> maintains a queue of processes (a list of engines),
 cycling through the queue in a <i>round-robin</i> fashion, allowing each
 process to run for a set amount of time.
@@ -644,11 +1008,11 @@ Fibonacci numbers first, regardless of the order of the input list.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'(4&nbsp;5&nbsp;2&nbsp;8&nbsp;3&nbsp;7&nbsp;6&nbsp;2)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(1&nbsp;1&nbsp;2&nbsp;3&nbsp;5&nbsp;8&nbsp;13&nbsp;21)</tt>
 <p>More interesting things can happen if the amount of fuel varies
 each time through the loop.
-<a name="./control:s25"></a>In this case, the computation would
+<a name="./control:s33"></a>In this case, the computation would
 be nondeterministic, i.e., the results would vary from call to call.
 
 <p>
-The following syntactic form, <a name="./control:s26"></a><tt>por</tt> (parallel-or), returns the
+The following syntactic form, <a name="./control:s34"></a><tt>por</tt> (parallel-or), returns the
 first of its expressions to complete with a true value.
 <tt>por</tt> is implemented with the procedure <tt>first-true</tt>, which is
 similar to <tt>round-robin</tt> but quits when any of the engines
@@ -741,7 +1105,7 @@ and passed to the <tt><i>expire</i></tt> procedure.
 
 
 <p>
-<a name="./control:s27"></a><span class=formdef><b>procedure</b>: <tt>(engine-block)</tt></span>
+<a name="./control:s35"></a><span class=formdef><b>procedure</b>: <tt>(engine-block)</tt></span>
 <br>
 <b>returns: </b>does not return
 <br>
@@ -786,7 +1150,7 @@ Any remaining fuel is forfeited.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(set!&nbsp;eng&nbsp;x)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"expired"))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"completed"</tt>
-<p><a name="./control:s28"></a><span class=formdef><b>procedure</b>: <tt>(engine-return&nbsp;<i>obj</i>&nbsp;...)</tt></span>
+<p><a name="./control:s36"></a><span class=formdef><b>procedure</b>: <tt>(engine-return&nbsp;<i>obj</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>does not return
 <br>
@@ -821,11 +1185,11 @@ passed to <tt>engine-return</tt>.
 
 <hr class=copyright align=left>
 <p>
-<a class=plain href="index.html">Chez Scheme Version 9 User's Guide</a><br>
-Copyright &copy; 2022 Cisco Systems, Inc.<br>
+<a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
+Copyright &copy; 2024 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised April 2022 for Chez Scheme Version 9.5.8<br>
+Revised February 2024 for Chez Scheme Version 10.0.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

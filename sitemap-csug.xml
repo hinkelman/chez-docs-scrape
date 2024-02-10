@@ -8,123 +8,123 @@
 
 
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/preface.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/preface.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/intro.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/intro.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/use.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/use.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/debug.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/debug.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/foreign.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/foreign.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/binding.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/binding.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/control.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/control.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/objects.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/objects.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/numeric.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/numeric.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/io.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/io.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/libraries.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/libraries.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/syntax.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/syntax.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/system.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/system.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/smgmt.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/smgmt.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/expeditor.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/expeditor.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/threads.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/threads.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/compat.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/compat.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/bibliography.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/bibliography.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/summary.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/summary.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/csug_1.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/csug_1.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/index.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/index.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/canned/copyright.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/canned/copyright.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://cisco.github.io/ChezScheme/csug9.5/canned/about.html</loc>
-  <lastmod>2022-04-25T15:29:29+00:00</lastmod>
+  <loc>https://cisco.github.io/ChezScheme/csug10.0/canned/about.html</loc>
+  <lastmod>2024-02-05T22:51:20+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 
