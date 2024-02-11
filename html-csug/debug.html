@@ -31,7 +31,7 @@ Scheme programmers, might want to consult
 the tutorial "How to Debug Chez Scheme Programs."
 HTML and PDF versions
 are available at
-<a  href=http://www.cs.indiana.edu/chezscheme/debug/>http://www.cs.indiana.edu/chezscheme/debug/</a>.
+<a  href=https://scheme.com/debug/debug.html>https://scheme.com/debug/debug.html</a>.
 
 
 <p>
@@ -842,7 +842,7 @@ span multiple lines.
 <p>
 <p><tt>file</tt> <tt><i>path</i></tt> opens the source file at the specified path for
 listing.
-The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g116">12.5</a>)
+The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
 determines the set of directories
 searched for source files.
 
@@ -927,7 +927,7 @@ accessible by name, and the others must be accessed by number.
 <p>
 <p><tt>file</tt> opens the source file containing the pending call,
 if known.
-The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g116">12.5</a>)
+The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
 determines the list of source directories searched for source files
 identified by relative path names.
 
@@ -1273,7 +1273,7 @@ returns an inspector object containing the contents of the box.
 
 <p>
 <p><b>TLC inspector objects.</b>
-Box inspector objects contain <i>Chez&nbsp;Scheme</i> boxes.
+TLC inspector objects contain <i>Chez&nbsp;Scheme</i> transport link cells.
 
 <p>
 <p><tt>(</tt><i>tlc-object</i> <tt>'type</tt><tt>)</tt>
@@ -1442,7 +1442,7 @@ The search may be unsuccessful even if a file by the expected
 name is found in the path if the file has been modified since the source
 code was compiled.
 If no file name is known, no values are returned.
-The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g116">12.5</a>)
+The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
 determines the set of directories
 searched for source files identified by relative path names.
 
@@ -1466,6 +1466,12 @@ may not always be accurate.
 procedure.
 
 <p>
+<p><tt>(</tt><i>code-object</i> <tt>'realm</tt><tt>)</tt>
+returns a symbol or <tt>#f</tt>. The realm of a code object is determined
+by the <tt>compile-procedure-realm</tt> parameter at the time that the code
+object is compiled.
+
+<p>
 <p><tt>(</tt><i>code-object</i> <tt>'source</tt><tt>)</tt>
 returns an inspector object containing the source information attached
 to the code object or <tt>#f</tt> if no source information is attached.
@@ -1487,7 +1493,7 @@ The search may be unsuccessful even if a file by the expected
 name is found in the path if the file has been modified since the source
 code was compiled.
 If no file name is known, no values are returned.
-The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g116">12.5</a>)
+The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
 determines the set of directories
 searched for source files identified by relative path names.
 
@@ -1514,7 +1520,7 @@ returns a symbol or <tt>#f</tt>.
 compiler-generated temporary variable.
 Variable names are not retained when the parameter
 <tt>generate-inspector-information</tt>
-(page&nbsp;<a href="./system.html#g117">12.6</a>)
+(page&nbsp;<a href="./system.html#g120">12.6</a>)
 is false during compilation.
 
 <p>
@@ -1748,6 +1754,15 @@ of all objects in the heap is sufficient,
 more efficient.
 
 <p>
+The procedure <tt>compute-size-increments</tt> is similar to
+<tt>compute-size</tt> mapped over a list of elements, but it reports a
+size for each later element without including the size of objects
+reachable from ealier elements, and it treats weak and ephemeron pairs
+differently. For a large number of reachable objects,
+<tt>compute-size-increments</tt> uses much less memory than
+<tt>compute-size</tt>.
+
+<p>
 These procedures treat immediate objects such as fixnums, booleans, and
 characters as zero-count, zero-byte leaves.
 
@@ -1796,6 +1811,11 @@ If <tt><i>generation</i></tt> is not supplied, it defaults to the value of
 <tt><i>object</i></tt> and anything reachable from <tt><i>object</i></tt> in any generation
 less than or equal to <tt><i>generation</i></tt>.
 Immediate values such as fixnums, booleans, and characters have zero size.
+Size computation for a thread is limited when the thread is still active,
+since its full continuation cannot be inspected in that case, but the
+full continuation is inspected if the thread is inactive (such as during
+a garbage collection rendezvous when a different thread is selected by
+the rendezvous).
 
 <p>
 The following examples are valid for machines with 32-bit pointers.
@@ -1900,17 +1920,81 @@ The following examples are valid for machines with 32-bit pointers.
 &nbsp;&nbsp;0)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;((pair&nbsp;1&nbsp;.&nbsp;8)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(#&lt;record&nbsp;type&nbsp;frob&gt;&nbsp;1&nbsp;.&nbsp;8))</tt>
+<p><a name="./debug:s32"></a><span class=formdef><b>procedure</b>: <tt>(compute-size-increments&nbsp;<i>list</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(compute-size-increments&nbsp;<i>list</i>&nbsp;<i>generation</i>)</tt></span>
+<br>
+<b>returns: </b>a list as described below
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>list</i></tt> must be a list, but each element can be any object.
+<tt><i>generation</i></tt> must be a fixnum between 0 and the value of
+<tt>collect-maximum-generation</tt>, inclusive, or the symbol
+<tt>static</tt>.
+If <tt><i>generation</i></tt> is not supplied, it defaults to the value of
+<tt>collect-maximum-generation</tt>.
+In the threaded versions of <i>Chez&nbsp;Scheme</i>, the thread that invokes
+<tt>compute-size-increments</tt> must be the only active thread.
+
+<p>
+<tt>compute-size-increments</tt> is like mapping <tt>compute-size</tt>
+over <tt><i>list</i></tt>, except that any object reachable from an earlier
+element of <tt><i>list</i></tt> is not treated as reachable by a later element
+of <tt><i>list</i></tt>. In addition, each immediate element of <tt><i>list</i></tt> is
+not treated as reachable by earlier elements of <tt><i>list</i></tt>---although
+other values reachable from later elements of <tt><i>list</i></tt> may be
+considered reachable from earlier elements.
+
+<p>
+Unlike <tt><i>compute-size</i></tt>, <tt>compute-size-increments</tt> does not
+consider the <tt>car</tt> of a weak pair reachable from the weak pair.
+It also does not consider the <tt>car</tt> or <tt>cdr</tt> of an
+ephemeron pair to be reachable from the ephemeron pair, unless the
+<tt>car</tt> is already determined to be reachable (perhaps from an
+earlier element of <tt><i>list</i></tt>); if the <tt>car</tt> of an ephemeron
+pair is discovered to be reachable later (perhaps from a later element
+of <tt><i>list</i></tt>), then the <tt>cdr</tt> of the ephemeron pair is
+considered to be reachable from the <tt>car</tt>, which has the effect
+of charging the memory of the <tt>cdr</tt> to the same element of
+<tt><i>list</i></tt> as the memory of the <tt>car</tt>.
+
+<p>
+The following examples are valid for machines with 32-bit pointers.
+
+<p>
+
+<p><tt>(compute-size-increments&nbsp;(list&nbsp;0))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(0)<br>
+
+(compute-size-increments&nbsp;(list&nbsp;(cons&nbsp;0&nbsp;0)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(8)<br>
+
+(compute-size-increments&nbsp;(list&nbsp;(cons&nbsp;0&nbsp;0)&nbsp;(cons&nbsp;0&nbsp;0)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(8&nbsp;8)<br>
+
+(compute-size-increments&nbsp;(let&nbsp;([p&nbsp;(cons&nbsp;0&nbsp;0)])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;p&nbsp;p)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(8&nbsp;0)<br>
+
+(compute-size-increments&nbsp;(let&nbsp;([p&nbsp;(cons&nbsp;0&nbsp;0)])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;(cons&nbsp;1&nbsp;p)&nbsp;(cons&nbsp;1&nbsp;p))))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(16&nbsp;8)<br>
+
+(compute-size-increments&nbsp;(list&nbsp;(ephemeron-cons&nbsp;0&nbsp;0)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(16)<br>
+
+(compute-size-increments&nbsp;(let*&nbsp;([p&nbsp;(cons&nbsp;0&nbsp;0)]<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[e&nbsp;(ephemeron-cons&nbsp;p&nbsp;(cons&nbsp;0&nbsp;0))])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(list&nbsp;e&nbsp;p)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;(16&nbsp;16)</tt>
 <p>
 
 
 
 <hr class=copyright align=left>
 <p>
-<a class=plain href="index.html">Chez Scheme Version 9 User's Guide</a><br>
-Copyright &copy; 2022 Cisco Systems, Inc.<br>
+<a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
+Copyright &copy; 2024 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised April 2022 for Chez Scheme Version 9.5.8<br>
+Revised February 2024 for Chez Scheme Version 10.0.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

@@ -4,7 +4,7 @@
 
 <html>
 <head>
-<title>Chez Scheme Version 9 User's Guide</title>
+<title>Chez Scheme Version 10 User's Guide</title>
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
@@ -16,7 +16,7 @@
 <p>
 <table><tr>
 <td><img src="canned/cisco-logo.png"><br></td>
-<td style="padding-left: 2em"><span class=title>Chez Scheme Version 9<br>User's Guide</span></td>
+<td style="padding-left: 2em"><span class=title>Chez Scheme Version 10<br>User's Guide</span></td>
 </tr></table>
 
 
@@ -105,13 +105,15 @@
 
 <li><b><a class=toc href="./foreign.html#./foreign:h5">Section 4.5.  Foreign Data</a></b>
 
-<li><b><a class=toc href="./foreign.html#./foreign:h6">Section 4.6.  Providing Access to Foreign Procedures</a></b>
+<li><b><a class=toc href="./foreign.html#./foreign:h6">Section 4.6.  Foreign Arrays of Managed Objects</a></b>
 
-<li><b><a class=toc href="./foreign.html#./foreign:h7">Section 4.7.  Using Other Foreign Languages</a></b>
+<li><b><a class=toc href="./foreign.html#./foreign:h7">Section 4.7.  Providing Access to Foreign Procedures</a></b>
 
-<li><b><a class=toc href="./foreign.html#./foreign:h8">Section 4.8.  C Library Routines</a></b>
+<li><b><a class=toc href="./foreign.html#./foreign:h8">Section 4.8.  Using Other Foreign Languages</a></b>
 
-<li><b><a class=toc href="./foreign.html#./foreign:h9">Section 4.9.  Example: Socket Operations</a></b>
+<li><b><a class=toc href="./foreign.html#./foreign:h9">Section 4.9.  C Library Routines</a></b>
+
+<li><b><a class=toc href="./foreign.html#./foreign:h10">Section 4.10.  Example: Socket Operations</a></b>
 
 </ul><p>
 
@@ -158,25 +160,29 @@
 
 <li><b><a class=toc href="./objects.html#./objects:h6">Section 7.6.  Fixnum-Only Vectors</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h7">Section 7.7.  Bytevectors</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h7">Section 7.7.  Flonum-Only Vectors</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h8">Section 7.8.  Boxes</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h8">Section 7.8.  Bytevectors</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h9">Section 7.9.  Symbols</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h9">Section 7.9.  Stencil Vectors</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h10">Section 7.10.  Void</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h10">Section 7.10.  Boxes</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h11">Section 7.11.  Sorting</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h11">Section 7.11.  Symbols</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h12">Section 7.12.  Hashtables</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h12">Section 7.12.  Void</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h13">Section 7.13.  Record Types</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h13">Section 7.13.  Sorting</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h14">Section 7.14.  Record Equality and Hashing</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h14">Section 7.14.  Hashtables</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h15">Section 7.15.  Legacy Record Types</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h15">Section 7.15.  Record Types</a></b>
 
-<li><b><a class=toc href="./objects.html#./objects:h16">Section 7.16.  Procedures</a></b>
+<li><b><a class=toc href="./objects.html#./objects:h16">Section 7.16.  Record Equality and Hashing</a></b>
+
+<li><b><a class=toc href="./objects.html#./objects:h17">Section 7.17.  Legacy Record Types</a></b>
+
+<li><b><a class=toc href="./objects.html#./objects:h18">Section 7.18.  Procedures</a></b>
 
 </ul><p>
 
@@ -332,6 +338,10 @@
 
 <li><b><a class=toc href="./smgmt.html#./smgmt:h3">Section 13.3.  Locking Objects</a></b>
 
+<li><b><a class=toc href="./smgmt.html#./smgmt:h4">Section 13.4.  Immobile Objects</a></b>
+
+<li><b><a class=toc href="./smgmt.html#./smgmt:h5">Section 13.5.  Phantom Bytevectors</a></b>
+
 </ul><p>
 
 <li><b><a class=toc href="./expeditor.html#./expeditor:h0">Chapter 14.  Expression Editor</a></b>
@@ -362,11 +372,13 @@
 
 <li><b><a class=toc href="./threads.html#./threads:h6">Section 15.6.  Reference counting with ftype guardians</a></b>
 
-<li><b><a class=toc href="./threads.html#./threads:h7">Section 15.7.  Thread Parameters</a></b>
+<li><b><a class=toc href="./threads.html#./threads:h7">Section 15.7.  Memory Consistency</a></b>
 
-<li><b><a class=toc href="./threads.html#./threads:h8">Section 15.8.  Buffered I/O</a></b>
+<li><b><a class=toc href="./threads.html#./threads:h8">Section 15.8.  Thread Parameters</a></b>
 
-<li><b><a class=toc href="./threads.html#./threads:h9">Section 15.9.  Example: Bounded Queues</a></b>
+<li><b><a class=toc href="./threads.html#./threads:h9">Section 15.9.  Buffered I/O</a></b>
+
+<li><b><a class=toc href="./threads.html#./threads:h10">Section 15.10.  Example: Bounded Queues</a></b>
 
 </ul><p>
 
@@ -391,11 +403,11 @@
 </ul>
 <hr class=copyright align=left>
 <p>
-<a class=plain href="index.html">Chez Scheme Version 9 User's Guide</a><br>
-Copyright &copy; 2022 Cisco Systems, Inc.<br>
+<a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
+Copyright &copy; 2024 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised April 2022 for Chez Scheme Version 9.5.8<br>
+Revised February 2024 for Chez Scheme Version 10.0.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 

@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g64"></a>
+<a name="g67"></a>
 <a name="./numeric:h0"></a>
 
 <h1>Chapter 8. Numeric Operations<a name="CHPTNUMERIC"></a></h1>
@@ -109,7 +109,7 @@ while IEEE NANs are printed as <tt>+nan.0</tt> or <tt>-nan.0</tt>.
 (/&nbsp;+inf.0&nbsp;-inf.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;+nan.0</tt>
 <p>The first section of this chapter describes type-specific numeric type
 predicates.
-Sections&nbsp;<a href="./numeric.html#g66">8.2</a> through&nbsp;<a href="./numeric.html#g68">8.4</a>
+Sections&nbsp;<a href="./numeric.html#g69">8.2</a> through&nbsp;<a href="./numeric.html#g71">8.4</a>
 describe fast, type-specific
 numeric operations on fixnums, flonums, and inexact complex numbers
 (flonums and/or inexact complexnums).
@@ -121,17 +121,17 @@ The flonum-specific versions should be used only when the
 inputs and outputs (where appropriate) are certain to be flonums.
 The mixed flonum/complexnum versions should be used only when the
 inputs are certain to be either flonums or inexact complexnums.
-Section&nbsp;<a href="./numeric.html#g69">8.5</a> describes operations, both
+Section&nbsp;<a href="./numeric.html#g72">8.5</a> describes operations, both
 arbitrary precision and fixnum-specific, that allow
 exact integers to be treated as sets or sequences of bits.
-Random number generation is covered Section&nbsp;<a href="./numeric.html#g70">8.6</a>,
+Random number generation is covered Section&nbsp;<a href="./numeric.html#g73">8.6</a>,
 and miscellaneous numeric operations are covered in the
-Section&nbsp;<a href="./numeric.html#g71">8.7</a>.
+Section&nbsp;<a href="./numeric.html#g74">8.7</a>.
 
 
 <p>
 
-<h3><a name="g65"></a><a name="./numeric:h1"></a>Section 8.1. Numeric Type Predicates</h3>
+<h3><a name="g68"></a><a name="./numeric:h1"></a>Section 8.1. Numeric Type Predicates</h3>
 
 
 
@@ -202,7 +202,7 @@ flonums or inexact complex numbers.
 
 (cflonum?&nbsp;+1.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
 <p>
-<h3><a name="g66"></a><a name="./numeric:h2"></a>Section 8.2. Fixnum Operations<a name="SECTNUMERICFIXNUM"></a></h3>
+<h3><a name="g69"></a><a name="./numeric:h2"></a>Section 8.2. Fixnum Operations<a name="SECTNUMERICFIXNUM"></a></h3>
 
 
 
@@ -375,7 +375,22 @@ dividing <tt><i>fixnum<sub>1</sub></i></tt> by the product of the remaining argu
 (fx/&nbsp;-9&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-4<br>
 
 (fx/&nbsp;60&nbsp;5&nbsp;3&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2</tt>
-<p><a name="./numeric:s21"></a><span class=formdef><b>procedure</b>: <tt>(fx1+&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s21"></a><span class=formdef><b>procedure</b>: <tt>(fx+/wraparound&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(fx-/wraparound&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(fx*/wraparound&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(fxsll/wraparound&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<br>
+<b>returns: </b>the arithmetic result, wrapping on overflow
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>These functions are like <tt>fx+</tt>, <tt>fx-</tt>, <tt>fx*</tt>, and
+<tt>fxsll</tt>, but when the result is too large to fit in a fixnum,
+as many high bits of the result as necessary are discarded to make the result representable
+as a fixnum.
+
+<p>
+<a name="./numeric:s22"></a><span class=formdef><b>procedure</b>: <tt>(fx1+&nbsp;<i>fixnum</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(fx1-&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>fixnum</i></tt> plus 1 or <tt><i>fixnum</i></tt> minus 1
@@ -402,7 +417,7 @@ dividing <tt><i>fixnum<sub>1</sub></i></tt> by the product of the remaining argu
 <p><tt>(define&nbsp;fx1+&nbsp;(lambda&nbsp;(x)&nbsp;(fx+&nbsp;x&nbsp;1)))<br>
 
 (define&nbsp;fx1-&nbsp;(lambda&nbsp;(x)&nbsp;(fx-&nbsp;x&nbsp;1)))</tt>
-<p><a name="./numeric:s22"></a><span class=formdef><b>procedure</b>: <tt>(fxquotient&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s23"></a><span class=formdef><b>procedure</b>: <tt>(fxquotient&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>see explanation
 <br>
@@ -413,7 +428,7 @@ See the description of <tt>fx/</tt> above.
 
 
 <p>
-<a name="./numeric:s23"></a><span class=formdef><b>procedure</b>: <tt>(fxremainder&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
+<a name="./numeric:s24"></a><span class=formdef><b>procedure</b>: <tt>(fxremainder&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
 <br>
 <b>returns: </b>the fixnum remainder of <tt><i>fixnum<sub>1</sub></i></tt> divided by <tt><i>fixnum<sub>2</sub></i></tt>
 <br>
@@ -432,7 +447,7 @@ See the description of <tt>fx/</tt> above.
 (fxremainder&nbsp;10&nbsp;-3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1<br>
 
 (fxremainder&nbsp;-17&nbsp;-9)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-8</tt>
-<p><a name="./numeric:s24"></a><span class=formdef><b>procedure</b>: <tt>(fxmodulo&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
+<p><a name="./numeric:s25"></a><span class=formdef><b>procedure</b>: <tt>(fxmodulo&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
 <br>
 <b>returns: </b>the fixnum modulus of <tt><i>fixnum<sub>1</sub></i></tt> and <tt><i>fixnum<sub>2</sub></i></tt>
 <br>
@@ -451,7 +466,7 @@ See the description of <tt>fx/</tt> above.
 (fxmodulo&nbsp;10&nbsp;-3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-2<br>
 
 (fxmodulo&nbsp;-17&nbsp;-9)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-8</tt>
-<p><a name="./numeric:s25"></a><span class=formdef><b>procedure</b>: <tt>(fxabs&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s26"></a><span class=formdef><b>procedure</b>: <tt>(fxabs&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b>the absolute value of <tt><i>fixnum</i></tt>
 <br>
@@ -465,7 +480,7 @@ See the description of <tt>fx/</tt> above.
 
 (fxabs&nbsp;0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;0</tt>
 <p>
-<h3><a name="g67"></a><a name="./numeric:h3"></a>Section 8.3. Flonum Operations<a name="SECTNUMERICFLONUM"></a></h3>
+<h3><a name="g70"></a><a name="./numeric:h3"></a>Section 8.3. Flonum Operations<a name="SECTNUMERICFLONUM"></a></h3>
 
 
 
@@ -493,7 +508,7 @@ to <tt>fl-make-rectangular</tt>, <tt>make-rectangular</tt>, or
 format.
 
 <p>
-<a name="./numeric:s26"></a><span class=formdef><b>procedure</b>: <tt>(flonum-&gt;fixnum&nbsp;<i>flonum</i>)</tt></span>
+<a name="./numeric:s27"></a><span class=formdef><b>procedure</b>: <tt>(flonum-&gt;fixnum&nbsp;<i>flonum</i>)</tt></span>
 <br>
 <b>returns: </b>the fixnum representation of <tt><i>flonum</i></tt>, truncated
 <br>
@@ -501,7 +516,7 @@ format.
 
 <p>The truncated value of <tt><i>flonum</i></tt> must fall within the fixnum range.
 <tt>flonum-&gt;fixnum</tt> is a restricted version of
-<a name="./numeric:s27"></a><tt>exact</tt>,
+<a name="./numeric:s28"></a><tt>exact</tt>,
 which converts any numeric representation
 to its exact equivalent.
 
@@ -512,7 +527,7 @@ to its exact equivalent.
 (flonum-&gt;fixnum&nbsp;3.9)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3<br>
 
 (flonum-&gt;fixnum&nbsp;-2.2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-2</tt>
-<p><a name="./numeric:s28"></a><span class=formdef><b>procedure</b>: <tt>(fl=&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s29"></a><span class=formdef><b>procedure</b>: <tt>(fl=&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(fl&lt;&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(fl&gt;&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(fl&lt;=&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>&nbsp;...)</tt></span>
@@ -565,7 +580,7 @@ suffix.
 (fl&lt;&nbsp;+nan.0&nbsp;+nan.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f<br>
 
 (fl&gt;&nbsp;+nan.0&nbsp;+nan.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f</tt>
-<p><a name="./numeric:s29"></a><span class=formdef><b>procedure</b>: <tt>(flnonpositive?&nbsp;<i>fl</i>)</tt></span>
+<p><a name="./numeric:s30"></a><span class=formdef><b>procedure</b>: <tt>(flnonpositive?&nbsp;<i>fl</i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if <tt><i>fl</i></tt> is not greater than zero, <tt>#f</tt> otherwise
 <br><span class=formdef><b>procedure</b>: <tt>(flnonnegative?&nbsp;<i>fl</i>)</tt></span>
@@ -610,7 +625,17 @@ are considered nonpositive and nonnegative.
 (flnonnegative?&nbsp;+inf.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t<br>
 
 (flnonnegative?&nbsp;-inf.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f</tt>
-<p><a name="./numeric:s30"></a><span class=formdef><b>procedure</b>: <tt>(decode-float&nbsp;<i>x</i>)</tt></span>
+<p><a name="./numeric:s31"></a><span class=formdef><b>procedure</b>: <tt>(flsingle&nbsp;<i>fl</i>)</tt></span>
+<br>
+<b>returns: </b>a possibly less precise variant of <tt><i>fl</i></tt>
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Potentially discards precision from <tt><i>fl</i></tt> so that the result is
+representable as a 32-bit IEEE floating-point number.
+
+<p>
+<a name="./numeric:s32"></a><span class=formdef><b>procedure</b>: <tt>(decode-float&nbsp;<i>x</i>)</tt></span>
 <br>
 <b>returns: </b>see below
 <br>
@@ -649,7 +674,7 @@ It is useful primarily in the printing of floating-point numbers.
 (slow-identity&nbsp;1.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1.0<br>
 
 (slow-identity&nbsp;-1e20)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-1e20</tt>
-<p><a name="./numeric:s31"></a><span class=formdef><b>procedure</b>: <tt>(fllp&nbsp;<i>flonum</i>)</tt></span>
+<p><a name="./numeric:s33"></a><span class=formdef><b>procedure</b>: <tt>(fllp&nbsp;<i>flonum</i>)</tt></span>
 <br>
 <b>returns: </b>see below
 <br>
@@ -682,7 +707,7 @@ the number.
 
 (fllp&nbsp;#b1.0e-10000000000)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;0</tt>
 <p>
-<h3><a name="g68"></a><a name="./numeric:h4"></a>Section 8.4. Inexact Complex Operations<a name="SECTNUMERICCOMPLEXNUM"></a></h3>
+<h3><a name="g71"></a><a name="./numeric:h4"></a>Section 8.4. Inexact Complex Operations<a name="SECTNUMERICCOMPLEXNUM"></a></h3>
 
 
 
@@ -693,12 +718,12 @@ Inexact complex numbers with nonzero imaginary parts are represented as
 <i>inexact complexnums</i>.
 An inexact complexnum contains two 64-bit double-precision floating point
 numbers.
-Inexact <a name="./numeric:s32"></a><a name="./numeric:s33"></a>complex numbers
+Inexact <a name="./numeric:s34"></a><a name="./numeric:s35"></a>complex numbers
 with imaginary parts equal to zero (in other words, inexact real numbers)
 may be represented as either inexact complexnums or flonums.
 The operations described in this section accept any mix of
 inexact complexnum and flonum arguments
-(collectively, "<a name="./numeric:s34"></a>cflonums").
+(collectively, "<a name="./numeric:s36"></a>cflonums").
 
 <p>
 In most cases, the operations are performed with minimal type checking
@@ -709,7 +734,7 @@ to set them apart from their generic counterparts.
 
 
 <p>
-<a name="./numeric:s35"></a><span class=formdef><b>procedure</b>: <tt>(fl-make-rectangular&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>)</tt></span>
+<a name="./numeric:s37"></a><span class=formdef><b>procedure</b>: <tt>(fl-make-rectangular&nbsp;<i>flonum<sub>1</sub></i>&nbsp;<i>flonum<sub>2</sub></i>)</tt></span>
 <br>
 <b>returns: </b>an inexact complexnum 
 <br>
@@ -725,7 +750,7 @@ to <tt><i>flonum<sub>1</sub></i></tt> and imaginary part equal to <tt><i>flonum<
 (fl-make-rectangular&nbsp;2.0&nbsp;0.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2.0+0.0i<br>
 
 (fl-make-rectangular&nbsp;2.0&nbsp;-0.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2.0-0.0i</tt>
-<p><a name="./numeric:s36"></a><span class=formdef><b>procedure</b>: <tt>(cfl-real-part&nbsp;<i>cflonum</i>)</tt></span>
+<p><a name="./numeric:s38"></a><span class=formdef><b>procedure</b>: <tt>(cfl-real-part&nbsp;<i>cflonum</i>)</tt></span>
 <br>
 <b>returns: </b>the real part of <tt><i>cflonum</i></tt>
 <br><span class=formdef><b>procedure</b>: <tt>(cfl-imag-part&nbsp;<i>cflonum</i>)</tt></span>
@@ -743,7 +768,7 @@ to <tt><i>flonum<sub>1</sub></i></tt> and imaginary part equal to <tt><i>flonum<
 (cfl-imag-part&nbsp;2.0-0.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-0.0<br>
 
 (cfl-imag-part&nbsp;2.0-inf.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-inf.0</tt>
-<p><a name="./numeric:s37"></a><span class=formdef><b>procedure</b>: <tt>(cfl=&nbsp;<i>cflonum</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s39"></a><span class=formdef><b>procedure</b>: <tt>(cfl=&nbsp;<i>cflonum</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if its arguments are equal, <tt>#f</tt> otherwise
 <br>
@@ -756,7 +781,7 @@ to <tt><i>flonum<sub>1</sub></i></tt> and imaginary part equal to <tt><i>flonum<
 (cfl=&nbsp;1.0+2.0i&nbsp;1.0+2.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t<br>
 
 (cfl=&nbsp;1.0+2.0i&nbsp;1.0-2.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f</tt>
-<p><a name="./numeric:s38"></a><span class=formdef><b>procedure</b>: <tt>(cfl+&nbsp;<i>cflonum</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s40"></a><span class=formdef><b>procedure</b>: <tt>(cfl+&nbsp;<i>cflonum</i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(cfl*&nbsp;<i>cflonum</i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(cfl-&nbsp;<i>cflonum<sub>1</sub></i>&nbsp;<i>cflonum<sub>2</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(cfl/&nbsp;<i>cflonum<sub>1</sub></i>&nbsp;<i>cflonum<sub>2</sub></i>&nbsp;...)</tt></span>
@@ -809,7 +834,7 @@ of its remaining arguments.
 (cfl*&nbsp;1.0+2.0i&nbsp;3.0+4.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-5.0+10.0i<br>
 
 (cfl/&nbsp;-5.0+10.0i&nbsp;1.0+2.0i&nbsp;2.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1.5+2.0i</tt>
-<p><a name="./numeric:s39"></a><span class=formdef><b>procedure</b>: <tt>(cfl-conjugate&nbsp;<i>cflonum</i>)</tt></span>
+<p><a name="./numeric:s41"></a><span class=formdef><b>procedure</b>: <tt>(cfl-conjugate&nbsp;<i>cflonum</i>)</tt></span>
 <br>
 <b>returns: </b>complex conjugate of <tt><i>cflonum</i></tt>
 <br>
@@ -819,7 +844,7 @@ of its remaining arguments.
 <i>a</i> + <i>bi</i>, returns its complex conjugate <i>a</i> + (-<i>b</i>)<i>i</i>.
 
 <p>
-See also <a name="./numeric:s40"></a><tt>conjugate</tt>, which is a generic
+See also <a name="./numeric:s42"></a><tt>conjugate</tt>, which is a generic
 version of this operator that returns the complex conjugate of any
 valid representation for a complex number.
 
@@ -830,7 +855,7 @@ valid representation for a complex number.
 (cfl-conjugate&nbsp;3.0+4.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3.0-4.0i<br>
 
 (cfl-conjugate&nbsp;1e-20-2e-30i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1e-20+2e-30i</tt>
-<p><a name="./numeric:s41"></a><span class=formdef><b>procedure</b>: <tt>(cfl-magnitude-squared&nbsp;<i>cflonum</i>)</tt></span>
+<p><a name="./numeric:s43"></a><span class=formdef><b>procedure</b>: <tt>(cfl-magnitude-squared&nbsp;<i>cflonum</i>)</tt></span>
 <br>
 <b>returns: </b>magnitude of <tt><i>cflonum</i></tt> squared
 <br>
@@ -841,11 +866,11 @@ argument <i>a</i> + <i>bi</i> returns a flonum representing the magnitude of the
 argument squared, i.e., <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>.
 
 <p>
-See also <a name="./numeric:s42"></a><tt>magnitude-squared</tt>,
+See also <a name="./numeric:s44"></a><tt>magnitude-squared</tt>,
 which is a generic version of this
 operator that returns the magnitude squared of any valid representation
 for a complex number.
-Both operations are similar to the <a name="./numeric:s43"></a><tt>magnitude</tt> procedure,
+Both operations are similar to the <a name="./numeric:s45"></a><tt>magnitude</tt> procedure,
 which returns the magnitude, <i>sqrt</i>(<i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>), of its generic complex
 argument.
 
@@ -855,7 +880,7 @@ argument.
 
 (cfl-magnitude-squared&nbsp;3.0-4.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;25.0</tt>
 <p>
-<h3><a name="g69"></a><a name="./numeric:h5"></a>Section 8.5. Bitwise and Logical Operators<a name="SECTNUMERICLOGICAL"></a></h3>
+<h3><a name="g72"></a><a name="./numeric:h5"></a>Section 8.5. Bitwise and Logical Operators<a name="SECTNUMERICLOGICAL"></a></h3>
 
 
 
@@ -898,7 +923,7 @@ Logical shifts do not make sense for arbitrary-precision integers,
 since these have no "left end" into which bits must be shifted.
 
 <p>
-<a name="./numeric:s44"></a><span class=formdef><b>procedure</b>: <tt>(logand&nbsp;<i>int</i>&nbsp;...)</tt></span>
+<a name="./numeric:s46"></a><span class=formdef><b>procedure</b>: <tt>(logand&nbsp;<i>int</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "and" of the arguments <tt><i>int</i>&nbsp;...</tt>
 <br>
@@ -925,7 +950,7 @@ With no arguments, <tt>logand</tt> returns -1, i.e., all bits set.
 (logand&nbsp;#x173C8D95&nbsp;-8)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#x173C8D90<br>
 
 (logand&nbsp;#b1100&nbsp;#b1111&nbsp;#b1101)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1100</tt>
-<p><a name="./numeric:s45"></a><span class=formdef><b>procedure</b>: <tt>(logior&nbsp;<i>int</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s47"></a><span class=formdef><b>procedure</b>: <tt>(logior&nbsp;<i>int</i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(logor&nbsp;<i>int</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "or" of the arguments <tt><i>int</i>&nbsp;...</tt>
@@ -953,7 +978,7 @@ With no arguments, <tt>logior</tt> returns 0, i.e., all bits reset.
 (logior&nbsp;#b1000&nbsp;#b0100&nbsp;#b0010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1110<br>
 
 (apply&nbsp;logior&nbsp;'(1&nbsp;2&nbsp;4&nbsp;8&nbsp;16))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;31</tt>
-<p><a name="./numeric:s46"></a><span class=formdef><b>procedure</b>: <tt>(logxor&nbsp;<i>int</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s48"></a><span class=formdef><b>procedure</b>: <tt>(logxor&nbsp;<i>int</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "exclusive or" of the arguments <tt><i>int</i>&nbsp;...</tt>
 <br>
@@ -978,7 +1003,7 @@ With no arguments, <tt>logxor</tt> returns 0, i.e., all bits reset.
 (logxor&nbsp;#b111000&nbsp;#b101010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b010010<br>
 
 (logxor&nbsp;#b1100&nbsp;#b0100&nbsp;#b0110)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1110</tt>
-<p><a name="./numeric:s47"></a><span class=formdef><b>procedure</b>: <tt>(lognot&nbsp;<i>int</i>)</tt></span>
+<p><a name="./numeric:s49"></a><span class=formdef><b>procedure</b>: <tt>(lognot&nbsp;<i>int</i>)</tt></span>
 <br>
 <b>returns: </b>the logical "not" of <tt><i>int</i></tt>
 <br>
@@ -996,7 +1021,7 @@ as a two's complement integer, regardless of the underlying representation.
 (lognot&nbsp;7)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-8<br>
 
 (lognot&nbsp;-8)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;7</tt>
-<p><a name="./numeric:s48"></a><span class=formdef><b>procedure</b>: <tt>(logbit?&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
+<p><a name="./numeric:s50"></a><span class=formdef><b>procedure</b>: <tt>(logbit?&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if the specified bit is set, otherwise <tt>#f</tt>
 <br>
@@ -1056,7 +1081,7 @@ all considered to be one.
 <br>
 <br>
 (logbit?&nbsp;20000&nbsp;(ash&nbsp;1&nbsp;20000))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s49"></a><span class=formdef><b>procedure</b>: <tt>(logtest&nbsp;<i>int<sub>1</sub></i>&nbsp;<i>int<sub>2</sub></i>)</tt></span>
+<p><a name="./numeric:s51"></a><span class=formdef><b>procedure</b>: <tt>(logtest&nbsp;<i>int<sub>1</sub></i>&nbsp;<i>int<sub>2</sub></i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if any common bits are set, otherwise <tt>#f</tt>
 <br>
@@ -1100,7 +1125,7 @@ It returns <tt>#f</tt> if the two arguments have no set bits in common.
 <br>
 <br>
 (logtest&nbsp;(ash&nbsp;#b101&nbsp;20000)&nbsp;(ash&nbsp;#b111&nbsp;20000))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s50"></a><span class=formdef><b>procedure</b>: <tt>(logbit0&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
+<p><a name="./numeric:s52"></a><span class=formdef><b>procedure</b>: <tt>(logbit0&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
 <br>
 <b>returns: </b>the result of clearing bit <tt><i>index</i></tt> of <tt><i>int</i></tt>
 <br>
@@ -1130,7 +1155,7 @@ As with <tt>logbit?</tt>, there is no upper limit on the index.
 (logbit0&nbsp;4&nbsp;#b10101010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b10101010<br>
 
 (logbit0&nbsp;0&nbsp;-1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-2</tt>
-<p><a name="./numeric:s51"></a><span class=formdef><b>procedure</b>: <tt>(logbit1&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
+<p><a name="./numeric:s53"></a><span class=formdef><b>procedure</b>: <tt>(logbit1&nbsp;<i>index</i>&nbsp;<i>int</i>)</tt></span>
 <br>
 <b>returns: </b>the result of setting bit <tt><i>index</i></tt> of <tt><i>int</i></tt>
 <br>
@@ -1162,7 +1187,7 @@ As with <tt>logbit?</tt>, there is no upper limit on the index.
 (logbit1&nbsp;4&nbsp;0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b10000<br>
 
 (logbit1&nbsp;0&nbsp;-2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-1</tt>
-<p><a name="./numeric:s52"></a><span class=formdef><b>procedure</b>: <tt>(ash&nbsp;<i>int</i>&nbsp;<i>count</i>)</tt></span>
+<p><a name="./numeric:s54"></a><span class=formdef><b>procedure</b>: <tt>(ash&nbsp;<i>int</i>&nbsp;<i>count</i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>int</i></tt> shifted left arithmetically by <tt><i>count</i></tt>.
 <br>
@@ -1185,7 +1210,7 @@ If <tt><i>count</i></tt> is negative, <tt><i>int</i></tt> is shifted right by
 (ash&nbsp;-1&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-4<br>
 
 (ash&nbsp;-1&nbsp;-2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-1</tt>
-<p><a name="./numeric:s53"></a><span class=formdef><b>procedure</b>: <tt>(fxlogand&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s55"></a><span class=formdef><b>procedure</b>: <tt>(fxlogand&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "and" of the arguments <tt><i>fixnum</i>&nbsp;...</tt>
 <br>
@@ -1210,7 +1235,7 @@ With no arguments, <tt>fxlogand</tt> returns -1, i.e., all bits set.
 (fxlogand&nbsp;#b111000&nbsp;#b101010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b101000<br>
 
 (fxlogand&nbsp;#b1100&nbsp;#b1111&nbsp;#b1101)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1100</tt>
-<p><a name="./numeric:s54"></a><span class=formdef><b>procedure</b>: <tt>(fxlogior&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s56"></a><span class=formdef><b>procedure</b>: <tt>(fxlogior&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(fxlogor&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "or" of the arguments <tt><i>fixnum</i>&nbsp;...</tt>
@@ -1236,7 +1261,7 @@ With no arguments, <tt>fxlogior</tt> returns 0, i.e., all bits reset.
 (fxlogior&nbsp;#b1000&nbsp;#b0100&nbsp;#b0010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1110<br>
 
 (apply&nbsp;fxlogior&nbsp;'(1&nbsp;2&nbsp;4&nbsp;8&nbsp;16))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;31</tt>
-<p><a name="./numeric:s55"></a><span class=formdef><b>procedure</b>: <tt>(fxlogxor&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
+<p><a name="./numeric:s57"></a><span class=formdef><b>procedure</b>: <tt>(fxlogxor&nbsp;<i>fixnum</i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the logical "exclusive or" of the arguments <tt><i>fixnum</i>&nbsp;...</tt>
 <br>
@@ -1261,7 +1286,7 @@ With no arguments, <tt>fxlogxor</tt> returns 0, i.e., all bits reset.
 (fxlogxor&nbsp;#b111000&nbsp;#b101010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b010010<br>
 
 (fxlogxor&nbsp;#b1100&nbsp;#b0100&nbsp;#b0110)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b1110</tt>
-<p><a name="./numeric:s56"></a><span class=formdef><b>procedure</b>: <tt>(fxlognot&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s58"></a><span class=formdef><b>procedure</b>: <tt>(fxlognot&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b>the logical "not" of <tt><i>fixnum</i></tt>
 <br>
@@ -1279,7 +1304,7 @@ of the underlying representation.
 (fxlognot&nbsp;1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-2<br>
 
 (fxlognot&nbsp;-2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1</tt>
-<p><a name="./numeric:s57"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit?&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s59"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit?&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if the specified bit is set, otherwise <tt>#f</tt>
 <br>
@@ -1328,7 +1353,7 @@ reset bit are all considered to be one.
 (fxlogbit?&nbsp;(random&nbsp;1000000)&nbsp;0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f<br>
 
 (fxlogbit?&nbsp;(random&nbsp;1000000)&nbsp;-1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s58"></a><span class=formdef><b>procedure</b>: <tt>(fxlogtest&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
+<p><a name="./numeric:s60"></a><span class=formdef><b>procedure</b>: <tt>(fxlogtest&nbsp;<i>fixnum<sub>1</sub></i>&nbsp;<i>fixnum<sub>2</sub></i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if any common bits are set, otherwise <tt>#f</tt>
 <br>
@@ -1361,7 +1386,7 @@ It returns <tt>#f</tt> if the two arguments have no set bits in common.
 (fxlogtest&nbsp;(+&nbsp;(random&nbsp;1000000)&nbsp;1)&nbsp;0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f<br>
 
 (fxlogtest&nbsp;(+&nbsp;(random&nbsp;1000000)&nbsp;1)&nbsp;-1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s59"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit0&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s61"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit0&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b>the result of clearing bit <tt><i>index</i></tt> of <tt><i>fixnum</i></tt>
 <br>
@@ -1390,7 +1415,7 @@ higher-order bits.
 (fxlogbit0&nbsp;4&nbsp;#b10101010)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b10101010<br>
 
 (fxlogbit0&nbsp;0&nbsp;-1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-2</tt>
-<p><a name="./numeric:s60"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit1&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
+<p><a name="./numeric:s62"></a><span class=formdef><b>procedure</b>: <tt>(fxlogbit1&nbsp;<i>index</i>&nbsp;<i>fixnum</i>)</tt></span>
 <br>
 <b>returns: </b>the result of setting bit <tt><i>index</i></tt> of <tt><i>fixnum</i></tt>
 <br>
@@ -1421,7 +1446,7 @@ higher-order bits.
 (fxlogbit1&nbsp;4&nbsp;0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#b10000<br>
 
 (fxlogbit1&nbsp;0&nbsp;-2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-1</tt>
-<p><a name="./numeric:s61"></a><span class=formdef><b>procedure</b>: <tt>(fxsll&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
+<p><a name="./numeric:s63"></a><span class=formdef><b>procedure</b>: <tt>(fxsll&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>fixnum</i></tt> shifted left by <tt><i>count</i></tt>
 <br>
@@ -1441,7 +1466,7 @@ as a fixnum.
 <p><tt>(fxsll&nbsp;1&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;4<br>
 
 (fxsll&nbsp;-1&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-4</tt>
-<p><a name="./numeric:s62"></a><span class=formdef><b>procedure</b>: <tt>(fxsrl&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
+<p><a name="./numeric:s64"></a><span class=formdef><b>procedure</b>: <tt>(fxsrl&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>fixnum</i></tt> logically shifted right by <tt><i>count</i></tt>
 <br>
@@ -1458,7 +1483,7 @@ bits in a fixnum, i.e.,
 <p><tt>(fxsrl&nbsp;4&nbsp;2)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1<br>
 
 (=&nbsp;(fxsrl&nbsp;-1&nbsp;1)&nbsp;(most-positive-fixnum))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s63"></a><span class=formdef><b>procedure</b>: <tt>(fxsra&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
+<p><a name="./numeric:s65"></a><span class=formdef><b>procedure</b>: <tt>(fxsra&nbsp;<i>fixnum</i>&nbsp;<i>count</i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>fixnum</i></tt> arithmetically shifted right by <tt><i>count</i></tt>
 <br>
@@ -1477,13 +1502,34 @@ bits in a fixnum, i.e.,
 (fxsra&nbsp;-1&nbsp;1)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-1<br>
 
 (fxsra&nbsp;-64&nbsp;3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-8</tt>
+<p><a name="./numeric:s66"></a><span class=formdef><b>procedure</b>: <tt>(fxpopcount&nbsp;<i>fixnum</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(fxpopcount32&nbsp;<i>fixnum</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(fxpopcount16&nbsp;<i>fixnum</i>)</tt></span>
+<br>
+<b>returns: </b>number of bits set in <tt><i>fixnum</i></tt>
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>fixnum</i></tt> must be non-negative, and it must have a width of no more than 32 for
+<tt>fxpopcount32</tt> or no more than 16 for <tt>fxpopcount16</tt>.
+<tt><i>fixnum</i></tt> is treated as a two's complement integer, regardless
+of the underlying representation.
+
 <p>
-<h3><a name="g70"></a><a name="./numeric:h6"></a>Section 8.6. Random Number Generation<a name="SECTNUMERICRANDOM"></a></h3>
+See also <tt>fxbit-count</tt>, which produces the same result as
+<tt>fxpopcount</tt> for the domain of <tt>fxpopcount</tt>. Because
+<tt>fxbit-count</tt> also handles negative arguments, however, it does
+not map as simply to certain processor instructions.
+
+
+<p>
+
+<h3><a name="g73"></a><a name="./numeric:h6"></a>Section 8.6. Random Number Generation<a name="SECTNUMERICRANDOM"></a></h3>
 
 
 
 <p>
-<a name="./numeric:s64"></a><span class=formdef><b>procedure</b>: <tt>(random&nbsp;<i>real</i>)</tt></span>
+<a name="./numeric:s67"></a><span class=formdef><b>procedure</b>: <tt>(random&nbsp;<i>real</i>)</tt></span>
 <br>
 <b>returns: </b>a nonnegative pseudo-random number less than <tt><i>real</i></tt>
 <br>
@@ -1498,11 +1544,11 @@ bits in a fixnum, i.e.,
 (random&nbsp;1029384535235)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1029384535001,&nbsp;<i>every</i>&nbsp;<i>now</i>&nbsp;<i>and</i>&nbsp;<i>then</i><br>
 
 (random&nbsp;1.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;0.5,&nbsp;<i>every</i>&nbsp;<i>now</i>&nbsp;<i>and</i>&nbsp;<i>then</i></tt>
-<p><a name="./numeric:s65"></a><span class=formdef><b>thread parameter</b>: <tt>random-seed</tt></span>
+<p><a name="./numeric:s68"></a><span class=formdef><b>thread parameter</b>: <tt>random-seed</tt></span>
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
-<p>The <a name="./numeric:s66"></a>random number generator allows the
+<p>The <a name="./numeric:s69"></a>random number generator allows the
 current random seed to be obtained and modified via the parameter
 <tt>random-seed</tt>.
 
@@ -1522,13 +1568,98 @@ random seed to the argument.
 &nbsp;&nbsp;&nbsp;&nbsp;(random-seed&nbsp;s)<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;(eqv?&nbsp;(random&nbsp;1.0)&nbsp;r1)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
+<p><a name="./numeric:s70"></a><span class=formdef><b>procedure</b>: <tt>(make-pseudo-random-generator)</tt></span>
+<br>
+<b>returns: </b>a fresh pseudo-random generator
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Creates a pseudo-random generator state for use with
+<tt>pseudo-random-generator-next!</tt>. This generator uses a more
+modern algorithm than <tt>random</tt> and generates number sequences
+that better approximate true randomness.
+
 <p>
-<h3><a name="g71"></a><a name="./numeric:h7"></a>Section 8.7. Miscellaneous Numeric Operations<a name="SECTNUMERICMISC"></a></h3>
+The initial state of the pseudo-random generator is based on the
+current time, which is good enough for generating variability in most
+programs but not good enough for security purposes.
+
+<p>
+<a name="./numeric:s71"></a><span class=formdef><b>procedure</b>: <tt>(pseudo-random-generator?&nbsp;<i>val</i>)</tt></span>
+<br>
+<b>returns: </b>a boolean
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>Checks whether <tt><i>val</i></tt> is a pseudo-random generator state.
+
+<p>
+<a name="./numeric:s72"></a><span class=formdef><b>procedure</b>: <tt>(pseudo-random-generator-next!&nbsp;<i>prgen</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(pseudo-random-generator-next!&nbsp;<i>prgen</i>&nbsp;<i>below-int</i>)</tt></span>
+<br>
+<b>returns: </b>a pseudo-random number
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>prgen</i></tt> must be a pseudo-random generator state. If <tt><i>below-int</i></tt> is
+provided, it must be a positive, exact integer.
+
+<p>
+Steps a pseudo-random generator to produce a number. The result is an
+inexact number between <tt>0.0</tt> and <tt>1.0</tt>
+(both exclusive) if <tt><i>below-int</i></tt> is not provided. If <tt>below-int</tt> is
+provided, the result is an exact integer between <tt>0</tt> (inclusive)
+and <tt>below-int</tt> (exclusive).
+
+<p>
+<a name="./numeric:s73"></a><span class=formdef><b>procedure</b>: <tt>(pseudo-random-generator-seed!&nbsp;<i>prgen</i>&nbsp;<i>seed-int</i>)</tt></span>
+<br>
+<b>returns: </b>unspecified
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>prgen</i></tt> must be a pseudo-random generator state, and <tt><i>seed-int</i></tt> must
+be a nonnegative, exact integer.
+
+<p>
+Sets the state of a pseudo-random generator using only 31 or so bits
+of <tt><i>seed-int</i></tt>. This procedure is useful for initializing the state
+of a pseudo-random generator to one of a small number of known states
+for triggering predictable output, but it is not a good way to put a
+generator into an unpredictable state.
+
+<p>
+<a name="./numeric:s74"></a><span class=formdef><b>procedure</b>: <tt>(pseudo-random-generator-&gt;vector&nbsp;<i>prgen</i>)</tt></span>
+<br>
+<b>returns: </b>a vector
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+<br><span class=formdef><b>procedure</b>: <tt>(vector-&gt;pseudo-random-generator&nbsp;<i>vec</i>)</tt></span>
+<br><span class=formdef><b>procedure</b>: <tt>(vector-&gt;pseudo-random-generator!&nbsp;<i>prgen</i>&nbsp;<i>vec</i>)</tt></span>
+<br>
+<b>returns: </b>unspecified
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p><tt><i>prgen</i></tt> must be a pseudo-random generator state, and <tt><i>vec</i></tt> must
+be a vector previously produced by <tt>pseudo-random-generator-&gt;vector</tt>.
+
+<p>
+<tt>pseudo-random-generator-&gt;vector</tt> converts the current state of
+a pseudo-random generator to a vector of numbers, <tt>vector-&gt;pseudo-random-generator</tt>
+creates a fresh pseudo-random generator with the same state, and
+<tt>vector-&gt;pseudo-random-generator!</tt>
+changes an existing pseudo-random generator to have the same state.
+
+
+<p>
+
+<h3><a name="g74"></a><a name="./numeric:h7"></a>Section 8.7. Miscellaneous Numeric Operations<a name="SECTNUMERICMISC"></a></h3>
 
 
 
 <p>
-<a name="./numeric:s67"></a><span class=formdef><b>procedure</b>: <tt>(=&nbsp;<i>num<sub>1</sub></i>&nbsp;<i>num<sub>2</sub></i>&nbsp;<i>num<sub>3</sub></i>&nbsp;...)</tt></span>
+<a name="./numeric:s75"></a><span class=formdef><b>procedure</b>: <tt>(=&nbsp;<i>num<sub>1</sub></i>&nbsp;<i>num<sub>2</sub></i>&nbsp;<i>num<sub>3</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(&lt;&nbsp;<i>real<sub>1</sub></i>&nbsp;<i>real<sub>2</sub></i>&nbsp;<i>real<sub>3</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(&gt;&nbsp;<i>real<sub>1</sub></i>&nbsp;<i>real<sub>2</sub></i>&nbsp;<i>real<sub>3</sub></i>&nbsp;...)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(&lt;=&nbsp;<i>real<sub>1</sub></i>&nbsp;<i>real<sub>2</sub></i>&nbsp;<i>real<sub>3</sub></i>&nbsp;...)</tt></span>
@@ -1550,7 +1681,7 @@ When passed one argument, each of these predicates returns <tt>#t</tt>.
 (&lt;&nbsp;3/4)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t<br>
 
 (=&nbsp;3/4)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s68"></a><span class=formdef><b>procedure</b>: <tt>(1+&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s76"></a><span class=formdef><b>procedure</b>: <tt>(1+&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(add1&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(1-&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(-1+&nbsp;<i>num</i>)</tt></span>
@@ -1597,7 +1728,7 @@ When passed one argument, each of these predicates returns <tt>#t</tt>.
 <br>
 <br>
 (double&nbsp;7)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;14</tt>
-<p><a name="./numeric:s69"></a><span class=formdef><b>procedure</b>: <tt>(expt-mod&nbsp;<i>int<sub>1</sub></i>&nbsp;<i>int<sub>2</sub></i>&nbsp;<i>int<sub>3</sub></i>)</tt></span>
+<p><a name="./numeric:s77"></a><span class=formdef><b>procedure</b>: <tt>(expt-mod&nbsp;<i>int<sub>1</sub></i>&nbsp;<i>int<sub>2</sub></i>&nbsp;<i>int<sub>3</sub></i>)</tt></span>
 <br>
 <b>returns: </b><tt><i>int<sub>1</sub></i></tt> raised to the <tt><i>int<sub>2</sub></i></tt> power, modulo <tt><i>int<sub>3</sub></i></tt>
 <br>
@@ -1615,7 +1746,7 @@ than the equivalent procedure <tt>(lambda&nbsp;(x&nbsp;y&nbsp;z)&nbsp;(modulo&nb
 <p><tt>(expt-mod&nbsp;2&nbsp;4&nbsp;3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1<br>
 
 (expt-mod&nbsp;2&nbsp;76543&nbsp;76543)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2</tt>
-<p><a name="./numeric:s70"></a><span class=formdef><b>procedure</b>: <tt>(isqrt&nbsp;<i>n</i>)</tt></span>
+<p><a name="./numeric:s78"></a><span class=formdef><b>procedure</b>: <tt>(isqrt&nbsp;<i>n</i>)</tt></span>
 <br>
 <b>returns: </b>the integer square root of <tt><i>n</i></tt>
 <br>
@@ -1639,7 +1770,7 @@ The integer square root of <i>n</i> is defined to be
 (isqrt&nbsp;20.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;4.0<br>
 
 (isqrt&nbsp;(*&nbsp;2&nbsp;(expt&nbsp;10&nbsp;20)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;14142135623</tt>
-<p><a name="./numeric:s71"></a><span class=formdef><b>procedure</b>: <tt>(integer-length&nbsp;<i>n</i>)</tt></span>
+<p><a name="./numeric:s79"></a><span class=formdef><b>procedure</b>: <tt>(integer-length&nbsp;<i>n</i>)</tt></span>
 <br>
 <b>returns: </b>see below
 <br>
@@ -1673,7 +1804,7 @@ For zero, <tt>integer-length</tt> returns 0.
 (integer-length&nbsp;-3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2<br>
 
 (integer-length&nbsp;-4)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;2</tt>
-<p><a name="./numeric:s72"></a><span class=formdef><b>procedure</b>: <tt>(nonpositive?&nbsp;<i>real</i>)</tt></span>
+<p><a name="./numeric:s80"></a><span class=formdef><b>procedure</b>: <tt>(nonpositive?&nbsp;<i>real</i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if <tt><i>real</i></tt> is not greater than zero, <tt>#f</tt> otherwise
 <br>
@@ -1690,7 +1821,7 @@ For zero, <tt>integer-length</tt> returns 0.
 (nonpositive?&nbsp;1.8e-15)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f<br>
 
 (nonpositive?&nbsp;-2/3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s73"></a><span class=formdef><b>procedure</b>: <tt>(nonnegative?&nbsp;<i>real</i>)</tt></span>
+<p><a name="./numeric:s81"></a><span class=formdef><b>procedure</b>: <tt>(nonnegative?&nbsp;<i>real</i>)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if <tt><i>real</i></tt> is not less than zero, <tt>#f</tt> otherwise
 <br>
@@ -1707,7 +1838,7 @@ For zero, <tt>integer-length</tt> returns 0.
 (nonnegative?&nbsp;-0.0121)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f<br>
 
 (nonnegative?&nbsp;15/16)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#t</tt>
-<p><a name="./numeric:s74"></a><span class=formdef><b>procedure</b>: <tt>(conjugate&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s82"></a><span class=formdef><b>procedure</b>: <tt>(conjugate&nbsp;<i>num</i>)</tt></span>
 <br>
 <b>returns: </b>complex conjugate of <tt><i>num</i></tt>
 <br>
@@ -1723,7 +1854,7 @@ For zero, <tt>integer-length</tt> returns 0.
 (conjugate&nbsp;1e-20-2e-30i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1e-20+2e-30i<br>
 
 (conjugate&nbsp;3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3</tt>
-<p><a name="./numeric:s75"></a><span class=formdef><b>procedure</b>: <tt>(magnitude-squared&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s83"></a><span class=formdef><b>procedure</b>: <tt>(magnitude-squared&nbsp;<i>num</i>)</tt></span>
 <br>
 <b>returns: </b>magnitude of <tt><i>num</i></tt> squared
 <br>
@@ -1738,7 +1869,7 @@ i.e., <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>.
 <p><tt>(magnitude-squared&nbsp;3.0-4.0i)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;25.0<br>
 
 (magnitude-squared&nbsp;3.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;9.0</tt>
-<p><a name="./numeric:s76"></a><span class=formdef><b>procedure</b>: <tt>(sinh&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s84"></a><span class=formdef><b>procedure</b>: <tt>(sinh&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(cosh&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(tanh&nbsp;<i>num</i>)</tt></span>
 <br>
@@ -1752,7 +1883,7 @@ i.e., <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>.
 (cosh&nbsp;0.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1.0<br>
 
 (tanh&nbsp;-0.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-0.0</tt>
-<p><a name="./numeric:s77"></a><span class=formdef><b>procedure</b>: <tt>(asinh&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s85"></a><span class=formdef><b>procedure</b>: <tt>(asinh&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(acosh&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(atanh&nbsp;<i>num</i>)</tt></span>
 <br>
@@ -1766,7 +1897,7 @@ i.e., <i>a</i><sup>2</sup> + <i>b</i><sup>2</sup>.
 (acosh&nbsp;1.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;0.0<br>
 
 (atanh&nbsp;-1.0)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;-inf.0</tt>
-<p><a name="./numeric:s78"></a><span class=formdef><b>procedure</b>: <tt>(string-&gt;number&nbsp;<i>string</i>)</tt></span>
+<p><a name="./numeric:s86"></a><span class=formdef><b>procedure</b>: <tt>(string-&gt;number&nbsp;<i>string</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(string-&gt;number&nbsp;<i>string</i>&nbsp;<i>radix</i>)</tt></span>
 <br>
 <b>returns: </b>the number represented by <tt><i>string</i></tt>, or <tt>#f</tt>
@@ -1783,7 +1914,7 @@ The Revised<sup>6</sup> Report version requires radix to be in the set
 <p><tt>(string-&gt;number&nbsp;"211012"&nbsp;3)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;559<br>
 
 (string-&gt;number&nbsp;"tobeornottobe"&nbsp;36)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;140613689159812836698</tt>
-<p><a name="./numeric:s79"></a><span class=formdef><b>procedure</b>: <tt>(number-&gt;string&nbsp;<i>num</i>)</tt></span>
+<p><a name="./numeric:s87"></a><span class=formdef><b>procedure</b>: <tt>(number-&gt;string&nbsp;<i>num</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(number-&gt;string&nbsp;<i>num</i>&nbsp;<i>radix</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(number-&gt;string&nbsp;<i>num</i>&nbsp;<i>radix</i>&nbsp;<i>precision</i>)</tt></span>
 <br>
@@ -1807,11 +1938,11 @@ The Revised<sup>6</sup> Report version requires radix to be in the set
 
 <hr class=copyright align=left>
 <p>
-<a class=plain href="index.html">Chez Scheme Version 9 User's Guide</a><br>
-Copyright &copy; 2022 Cisco Systems, Inc.<br>
+<a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
+Copyright &copy; 2024 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised April 2022 for Chez Scheme Version 9.5.8<br>
+Revised February 2024 for Chez Scheme Version 10.0.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

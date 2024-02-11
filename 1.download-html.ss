@@ -14,7 +14,7 @@
 ;; CSUG and TSPL did not have sitemap.xml files
 ;; (at least not by appending sitemap.xml at end of URL)
 ;; used this site to generate sitemaps: https://www.xml-sitemaps.com/
-;; https://cisco.github.io/ChezScheme/csug9.5/
+;; https://cisco.github.io/ChezScheme/csug10.0/
 ;; https://scheme.com/tspl4/
 
 ;; fragile, position-based approach
