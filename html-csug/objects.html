@@ -1827,14 +1827,12 @@ the following must be true:
 <p>
 <ul>
 
- <p>
 <li><tt><i>remove-bits</i></tt>
        must be a subset of the bits in the mask of <tt><i>stencil-vector</i></tt>.
        In other words,
        <tt>(logand&nbsp;(stencil-vector-mask&nbsp;<i>stencil-vector</i>)&nbsp;<i>remove-bits</i>)</tt>
        must be equal to <tt><i>remove-bits</i></tt>.
 
-  <p>
 <li><tt><i>add-bits</i></tt> must have a set of bits that do not overlap the
         subtraction of <tt><i>remove-bits</i></tt> from the mask of
         <tt><i>stencil-vector</i></tt>.  In other words
@@ -1848,7 +1846,6 @@ the following must be true:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt>
 <p>        must be <tt>0</tt>.
         
- <p>
 <li>The number of supplied <tt><i>obj</i></tt>s must match <tt>(fxpopcount&nbsp;add-bits)</tt>.
 
 <p>
@@ -2074,17 +2071,14 @@ are not often useful.
 as <tt>(unquote-splicing&nbsp;abc)</tt>; to produce <tt>(unquote&nbsp;@abc)</tt>
 one can type <tt>,&nbsp;@abc</tt>, <tt>\x40;abc</tt>, or <tt>,|@abc|</tt>.
 
-<p>
 <li>The single-character sequences <tt>&#123;</tt> and <tt>&#125;</tt>
 are read as symbols.
 
-<p>
 <li>A symbol's name may begin with any character that might normally start a
 number, including a digit, <tt>.</tt>, <tt>+</tt>, <tt>-</tt>, as long as
 the delimited sequence of characters starting with that character cannot
 be parsed as a number.
 
-<p>
 <li>A symbol whose name contains arbitrary characters may be written by
 escaping them with <tt>\</tt> or with <tt>|</tt>.
 <tt>\</tt> is used to escape a single character (except 'x', since
@@ -4121,14 +4115,11 @@ The following procedures are defined by <tt>define-record</tt>:
 <ul>
 <li>a constructor procedure whose name is <tt>make-<i>name</i></tt>,
 
-<p>
 <li>a type predicate whose name is <tt><i>name</i>?</tt>,
 
-<p>
 <li>an access procedure whose name is <tt><i>name</i>-<i>fieldname</i></tt>
 for each noninherited field, and
 
-<p>
 <li>an assignment procedure whose name is
 <tt>set-<i>name</i>-<i>fieldname</i>!</tt>
 for each noninherited mutable field.

@@ -585,7 +585,6 @@ Calling the result iterator procedure (with no arguments) returns two values:
 <p>
 <ul>
 
-<p>
 <li>The first result is either a vector of values, one for each key in
   <tt><i>key-vector</i></tt> (in the order given in <tt><i>key-vector</i></tt>) and drawn from
   a single continuation's mark table, or <tt>#f</tt> if no more values for
@@ -596,7 +595,6 @@ Calling the result iterator procedure (with no arguments) returns two values:
   will never consist solely of <tt><i>none-val</i></tt> values (unless one or more of the keys
   is explicitly mapped to <tt><i>none-val</i></tt>).
 
-<p>
 <li>The second result is a new iterator procedure to obtain
 the next vector of values, and so on. When the first result is
 <tt>#f</tt>, the second result is an iterator procedure that will still
