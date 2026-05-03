@@ -1,1 +1,0 @@
-(define unique-categories (quote ("global param" "thread param" "procedure" "module" "syntax")))
