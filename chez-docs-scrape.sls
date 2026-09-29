@@ -162,7 +162,7 @@
     ;; filtering out those empty lists
     (filter (lambda (x) (not (null? x)))
             (apply append (map (lambda (file) (process-html-file dir file))
-                               (directory-list dir)))))
+                               (sort string<? (directory-list dir))))))
 
   (define (process-html-file dir file)
     (process-p-list (get-p-list dir file)))
