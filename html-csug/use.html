@@ -351,7 +351,7 @@ This may be accomplished by setting the
 <p><tt>echo&nbsp;'(reset-handler&nbsp;abort)&nbsp;(compile-file&nbsp;"<i>filename</i>")'&nbsp;|&nbsp;scheme&nbsp;-q</tt>
 <p>One can also redefine the
 <a name="./use:s8"></a><tt>base-exception-handler</tt>
-(Section&nbsp;<a href="./system.html#g115">12.1</a>) to achieve a similar effect
+(Section&nbsp;<a href="./system.html#g117">12.1</a>) to achieve a similar effect
 while exercising more control over the format of the messages that
 are produced.
 
@@ -387,6 +387,8 @@ been redirected, or if the <tt>--eedisable</tt> command-line option
 (Section&nbsp;<a href="./use.html#g14">2.9</a>) has been used.
 The history is saved across sessions, by default, in the file
 ".chezscheme_history" in the user's home directory.
+If the <tt>CHEZSCHEME_HISTORY</tt> environment variable is set during startup,
+its value becomes the default history file location.
 The <tt>--eehistory</tt> command-line option
 (Section&nbsp;<a href="./use.html#g14">2.9</a>) can be used to specify a different
 location for the history file or to disable the saving and restoring of
@@ -418,7 +420,7 @@ are shown separated by commas.
 
 <p>
 Detailed descriptions of the editing commands are given in
-Chapter&nbsp;<a href="./expeditor.html#g137">14</a>, which also describes parameters that allow
+Chapter&nbsp;<a href="./expeditor.html#g140">14</a>, which also describes parameters that allow
 control over the expression editor, mechanisms for adding or changing key
 bindings, and mechanisms for creating new commands.
 
@@ -1163,7 +1165,7 @@ replaced with <tt>/usr/bin/petite</tt>.
 <p>
 <a name="./use:s33"></a><a name="./use:s34"></a>The <tt>--program</tt> command-line option is like <tt>--script</tt>
 except that the script file is treated as an RNRS top-level program
-(Chapter&nbsp;<a href="./libraries.html#g93">10</a>).
+(Chapter&nbsp;<a href="./libraries.html#g95">10</a>).
 The following RNRS top-level program implements the traditional Unix
 <tt>echo</tt> command, as with the script above.
 
@@ -1365,8 +1367,8 @@ program, e.g.:
 control parameters and also with the storage manager's run-time
 operation.
 The compiler-control parameters, including <tt>optimize-level</tt>, are
-described in Section&nbsp;<a href="./system.html#g120">12.6</a>, and the storage manager
-control parameters are described in Section&nbsp;<a href="./smgmt.html#g132">13.1</a>.
+described in Section&nbsp;<a href="./system.html#g122">12.6</a>, and the storage manager
+control parameters are described in Section&nbsp;<a href="./smgmt.html#g135">13.1</a>.
 
 <p>
 <a name="./use:s51"></a>Finally, it is often useful to "profile" your code to determine that
@@ -1384,7 +1386,7 @@ These operators can make code more readable when used judiciously,
 but they can slow down time-critical code.
 
 <p>
-Section&nbsp;<a href="./system.html#g121">12.7</a> describes how to use the compiler's support
+Section&nbsp;<a href="./system.html#g123">12.7</a> describes how to use the compiler's support
 for automatic profiling and profile-directed optimization.
 Be sure that profiling is not enabled when you compile your production
 code, since the code introduced into the generated code to perform the
@@ -1427,7 +1429,7 @@ as a subordinate program within another program, i.e., for use as
 an extension language.
 
 <p>
-These entry points are described in Section&nbsp;<a href="./foreign.html#g35">4.9</a>,
+These entry points are described in Section&nbsp;<a href="./foreign.html#g37">4.9</a>,
 along with other entry points for accessing and modifying Scheme
 data structures and calling Scheme procedures.
 
@@ -1584,7 +1586,7 @@ application and packaged in shared libraries (also known as shared
 objects or, on Windows, dynamic link libraries).
 The following assumes that any shared-library source code has been
 converted into object form; how to do this varies by platform.
-(Some hints are given in Section&nbsp;<a href="./foreign.html#g33">4.7</a>.)
+(Some hints are given in Section&nbsp;<a href="./foreign.html#g35">4.7</a>.)
 The result is a set of one or more shared libraries that are loaded
 explicitly by the Scheme source code during program initialization.
 
@@ -1613,7 +1615,7 @@ it may be necessary to make some adjustments to a file to be
 compiled if the file contains expressions or definitions that
 affect the compilation of subsequent forms in the file.
 This can be accomplished via <tt>eval-when</tt>
-(Section&nbsp;<a href="./system.html#g118">12.4</a>).
+(Section&nbsp;<a href="./system.html#g120">12.4</a>).
 This is not typically necessary or desirable if the application consists
 of a set of RNRS libraries and programs.
 
@@ -2048,10 +2050,10 @@ boot files.
 <hr class=copyright align=left>
 <p>
 <a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
-Copyright &copy; 2024 Cisco Systems, Inc.<br>
+Copyright &copy; 2025 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised February 2024 for Chez Scheme Version 10.0.0<br>
+Revised October 2025 for Chez Scheme Version 10.3.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

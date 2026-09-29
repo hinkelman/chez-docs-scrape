@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g114"></a>
+<a name="g116"></a>
 <a name="./system:h0"></a>
 
 <h1>Chapter 12. System Operations<a name="CHPTSYSTEM"></a></h1>
@@ -31,7 +31,7 @@ querying the operating system environment.
 
 <p>
 
-<h3><a name="g115"></a><a name="./system:h1"></a>Section 12.1. Exceptions<a name="SECTSYSTEMEXCEPTIONS"></a></h3>
+<h3><a name="g117"></a><a name="./system:h1"></a>Section 12.1. Exceptions<a name="SECTSYSTEMEXCEPTIONS"></a></h3>
 
 
 
@@ -90,7 +90,7 @@ have caused or been materially involved in the exceptional situation.
 <p><a name="./system:s3"></a>These procedures are like <tt>assertion-violation</tt>, <tt>error</tt>,
 and <tt>warning</tt> except
 that <tt><i>msg</i></tt> is assumed to be a format string, as if in a call to
-<tt>format</tt> (Section&nbsp;<a href="./io.html#g88">9.13</a>), with
+<tt>format</tt> (Section&nbsp;<a href="./io.html#g90">9.13</a>), with
 <tt><i>irritant</i>&nbsp;...</tt> treated as the additional arguments to
 <tt>format</tt>.
 This allows programs to control the appearance of the error message, at
@@ -351,7 +351,7 @@ effects).
 
 <p>
 
-<h3><a name="g116"></a><a name="./system:h2"></a>Section 12.2. Interrupts<a name="SECTSYSTEMINTERRUPTS"></a></h3>
+<h3><a name="g118"></a><a name="./system:h2"></a>Section 12.2. Interrupts<a name="SECTSYSTEMINTERRUPTS"></a></h3>
 
 
 
@@ -363,7 +363,7 @@ keyboard, the expiration of an internal timer set by <tt>set-timer</tt>,
 a breakpoint caused by a call to <tt>break</tt>, or a request from the
 storage manager to initiate a garbage collection.
 These mechanisms are described in this section, except for the
-collect request mechanism, which is described in Section&nbsp;<a href="./smgmt.html#g132">13.1</a>.
+collect request mechanism, which is described in Section&nbsp;<a href="./smgmt.html#g135">13.1</a>.
 
 <p>
 Timer, keyboard, and collect-request interrupts are supported via a counter
@@ -476,7 +476,7 @@ the return value may also be 0 if the timer was just about to fire when
 the call to <tt>set-timer</tt> occurred.
 
 <p>
-The engine mechanism (Section&nbsp;<a href="./control.html#g47">6.4</a>) is built on top of the
+The engine mechanism (Section&nbsp;<a href="./control.html#g49">6.4</a>) is built on top of the
 timer interrupt so timer interrupts should not be used with engines.
 
 
@@ -595,6 +595,8 @@ After a signal handler for a given signal has been registered, receipt
 of the specified signal results in a call to the handler.
 The handler is passed the signal number, allowing the same handler to
 be used for different signals while differentiating among them.
+In a threaded version of the system, signals are always delivered to
+the main thread.
 
 <p>
 Signals handled in this fashion are treated like keyboard interrupts in
@@ -615,7 +617,7 @@ systems.
 
 <p>
 
-<h3><a name="g117"></a><a name="./system:h3"></a>Section 12.3. Environments<a name="SECTMISCENVIRONMENTS"></a></h3>
+<h3><a name="g119"></a><a name="./system:h3"></a>Section 12.3. Environments<a name="SECTMISCENVIRONMENTS"></a></h3>
 
 
 
@@ -695,7 +697,7 @@ The environment returned by this procedure is immutable.
 
 <p><tt>ieee-environment</tt> returns an environment containing
 bindings for the keywords and variables whose meanings are
-defined by the IEEE/ANSI Standard for Scheme&nbsp;[<a class=citation href="./bibliography.html#g183">26</a>].
+defined by the IEEE/ANSI Standard for Scheme&nbsp;[<a class=citation href="./bibliography.html#g186">26</a>].
 
 <p>
 The bindings for each of the identifiers in the IEEE environment are those
@@ -893,7 +895,7 @@ interaction&nbsp;environment:<br>
 
 &nbsp;&nbsp;vector-sort,&nbsp;vector-sort!</tt>
 <p>
-<h3><a name="g118"></a><a name="./system:h4"></a>Section 12.4. Compilation, Evaluation, and Loading<a name="SECTMISCCOMPILEEVAL"></a></h3>
+<h3><a name="g120"></a><a name="./system:h4"></a>Section 12.4. Compilation, Evaluation, and Loading<a name="SECTMISCCOMPILEEVAL"></a></h3>
 
 
 
@@ -918,7 +920,7 @@ Single-argument <tt>eval</tt> is a <i>Chez&nbsp;Scheme</i> extension.
 nonexpression form, i.e., a definition, whenever the environment
 is mutable.
 <i>Chez&nbsp;Scheme</i> further allows <tt><i>obj</i></tt> to be an annotation
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>), and the default evaluators
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>), and the default evaluators
 make use of annotations to incorporate source-file
 information in error messages and associate source-file
 information with compiled code.
@@ -951,7 +953,7 @@ procedures <a name="./system:s41"></a><tt>eval</tt>, <tt>load</tt>, and
 The evaluation procedure should expect one or two arguments: an object
 to evaluate and an optional environment.
 The second argument might be an annotation
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 
 <p>
 
@@ -970,7 +972,7 @@ The second argument might be an annotation
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
-<p><tt><i>obj</i></tt>, which can be an annotation (Section&nbsp;<a href="./syntax.html#g112">11.11</a>)
+<p><tt><i>obj</i></tt>, which can be an annotation (Section&nbsp;<a href="./syntax.html#g114">11.11</a>)
 or unannotated value, is treated as a Scheme expression, expanded with the
 current expander (the value of <tt>current-expand</tt>) in the specified
 environment (or the interaction environment, if no environment
@@ -1031,7 +1033,7 @@ expression found in a source file.
 If <tt><i>eval-proc</i></tt> is specified, <tt>load</tt> uses this procedure instead.
 <tt><i>eval-proc</i></tt> must accept one argument, the expression to evaluate.
 The expression passed to <tt><i>eval-proc</i></tt> might be an annotation
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>) or an unannotated value.
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>) or an unannotated value.
 
 <p>
 The <tt><i>eval-proc</i></tt> argument
@@ -1061,7 +1063,7 @@ For example,
 <p>pretty-prints each expression before evaluating it.
 
 <p>
-<a name="./system:s47"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
+<a name="./system:s47"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g121">12.5</a>)
 determines the set of directories searched for source files not identified
 by absolute path names or paths that start with <tt>./</tt> (or <tt>.\</tt>
 under Windows) or <tt>../</tt> (or <tt>..\</tt> under Windows).
@@ -1102,10 +1104,10 @@ expression found in the file.
 If <tt><i>eval-proc</i></tt> is specified, <tt>load-program</tt> uses this procedure instead.
 <tt><i>eval-proc</i></tt> must accept one argument, the expression to evaluate.
 The expression passed to <tt><i>eval-proc</i></tt> might be an annotation
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>) or an unannotated value.
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>) or an unannotated value.
 
 <p>
-<a name="./system:s50"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
+<a name="./system:s50"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g121">12.5</a>)
 determines the set of directories searched for source files not identified
 by absolute path names or paths that start with <tt>./</tt> (or <tt>.\</tt>
 under Windows) or <tt>../</tt> (or <tt>..\</tt> under Windows).
@@ -1261,7 +1263,7 @@ on bindings defined in another without actually loading and evaluating
 the code in the supporting file.
 
 <p>
-<a name="./system:s61"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
+<a name="./system:s61"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g121">12.5</a>)
 determines the set of directories searched for source files not identified
 by absolute path names or paths that start with <tt>./</tt> (or <tt>.\</tt>
 under Windows) or <tt>../</tt> (or <tt>..\</tt> under Windows).
@@ -1298,7 +1300,7 @@ top-level bindings at run-time, since these procedures use compile-time
 information to resolve top-level bindings.
 
 <p>
-<a name="./system:s63"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g119">12.5</a>)
+<a name="./system:s63"></a>The parameter <tt>source-directories</tt> (Section&nbsp;<a href="./system.html#g121">12.5</a>)
 determines the set of directories searched for source files not identified
 by absolute path names or paths that start with <tt>./</tt> (or <tt>.\</tt>
 under Windows) or <tt>../</tt> (or <tt>..\</tt> under Windows).
@@ -1700,7 +1702,7 @@ will take care of closing the ports.
 
 <p><tt><i>objs</i></tt> must be a list containing a sequence of
 objects that represent syntactically valid expressions, each possibly
-annotated (Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+annotated (Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 If any of the objects does not represent a syntactically valid
 expression, <tt>compile-to-port</tt> raises an exception with
 condition type <tt>&amp;syntax</tt>.
@@ -1767,7 +1769,7 @@ Otherwise, the return value is unspecified.
 
 <p><tt><i>obj-list</i></tt> must be a list containing a sequence of
 objects that represent syntactically valid expressions, each possibly
-annotated (Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+annotated (Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 If any of the objects does not represent a syntactically valid
 expression, <tt>compile-to-file</tt> raises an exception with
 condition type <tt>&amp;syntax</tt>.
@@ -2005,7 +2007,7 @@ returned by <tt>interaction-environment</tt>.
 
 <p>
 <tt><i>obj</i></tt> can be an annotation
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>), and the default expander
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>), and the default expander
 makes use of annotations to incorporate source-file
 information in error messages.
 
@@ -2014,7 +2016,7 @@ information in error messages.
 (see <tt>current-expand</tt>), initially <tt>sc-expand</tt>.
 
 <p>
-<a name="./system:s95"></a>See also <tt>expand-output</tt> (page&nbsp;<a href="./system.html#desc:expand-output">396</a>)
+<a name="./system:s95"></a>See also <tt>expand-output</tt> (page&nbsp;<a href="./system.html#desc:expand-output">400</a>)
 which can be used to request that the compiler or interpreter show
 expander output.
 
@@ -2040,7 +2042,7 @@ other procedure must ultimately be defined in terms of
 <p>
 The first argument to the expansion procedure represents the input
 expression.
-It can be an annotation (Section&nbsp;<a href="./syntax.html#g112">11.11</a>) or an
+It can be an annotation (Section&nbsp;<a href="./syntax.html#g114">11.11</a>) or an
 unannotated value.
 the second argument is an environment.
 Additional arguments might be passed to the expansion procedure
@@ -2062,7 +2064,7 @@ and roles are unspecified.
 value of <tt>current-expand</tt>.
 <tt><i>obj</i></tt> represents the program to be expanded, and
 <tt><i>env</i></tt> must be an environment.
-<tt><i>obj</i></tt> can be an annotation (Section&nbsp;<a href="./syntax.html#g112">11.11</a>)
+<tt><i>obj</i></tt> can be an annotation (Section&nbsp;<a href="./syntax.html#g114">11.11</a>)
 or unannotated value.
 If not provided, <tt><i>env</i></tt> defaults to the environment returned by
 <tt>interaction-environment</tt>.
@@ -2078,7 +2080,7 @@ If not provided, <tt><i>env</i></tt> defaults to the environment returned by
 
 <p><tt>expand/optimize</tt> treats <tt><i>obj</i></tt> as the representation of
 an expression.
-<tt><i>obj</i></tt> can be an annotation (Section&nbsp;<a href="./syntax.html#g112">11.11</a>)
+<tt><i>obj</i></tt> can be an annotation (Section&nbsp;<a href="./syntax.html#g114">11.11</a>)
 or unannotated value.
 <tt>expand/optimize</tt> expands the expression in environment <tt><i>env</i></tt>
 and passes the expression through the source optimizer <tt>cp0</tt>
@@ -2155,7 +2157,7 @@ optimizations performed.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;odd?)])<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(h&nbsp;n)))))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1025</tt>
-<p><a name="./system:s101"></a>See also <tt>expand/optimize-output</tt> (page&nbsp;<a href="./system.html#desc:expand/optimize-output">396</a>)
+<p><a name="./system:s101"></a>See also <tt>expand/optimize-output</tt> (page&nbsp;<a href="./system.html#desc:expand/optimize-output">400</a>)
 which can be used to request that the compiler or interpreter show
 source-optimizer output.
 
@@ -2289,7 +2291,7 @@ the definition for <tt>bound-id-member?</tt> is placed within
 <tt>nodups?</tt>, but this does not work for help routines shared
 among several syntactic definitions.
 Another solution is to label the <tt>nodups?</tt> definition a
-"meta" definition (see Section&nbsp;<a href="./syntax.html#g109">11.8</a>) but this
+"meta" definition (see Section&nbsp;<a href="./syntax.html#g111">11.8</a>) but this
 does not work for helpers that are used both by syntactic
 abstractions and by run-time code.
 
@@ -2753,7 +2755,7 @@ provide minor space and load-time savings for small compiled objects.
 
 <p>
 
-<h3><a name="g119"></a><a name="./system:h5"></a>Section 12.5. Source Directories and Files<a name="SECTSYSTEMSOURCE"></a></h3>
+<h3><a name="g121"></a><a name="./system:h5"></a>Section 12.5. Source Directories and Files<a name="SECTSYSTEMSOURCE"></a></h3>
 
 
 
@@ -2849,7 +2851,7 @@ directory.
 
 (find-file&nbsp;"../pie")&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"../ham/pie"</tt>
 <p>
-<h3><a name="g120"></a><a name="./system:h6"></a>Section 12.6. Compiler Controls<a name="SECTMISCOPTIMIZE"></a></h3>
+<h3><a name="g122"></a><a name="./system:h6"></a>Section 12.6. Compiler Controls<a name="SECTMISCOPTIMIZE"></a></h3>
 
 
 
@@ -2910,7 +2912,7 @@ This option is particularly useful for running RNRS top-level programs
 at optimize-level&nbsp;3 via the
 <a name="./system:s115"></a><tt>--program</tt> command-line option,
 since <tt>eval-when</tt> is ineffective for RNRS top-level programs as described
-on page&nbsp;<a href="./system.html#eval-when-tlp">385</a>.
+on page&nbsp;<a href="./system.html#eval-when-tlp">389</a>.
 
 
 <p>
@@ -2969,10 +2971,14 @@ It is used to tell the compiler how important the preservation of
 debugging information is, with 0 being least important and 3 being
 most important.
 The default value is 1.
-As of Version&nbsp;9.0, it is used solely to determine whether an
-error-causing call encountered in nontail position is treated as
-if it were in tail position (thus causing the caller's frame not
-to appear in a stack backtrace); this occurs at debug levels below&nbsp;2.
+
+<p>
+As of Version&nbsp;9.0, the value of <tt>debug-level</tt> is used by the
+system only to discourage optimizations that affect the continuation
+as revealed by the inspector. The reduced optimization is intended to
+produce more informative stack backtraces at the point when an
+exception is raised, and the reduction applies when the debug level is
+2 or 3.
 
 <p>
 <a name="./system:s118"></a><span class=formdef><b>thread parameter</b>: <tt>generate-interrupt-trap</tt></span>
@@ -2981,7 +2987,7 @@ to appear in a stack backtrace); this occurs at debug levels below&nbsp;2.
 
 <p>To support interrupts, including keyboard, timer, and collect request
 interrupts, the compiler inserts a short sequence of instructions at the
-entry to each nonleaf procedure (Section&nbsp;<a href="./system.html#g116">12.2</a>).
+entry to each nonleaf procedure (Section&nbsp;<a href="./system.html#g118">12.2</a>).
 This small overhead may be eliminated by setting
 <tt>generate-interrupt-trap</tt> to <tt>#f</tt>.
 The default value of this parameter is <tt>#t</tt>.
@@ -3157,7 +3163,7 @@ procedure is inlined at points where it is called by other procedures,
 as well as copy propagation, constant folding, useless code
 elimination, and several related optimizations.
 The algorithm used by the optimizer is described in detail in the paper
-"Fast and effective procedure inlining"&nbsp;[<a class=citation href="./bibliography.html#g188">31</a>].
+"Fast and effective procedure inlining"&nbsp;[<a class=citation href="./bibliography.html#g191">31</a>].
 
 <p>
 <tt>cptypes</tt> performs additional optimizations based on type
@@ -3428,8 +3434,8 @@ Similarly, when <tt>expand/optimize-output</tt> is set to a textual
 output port, the output of the source optimizer is printed.
 
 <p>
-<a name="./system:s137"></a><a name="./system:s138"></a>See also <tt>expand</tt> (page&nbsp;<a href="./system.html#desc:expand">379</a>) and
-<tt>expand-optimize</tt> (page&nbsp;<a href="./system.html#desc:expand/optimize">380</a>), which
+<a name="./system:s137"></a><a name="./system:s138"></a>See also <tt>expand</tt> (page&nbsp;<a href="./system.html#desc:expand">383</a>) and
+<tt>expand-optimize</tt> (page&nbsp;<a href="./system.html#desc:expand/optimize">384</a>), which
 can be used to run the expander or the expander and source optimizer
 directly on an individual form.
 
@@ -3453,7 +3459,7 @@ others.
 
 <p>
 
-<h3><a name="g121"></a><a name="./system:h7"></a>Section 12.7. Profiling<a name="SECTMISCPROFILE"></a></h3>
+<h3><a name="g123"></a><a name="./system:h7"></a>Section 12.7. Profiling<a name="SECTMISCPROFILE"></a></h3>
 
 
 
@@ -3479,7 +3485,7 @@ of a source-code base by a set of tests.
 <p>
 The association between source-code expressions and profile counts
 is usually established via annotations produced by the reader and
-present in the input to the expander (Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+present in the input to the expander (Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 It is also possible to explicitly identify source positions
 to be assigned profile counts via <tt>profile</tt> expressions.
 A <tt>profile</tt> expression has one subform, a source object, and
@@ -3495,7 +3501,7 @@ to inhibit the expander's implicit generation of <tt>profile</tt> forms
 for all annotated source expressions.
 It is also possible to obtain finer control over implicit generation of
 <tt>profile</tt> forms by marking which annotations should and
-should not be used for profiling (Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+should not be used for profiling (Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 
 <p>
 With block profiling enabled, the compiler similarly instruments the
@@ -3774,7 +3780,7 @@ set of tests.
 One covin file is created for each object file, with the object-file
 extension replaced by the extension <tt>.covin</tt>.
 Each covin file contains the printed representation of a source table
-(Section&nbsp;<a href="./syntax.html#g113">11.12</a>), compressed using the compression
+(Section&nbsp;<a href="./syntax.html#g115">11.12</a>), compressed using the compression
 format and level specified by <tt>compress-format</tt> and
 <tt>compress-level</tt>.
 This information can be read via
@@ -3807,7 +3813,7 @@ end for some language that targets Scheme.
 <p>When this parameter is set to <tt>#t</tt>, the default, the expander
 implicitly introduces <tt>profile</tt> forms for each annotated input
 expression, unless the annotation has not been marked for use in
-profiling  (Section&nbsp;<a href="./syntax.html#g112">11.11</a>).
+profiling  (Section&nbsp;<a href="./syntax.html#g114">11.11</a>).
 It can be set to <tt>#f</tt> to inhibit the expander's implicit
 generation of <tt>profile</tt> forms, typically when explicit
 <tt>profile</tt> forms are already present for all source positions
@@ -3844,7 +3850,7 @@ code objects to be dropped.
 profile information gathered since startup or the last call to
 <tt>profile-clear</tt>.
 It returns a list of pairs, where the car of each pair
-is a source object (Section&nbsp;<a href="./syntax.html#g112">11.11</a>) and the
+is a source object (Section&nbsp;<a href="./syntax.html#g114">11.11</a>) and the
 cdr is an exact nonnegative integer count.
 
 <p>
@@ -4136,7 +4142,7 @@ to <tt>profile-load-data</tt>, the weights are averaged.
 <b>libraries: </b><tt>(chezscheme)</tt>
 
 <p>The compiler's profile database maps source objects
-(Section&nbsp;<a href="./syntax.html#g112">11.11</a>) to weights.
+(Section&nbsp;<a href="./syntax.html#g114">11.11</a>) to weights.
 If <tt><i>obj</i></tt> is a source object, the <tt>profile-query-weight</tt> returns
 the weight associated with the source object or <tt>#f</tt> if the database
 does not have a weight recorded for the source object.
@@ -4175,7 +4181,7 @@ those counts.
 
 <p>
 
-<h3><a name="g122"></a><a name="./system:h8"></a>Section 12.8. Waiter Customization<a name="SECTMISCWAITERS"></a></h3>
+<h3><a name="g124"></a><a name="./system:h8"></a>Section 12.8. Waiter Customization<a name="SECTMISCWAITERS"></a></h3>
 
 
 
@@ -4306,7 +4312,7 @@ level as described above.
 <p>
 This procedure is the default value of the <tt>waiter-prompt-and-read</tt>
 parameter whenever the expression editor
-(Section&nbsp;<a href="./use.html#g7">2.2</a>, Chapter&nbsp;<a href="./expeditor.html#g137">14</a>) is
+(Section&nbsp;<a href="./use.html#g7">2.2</a>, Chapter&nbsp;<a href="./expeditor.html#g140">14</a>) is
 <i>not</i> enabled.
 It might be defined as follows.
 
@@ -4583,7 +4589,7 @@ To have any effect, this parameter must be set within a boot file.
 
 <p>
 
-<h3><a name="g123"></a><a name="./system:h9"></a>Section 12.9. Transcript Files<a name="SECTMISCTRANSCRIPTS"></a></h3>
+<h3><a name="g125"></a><a name="./system:h9"></a>Section 12.9. Transcript Files<a name="SECTMISCTRANSCRIPTS"></a></h3>
 
 
 
@@ -4639,7 +4645,7 @@ caf&eacute;.
 
 <p>
 
-<h3><a name="g124"></a><a name="./system:h10"></a>Section 12.10. Times and Dates<a name="SECTSYSTEMTIMESNDATES"></a></h3>
+<h3><a name="g126"></a><a name="./system:h10"></a>Section 12.10. Times and Dates<a name="SECTSYSTEMTIMESNDATES"></a></h3>
 
 
 
@@ -5210,14 +5216,14 @@ and how busy the system is running other threads and processes.
 
 <p>
 
-<h3><a name="g125"></a><a name="./system:h11"></a>Section 12.11. Timing and Statistics<a name="SECTMISCSTATISTICS"></a></h3>
+<h3><a name="g127"></a><a name="./system:h11"></a>Section 12.11. Timing and Statistics<a name="SECTMISCSTATISTICS"></a></h3>
 
 
 
 <p>
 This section documents procedures for timing computations.
 The <tt>current-time</tt> procedure described in
-Section&nbsp;<a href="./system.html#g124">12.10</a> may also be used to
+Section&nbsp;<a href="./system.html#g126">12.10</a> may also be used to
 time computations.
 
 <p>
@@ -5404,7 +5410,7 @@ A <tt>sstats</tt> record has the following fields:
 
 <p>
 All values are computed since system start-up.
-The time values are time objects (Section&nbsp;<a href="./system.html#g124">12.10</a>),
+The time values are time objects (Section&nbsp;<a href="./system.html#g126">12.10</a>),
 and the bytes and count values are exact integers.
 
 <p>
@@ -5614,7 +5620,7 @@ that the collector stores some objects.
 backreference lists. Each backreference list is a list of pairs, where
 the <tt>car</tt> of the pair is a referenced object, and the
 <tt>cdr</tt> of the pair is either <tt>#f</tt> or a value that caused
-the <tt>car</tt>'s value or be retained during collection. The
+the <tt>car</tt>'s value to be retained during collection. The
 <tt>cdr</tt> of a backreference pair is <tt>#f</tt> if the object in
 the <tt>car</tt> is retained by a root reference within the system's
 implementation or static generation. By locating the <tt>cdr</tt> of
@@ -5667,7 +5673,7 @@ after garbage collection.
 
 (assq&nbsp;(unbox&nbsp;b)&nbsp;(cadr&nbsp;(object-backreferences)))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;("hello"&nbsp;.&nbsp;#&amp;"hello")</tt>
 <p>
-<h3><a name="g126"></a><a name="./system:h12"></a>Section 12.12. Cost Centers<a name="SECTMISCCOSTCENTERS"></a></h3>
+<h3><a name="g128"></a><a name="./system:h12"></a>Section 12.12. Cost Centers<a name="SECTMISCCOSTCENTERS"></a></h3>
 
 
 
@@ -5786,7 +5792,102 @@ code.
 
 <p>
 
-<h3><a name="g127"></a><a name="./system:h13"></a>Section 12.13. Parameters<a name="SECTPARAMETERS"></a></h3>
+<h3><a name="g129"></a><a name="./system:h13"></a>Section 12.13. Black-Box Procedure<a name="SECTMISCBLACKBOX"></a></h3>
+
+
+
+<p>
+<a name="./system:s263"></a><span class=formdef><b>procedure</b>: <tt>(black-box&nbsp;<i>obj</i>)</tt></span>
+<br>
+<b>returns: </b><tt><i>obj</i></tt>
+<br>
+<b>libraries: </b><tt>(chezscheme)</tt>
+
+<p>The <tt>black-box</tt> procedure simply returns its argument, but
+optimization passes make no assumptions about how <tt>black-box</tt>
+uses its argument, whether <tt>black-box</tt> has side effects,
+or what <tt>black-box</tt> returns beyond the fact that it is a
+single value.
+
+<p>
+The intended use of <tt>black-box</tt> is for benchmarking and testing
+tasks that need to simulate an arbitrary consumption context for a
+computation, but without otherwise adding overhead to the computation
+by adding a non-inlined function call or other obfuscating work.
+
+<p>
+Examples:
+
+<p>
+
+<p><tt>(time<br>
+
+&nbsp;(let&nbsp;([to-power&nbsp;100])<br>
+
+&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([i&nbsp;1000])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(unless&nbsp;(zero?&nbsp;i)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;call&nbsp;to&nbsp;`expt`&nbsp;is&nbsp;likely&nbsp;optimized&nbsp;away&nbsp;entirely,&nbsp;since&nbsp;there's<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;no&nbsp;effect&nbsp;and&nbsp;the&nbsp;result&nbsp;is&nbsp;unused:<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(expt&nbsp;2&nbsp;to-power)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(sub1&nbsp;i))))))
+<br>
+<br>
+(time<br>
+
+&nbsp;(let&nbsp;([to-power&nbsp;100])<br>
+
+&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([i&nbsp;1000])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(unless&nbsp;(zero?&nbsp;i)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;likely&nbsp;optimized&nbsp;to&nbsp;just&nbsp;returning&nbsp;a&nbsp;folded&nbsp;constant,&nbsp;instead&nbsp;of<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;calling&nbsp;`expt`&nbsp;each&nbsp;iteration:<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(black-box&nbsp;(expt&nbsp;2&nbsp;to-power))<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(sub1&nbsp;i))))))
+<br>
+<br>
+(time<br>
+
+&nbsp;(let&nbsp;([to-power&nbsp;(black-box&nbsp;100)])<br>
+
+&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([i&nbsp;1000])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(unless&nbsp;(zero?&nbsp;i)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;in&nbsp;safe&nbsp;mode,&nbsp;likely&nbsp;calls&nbsp;`expt`,&nbsp;because&nbsp;`to-power`&nbsp;is&nbsp;not&nbsp;known<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;to&nbsp;be&nbsp;a&nbsp;number,&nbsp;but&nbsp;likely&nbsp;optimized&nbsp;away&nbsp;with&nbsp;`(optimize-level&nbsp;3)`:<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(expt&nbsp;2&nbsp;to-power)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(sub1&nbsp;i))))))
+<br>
+<br>
+(time<br>
+
+&nbsp;(let&nbsp;([to-power&nbsp;(black-box&nbsp;100)])<br>
+
+&nbsp;&nbsp;&nbsp;(let&nbsp;loop&nbsp;([i&nbsp;1000])<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(unless&nbsp;(zero?&nbsp;i)<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;arithmetic&nbsp;really&nbsp;performed&nbsp;every&nbsp;iteration,&nbsp;since&nbsp;`to-power`&nbsp;value<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;is&nbsp;assumed&nbsp;unknown,&nbsp;and&nbsp;`expt`&nbsp;result&nbsp;is&nbsp;assumed&nbsp;to&nbsp;be&nbsp;used<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(black-box&nbsp;(expt&nbsp;2&nbsp;to-power))<br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(loop&nbsp;(sub1&nbsp;i))))))</tt>
+<p>
+<h3><a name="g130"></a><a name="./system:h14"></a>Section 12.14. Parameters<a name="SECTPARAMETERS"></a></h3>
 
 
 
@@ -5801,7 +5902,7 @@ the parameter may be defined directly with <tt>case-lambda</tt>.
 
 
 <p>
-<a name="./system:s263"></a><span class=formdef><b>procedure</b>: <tt>(make-parameter&nbsp;<i>object</i>)</tt></span>
+<a name="./system:s264"></a><span class=formdef><b>procedure</b>: <tt>(make-parameter&nbsp;<i>object</i>)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(make-parameter&nbsp;<i>object</i>&nbsp;<i>procedure</i>)</tt></span>
 <br>
 <b>returns: </b>a parameter (procedure)
@@ -5852,7 +5953,7 @@ follows:
 
 (format&nbsp;"~s"&nbsp;'(1&nbsp;2&nbsp;3&nbsp;4&nbsp;5&nbsp;6))&nbsp;&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"(1&nbsp;2&nbsp;3&nbsp;4&nbsp;5&nbsp;6)"</tt>
 <p>The definition of <tt>make-parameter</tt> is straightforward using
-<a name="./system:s264"></a><tt>case-lambda</tt>:
+<a name="./system:s265"></a><tt>case-lambda</tt>:
 
 <p>
 
@@ -5876,12 +5977,12 @@ follows:
 <p>In threaded versions of <i>Chez&nbsp;Scheme</i>, <tt>make-parameter</tt> creates
 global parameters.
 The procedure <tt>make-thread-parameter</tt>, described in
-Section&nbsp;<a href="./threads.html#g150">15.8</a>, may be used to make thread
+Section&nbsp;<a href="./threads.html#g153">15.8</a>, may be used to make thread
 parameters.
 
 
 <p>
-<a name="./system:s265"></a><span class=formdef><b>syntax</b>: <tt>(parameterize&nbsp;((<i>param</i>&nbsp;<i>expr</i>)&nbsp;...)&nbsp;<i>body<sub>1</sub></i>&nbsp;<i>body<sub>2</sub></i>&nbsp;...)</tt></span>
+<a name="./system:s266"></a><span class=formdef><b>syntax</b>: <tt>(parameterize&nbsp;((<i>param</i>&nbsp;<i>expr</i>)&nbsp;...)&nbsp;<i>body<sub>1</sub></i>&nbsp;<i>body<sub>2</sub></i>&nbsp;...)</tt></span>
 <br>
 <b>returns: </b>the values of the body <tt><i>body<sub>1</sub></i>&nbsp;<i>body<sub>2</sub></i>&nbsp;...</tt>
 <br>
@@ -5942,7 +6043,7 @@ values.
 
 (test)&nbsp;&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;1</tt>
 <p>The definition of <tt>parameterize</tt> is similar to the definition of
-<tt>fluid-let</tt> (page&nbsp;<a href="./binding.html#defn:fluid-let">121</a>):
+<tt>fluid-let</tt> (page&nbsp;<a href="./binding.html#defn:fluid-let">123</a>):
 
 <p>
 
@@ -5970,7 +6071,7 @@ values.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(dynamic-wind&nbsp;swap&nbsp;(lambda&nbsp;()&nbsp;b1&nbsp;b2&nbsp;...)&nbsp;swap))))])))</tt>
 <p>
-<h3><a name="g128"></a><a name="./system:h14"></a>Section 12.14. Virtual registers<a name="SECTVIRTUALREGISTERS"></a></h3>
+<h3><a name="g131"></a><a name="./system:h15"></a>Section 12.15. Virtual registers<a name="SECTVIRTUALREGISTERS"></a></h3>
 
 
 
@@ -6029,7 +6130,7 @@ the registers.
 
 
 <p>
-<a name="./system:s266"></a><span class=formdef><b>procedure</b>: <tt>(virtual-register-count)</tt></span>
+<a name="./system:s267"></a><span class=formdef><b>procedure</b>: <tt>(virtual-register-count)</tt></span>
 <br>
 <b>returns: </b>the number of virtual registers
 <br>
@@ -6040,7 +6141,7 @@ It cannot be changed except by recompiling <i>Chez&nbsp;Scheme</i> from
 source.
 
 <p>
-<a name="./system:s267"></a><span class=formdef><b>procedure</b>: <tt>(set-virtual-register!&nbsp;<i>k</i>&nbsp;<i>x</i>)</tt></span>
+<a name="./system:s268"></a><span class=formdef><b>procedure</b>: <tt>(set-virtual-register!&nbsp;<i>k</i>&nbsp;<i>x</i>)</tt></span>
 <br>
 <b>returns: </b>unspecified
 <br>
@@ -6051,7 +6152,7 @@ source.
 <tt>(virtual-register-count)</tt>.
 
 <p>
-<a name="./system:s268"></a><span class=formdef><b>procedure</b>: <tt>(virtual-register&nbsp;<i>k</i>)</tt></span>
+<a name="./system:s269"></a><span class=formdef><b>procedure</b>: <tt>(virtual-register&nbsp;<i>k</i>)</tt></span>
 <br>
 <b>returns: </b>see below
 <br>
@@ -6064,12 +6165,12 @@ threaded versions of the system).
 
 <p>
 
-<h3><a name="g129"></a><a name="./system:h15"></a>Section 12.15. Environmental Queries and Settings<a name="SECTSYSTEMENV"></a></h3>
+<h3><a name="g132"></a><a name="./system:h16"></a>Section 12.16. Environmental Queries and Settings<a name="SECTSYSTEMENV"></a></h3>
 
 
 
 <p>
-<a name="./system:s269"></a><span class=formdef><b>procedure</b>: <tt>(scheme-version)</tt></span>
+<a name="./system:s270"></a><span class=formdef><b>procedure</b>: <tt>(scheme-version)</tt></span>
 <br><span class=formdef><b>procedure</b>: <tt>(scheme-version&nbsp;<i>show-pre-release?</i>)</tt></span>
 <br>
 <b>returns: </b>a version string
@@ -6101,7 +6202,7 @@ appended.
 <p><tt>(scheme-version)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"Chez&nbsp;Scheme&nbsp;Version&nbsp;9.9.9"<br>
 
 (scheme-version&nbsp;#t)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"Chez&nbsp;Scheme&nbsp;Version&nbsp;9.9.9-pre-release.11"</tt>
-<p><a name="./system:s270"></a><span class=formdef><b>procedure</b>: <tt>(scheme-version-number)</tt></span>
+<p><a name="./system:s271"></a><span class=formdef><b>procedure</b>: <tt>(scheme-version-number)</tt></span>
 <br>
 <b>returns: </b>three values: the major, minor, and patch version numbers
 <br>
@@ -6119,7 +6220,7 @@ In <i>Chez&nbsp;Scheme</i> Version 9.7.3 or 9.7.3-pre-release.3:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="gifs/ghostRightarrow.gif">&nbsp;7<br>
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="gifs/ghostRightarrow.gif">&nbsp;3</tt>
-<p><a name="./system:s271"></a><span class=formdef><b>procedure</b>: <tt>(scheme-pre-release)</tt></span>
+<p><a name="./system:s272"></a><span class=formdef><b>procedure</b>: <tt>(scheme-pre-release)</tt></span>
 <br>
 <b>returns: </b>a pre-release number or <tt>#f</tt>
 <br>
@@ -6141,7 +6242,7 @@ In <i>Chez&nbsp;Scheme</i> Version 9.7.3:
 <p>
 
 <p><tt>(scheme-pre-release)&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3</tt>
-<p><a name="./system:s272"></a><span class=formdef><b>procedure</b>: <tt>(petite?)</tt></span>
+<p><a name="./system:s273"></a><span class=formdef><b>procedure</b>: <tt>(petite?)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if called in <i>Petite&nbsp;Chez&nbsp;Scheme</i>, <tt>#f</tt> otherwise
 <br>
@@ -6153,13 +6254,13 @@ a way to determine if the compiler is available.
 
 
 <p>
-<a name="./system:s273"></a><span class=formdef><b>procedure</b>: <tt>(threaded?)</tt></span>
+<a name="./system:s274"></a><span class=formdef><b>procedure</b>: <tt>(threaded?)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if called in a threaded version of the system, <tt>#f</tt> otherwise
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
-<p><a name="./system:s274"></a><span class=formdef><b>procedure</b>: <tt>(interactive?)</tt></span>
+<p><a name="./system:s275"></a><span class=formdef><b>procedure</b>: <tt>(interactive?)</tt></span>
 <br>
 <b>returns: </b><tt>#t</tt> if system is run interactively, <tt>#f</tt> otherwise
 <br>
@@ -6172,13 +6273,13 @@ Otherwise, it returns <tt>#f</tt>.
 
 
 <p>
-<a name="./system:s275"></a><span class=formdef><b>procedure</b>: <tt>(get-process-id)</tt></span>
+<a name="./system:s276"></a><span class=formdef><b>procedure</b>: <tt>(get-process-id)</tt></span>
 <br>
 <b>returns: </b>the operating system process id of the current process
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
-<p><a name="./system:s276"></a><span class=formdef><b>procedure</b>: <tt>(getenv&nbsp;<i>key</i>)</tt></span>
+<p><a name="./system:s277"></a><span class=formdef><b>procedure</b>: <tt>(getenv&nbsp;<i>key</i>)</tt></span>
 <br>
 <b>returns: </b>environment value of <tt><i>key</i></tt> or <tt>#f</tt>
 <br>
@@ -6192,7 +6293,7 @@ is associated with <tt><i>key</i></tt>.
 <p>
 
 <p><tt>(getenv&nbsp;"HOME")&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"/u/freddy"</tt>
-<p><a name="./system:s277"></a><span class=formdef><b>procedure</b>: <tt>(putenv&nbsp;<i>key</i>&nbsp;<i>value</i>)</tt></span>
+<p><a name="./system:s278"></a><span class=formdef><b>procedure</b>: <tt>(putenv&nbsp;<i>key</i>&nbsp;<i>value</i>)</tt></span>
 <br>
 <b>returns: </b>unspecified
 <br>
@@ -6211,7 +6312,7 @@ and any spawned processes.
 <p><tt>(putenv&nbsp;"SCHEME"&nbsp;"rocks!")<br>
 
 (getenv&nbsp;"SCHEME")&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;"rocks!"</tt>
-<p><a name="./system:s278"></a><span class=formdef><b>procedure</b>: <tt>(get-registry&nbsp;<i>key</i>)</tt></span>
+<p><a name="./system:s279"></a><span class=formdef><b>procedure</b>: <tt>(get-registry&nbsp;<i>key</i>)</tt></span>
 <br>
 <b>returns: </b>registry value of <tt><i>key</i></tt> or <tt>#f</tt>
 <br><span class=formdef><b>procedure</b>: <tt>(put-registry!&nbsp;<i>key</i>&nbsp;<i>val</i>)</tt></span>
@@ -6259,12 +6360,12 @@ These routines are defined for Windows only.
 
 (get-registry&nbsp;"hkey_local_machine\\Software\\North\\South")&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;#f</tt>
 <p>
-<h3><a name="g130"></a><a name="./system:h16"></a>Section 12.16. Subset Modes<a name="SECTMISCSUBSETMODE"></a></h3>
+<h3><a name="g133"></a><a name="./system:h17"></a>Section 12.17. Subset Modes<a name="SECTMISCSUBSETMODE"></a></h3>
 
 
 
 <p>
-<a name="./system:s279"></a><span class=formdef><b>thread parameter</b>: <tt>subset-mode</tt></span>
+<a name="./system:s280"></a><span class=formdef><b>thread parameter</b>: <tt>subset-mode</tt></span>
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
@@ -6281,10 +6382,10 @@ It is typically used only for system debugging.
 <hr class=copyright align=left>
 <p>
 <a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
-Copyright &copy; 2024 Cisco Systems, Inc.<br>
+Copyright &copy; 2025 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised February 2024 for Chez Scheme Version 10.0.0<br>
+Revised October 2025 for Chez Scheme Version 10.3.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

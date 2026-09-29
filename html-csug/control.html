@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g43"></a>
+<a name="g45"></a>
 <a name="./control:h0"></a>
 
 <h1>Chapter 6. Control Structures<a name="CHPTCONTROL"></a></h1>
@@ -26,7 +26,7 @@ on Scheme for a description of standard control structures.
 
 <p>
 
-<h3><a name="g44"></a><a name="./control:h1"></a>Section 6.1. Conditionals</h3>
+<h3><a name="g46"></a><a name="./control:h1"></a>Section 6.1. Conditionals</h3>
 
 
 
@@ -43,7 +43,7 @@ from <tt>cond</tt> in that the tests embedded within the clauses
 are assumed to be exclusive in the sense that if one of the tests
 is true, the others are not.
 This allows the implementation to reorder clauses when profiling
-information is available at expansion time (Section&nbsp;<a href="./system.html#g121">12.7</a>).
+information is available at expansion time (Section&nbsp;<a href="./system.html#g123">12.7</a>).
 
 <p>
 The <tt>(<i>test</i>)</tt> form of clause is not supported.
@@ -203,7 +203,7 @@ is present, the value is unspecified.
 
 (calc&nbsp;'(div&nbsp;3&nbsp;4))&nbsp;<img src="math/csug/0.gif" alt="<graphic>">&nbsp;3/4</tt>
 <p>
-<h3><a name="g45"></a><a name="./control:h2"></a>Section 6.2. Mapping and Folding</h3>
+<h3><a name="g47"></a><a name="./control:h2"></a>Section 6.2. Mapping and Folding</h3>
 
 
 
@@ -228,7 +228,7 @@ is present, the value is unspecified.
 
 <p>
 
-<h3><a name="g46"></a><a name="./control:h3"></a>Section 6.3. Continuations</h3>
+<h3><a name="g48"></a><a name="./control:h3"></a>Section 6.3. Continuations</h3>
 
 
 
@@ -292,7 +292,7 @@ transparently in many applications.
 One-shot continuations may be more efficient for some applications than
 multishot continuations.
 See the paper "Representing control in the presence of one-shot
-continuations"&nbsp;[<a class=citation href="./bibliography.html#g160">3</a>] for more information about
+continuations"&nbsp;[<a class=citation href="./bibliography.html#g163">3</a>] for more information about
 one-shot continuations, including how they are implemented in
 <i>Chez&nbsp;Scheme</i>.
 
@@ -708,13 +708,13 @@ when calling <tt><i>procedure</i></tt>.
 
 <p>
 
-<h3><a name="g47"></a><a name="./control:h4"></a>Section 6.4. Engines<a name="SECTENGINES"></a></h3>
+<h3><a name="g49"></a><a name="./control:h4"></a>Section 6.4. Engines<a name="SECTENGINES"></a></h3>
 
 
 
 <p>
 <a name="./control:s20"></a>Engines are a high-level process abstraction supporting
-<a name="./control:s21"></a><i>timed preemption</i>&nbsp;[<a class=citation href="./bibliography.html#g172">15</a>,<a class=citation href="./bibliography.html#g181">24</a>].
+<a name="./control:s21"></a><i>timed preemption</i>&nbsp;[<a class=citation href="./bibliography.html#g175">15</a>,<a class=citation href="./bibliography.html#g184">24</a>].
 Engines may be used to simulate <a name="./control:s22"></a>multiprocessing, implement operating
 system kernels, and perform <a name="./control:s23"></a>nondeterministic computations.
 
@@ -759,7 +759,7 @@ from the point of interruption.
 <p>
 When an engine is applied to its arguments, it sets up a timer
 to fire in <tt><i>ticks</i></tt> time units.
-(See <tt>set-timer</tt> on page&nbsp;<a href="./system.html#desc:set-timer">359</a>.)
+(See <tt>set-timer</tt> on page&nbsp;<a href="./system.html#desc:set-timer">363</a>.)
 If the engine computation completes before the timer expires, the
 system invokes <tt><i>complete</i></tt>, passing 
 it the number of <tt><i>ticks</i></tt> left over and
@@ -1186,10 +1186,10 @@ passed to <tt>engine-return</tt>.
 <hr class=copyright align=left>
 <p>
 <a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
-Copyright &copy; 2024 Cisco Systems, Inc.<br>
+Copyright &copy; 2025 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised February 2024 for Chez Scheme Version 10.0.0<br>
+Revised October 2025 for Chez Scheme Version 10.3.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

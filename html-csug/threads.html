@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g142"></a>
+<a name="g145"></a>
 <a name="./threads:h0"></a>
 
 <h1>Chapter 15. Thread System<a name="CHPTTHREADS"></a></h1>
@@ -55,7 +55,7 @@ whose property lists are being modified or accessed differ.
 <p>
 In this context, most I/O operations should be considered destructive,
 since they might modify a port's internal structure; see also
-Section&nbsp;<a href="./threads.html#g151">15.9</a> for information on buffered ports.
+Section&nbsp;<a href="./threads.html#g154">15.9</a> for information on buffered ports.
 
 <p>
 Use of operators that are not thread-safe without proper synchronization
@@ -88,7 +88,7 @@ synchronized across processors.
 
 <p>
 
-<h3><a name="g143"></a><a name="./threads:h1"></a>Section 15.1. Thread Creation</h3>
+<h3><a name="g146"></a><a name="./threads:h1"></a>Section 15.1. Thread Creation</h3>
 
 
 
@@ -108,7 +108,7 @@ a thread object.
 <p>
 Threads created by foreign code using some means other than
 <tt>fork-thread</tt> must call <tt>Sactivate_thread</tt>
-(Section&nbsp;<a href="./foreign.html#g35">4.9</a>) before touching any Scheme data
+(Section&nbsp;<a href="./foreign.html#g37">4.9</a>) before touching any Scheme data
 or calling any Scheme procedures.
 
 <p>
@@ -159,7 +159,7 @@ collection.
 
 <p>
 
-<h3><a name="g144"></a><a name="./threads:h2"></a>Section 15.2. Mutexes</h3>
+<h3><a name="g147"></a><a name="./threads:h2"></a>Section 15.2. Mutexes</h3>
 
 
 
@@ -262,7 +262,7 @@ Using <tt>with-mutex</tt> is generally more convenient and safer than using
 
 <p>
 
-<h3><a name="g145"></a><a name="./threads:h3"></a>Section 15.3. Conditions</h3>
+<h3><a name="g148"></a><a name="./threads:h3"></a>Section 15.3. Conditions</h3>
 
 
 
@@ -349,7 +349,7 @@ condition identified by <tt><i>cond</i></tt>.
 
 <p>
 
-<h3><a name="g146"></a><a name="./threads:h4"></a>Section 15.4. Locks<a name="SECTTHREADLOCKS"></a></h3>
+<h3><a name="g149"></a><a name="./threads:h4"></a>Section 15.4. Locks<a name="SECTTHREADLOCKS"></a></h3>
 
 
 
@@ -366,7 +366,7 @@ as long as the lock is allocated in memory shared by the processes.
 A lock is simply a word-sized integer, i.e., an <tt>iptr</tt> or
 <tt>uptr</tt> foreign type (Section&nbsp;<a href="./foreign.html#g31">4.5</a>) with the native
 endianness of the target machine, possibly part of a larger structure
-defined using <tt>define-ftype</tt> (page&nbsp;<a href="./foreign.html#defn:define-ftype">77</a>).
+defined using <tt>define-ftype</tt> (page&nbsp;<a href="./foreign.html#defn:define-ftype">79</a>).
 It must be explicitly allocated in memory that resides outside the Scheme
 heap and, when appropriate, explicitly deallocated.
 When just threads are involved (i.e., when multiple processes are not 
@@ -436,7 +436,7 @@ disciplined manner.
 <b>libraries: </b><tt>(chezscheme)</tt>
 
 <p>Each of these has a syntax like and behaves similarly to
-<tt>ftype-set!</tt> (page&nbsp;<a href="./foreign.html#defn:ftype-set!">86</a>), though with an implicit
+<tt>ftype-set!</tt> (page&nbsp;<a href="./foreign.html#defn:ftype-set!">88</a>), though with an implicit
 <tt><i>val-expr</i></tt>.
 In particular, the restrictions on and handling of <tt><i>fptr-expr</i></tt>
 and the accessors <tt><i>a</i>&nbsp;...</tt> is similar, with one important
@@ -482,7 +482,7 @@ needed to complete an intended synchronization.
 
 <p>
 
-<h3><a name="g147"></a><a name="./threads:h5"></a>Section 15.5. Locked increment and decrement<a name="SECTTHREADLOCKEDINCRDECR"></a></h3>
+<h3><a name="g150"></a><a name="./threads:h5"></a>Section 15.5. Locked increment and decrement<a name="SECTTHREADLOCKEDINCRDECR"></a></h3>
 
 
 
@@ -503,7 +503,7 @@ increment or decrement is required.
 <b>libraries: </b><tt>(chezscheme)</tt>
 
 <p>Each of these has a syntax like and behaves similarly to
-<tt>ftype-set!</tt> (page&nbsp;<a href="./foreign.html#defn:ftype-set!">86</a>), though with an implicit
+<tt>ftype-set!</tt> (page&nbsp;<a href="./foreign.html#defn:ftype-set!">88</a>), though with an implicit
 <tt><i>val-expr</i></tt>.
 In particular, the restrictions on and handling of <tt><i>fptr-expr</i></tt>
 and the accessors <tt><i>a</i>&nbsp;...</tt> is similar, with one important
@@ -523,7 +523,7 @@ Both return <tt>#t</tt> if the new value is 0, otherwise <tt>#f</tt>.
 
 <p>
 
-<h3><a name="g148"></a><a name="./threads:h6"></a>Section 15.6. Reference counting with ftype guardians<a name="SECTTHREADFTYPEGUARDIANS"></a></h3>
+<h3><a name="g151"></a><a name="./threads:h6"></a>Section 15.6. Reference counting with ftype guardians<a name="SECTTHREADFTYPEGUARDIANS"></a></h3>
 
 
 
@@ -542,7 +542,7 @@ purpose.
 <p>
 Ftype guardians are similar to guardians created by
 <a name="./threads:s25"></a><tt>make-guardian</tt>
-(Section&nbsp;<a href="./smgmt.html#g133">13.2</a>).
+(Section&nbsp;<a href="./smgmt.html#g136">13.2</a>).
 The <a name="./threads:s26"></a><tt>guardian?</tt> procedure returns
 true for both, and the
 <a name="./threads:s27"></a><tt>unregister-guardian</tt>
@@ -594,7 +594,7 @@ In such systems, programs should themselves use
 <tt>ftype-locked-decr!</tt> or non-Scheme equivalents (e.g., the C
 <a name="./threads:s31"></a><tt>LOCKED_INCR</tt> and
 <a name="./threads:s32"></a><tt>LOCKED_DECR</tt> macros in scheme.h,
-which are described in Section&nbsp;<a href="./foreign.html#g35">4.9</a>) to maintain
+which are described in Section&nbsp;<a href="./foreign.html#g37">4.9</a>) to maintain
 reference counts.
 
 <p>
@@ -688,7 +688,7 @@ of the containing object.
 
 <p>
 
-<h3><a name="g149"></a><a name="./threads:h7"></a>Section 15.7. Memory Consistency<a name="SECTSMGMTMEMMODEL"></a></h3>
+<h3><a name="g152"></a><a name="./threads:h7"></a>Section 15.7. Memory Consistency<a name="SECTSMGMTMEMMODEL"></a></h3>
 
 
 
@@ -722,7 +722,7 @@ a store-store and store-load fence.
 
 <p>
 
-<h3><a name="g150"></a><a name="./threads:h8"></a>Section 15.8. Thread Parameters<a name="SECTTHREADPARAMETERS"></a></h3>
+<h3><a name="g153"></a><a name="./threads:h8"></a>Section 15.8. Thread Parameters<a name="SECTTHREADPARAMETERS"></a></h3>
 
 
 
@@ -734,7 +734,7 @@ a store-store and store-load fence.
 <br>
 <b>libraries: </b><tt>(chezscheme)</tt>
 
-<p>See Section&nbsp;<a href="./system.html#g127">12.13</a> for a general
+<p>See Section&nbsp;<a href="./system.html#g130">12.14</a> for a general
 discussion of parameters and the use of the optional second argument.
 
 <p>
@@ -752,7 +752,7 @@ the current value (not location) of each
 thread parameter is inherited from the forking thread by the new thread.
 Similarly, when a thread created by some other means is activated for the
 first time (see <tt>Sactivate_thread</tt> in
-Section&nbsp;<a href="./foreign.html#g35">4.9</a>), the current value (not location) of each
+Section&nbsp;<a href="./foreign.html#g37">4.9</a>), the current value (not location) of each
 thread parameter is inherited from the main (original) thread by the new
 thread.
 
@@ -765,7 +765,7 @@ in the nonthreaded versions of the system.
 
 <p>
 
-<h3><a name="g151"></a><a name="./threads:h9"></a>Section 15.9. Buffered I/O<a name="SECTTHREADSBUFFEREDIO"></a></h3>
+<h3><a name="g154"></a><a name="./threads:h9"></a>Section 15.9. Buffered I/O<a name="SECTTHREADSBUFFEREDIO"></a></h3>
 
 
 
@@ -805,13 +805,13 @@ acquiring a mutex for each I/O operation.
 
 <p>
 
-<h3><a name="g152"></a><a name="./threads:h10"></a>Section 15.10. Example: Bounded Queues</h3>
+<h3><a name="g155"></a><a name="./threads:h10"></a>Section 15.10. Example: Bounded Queues</h3>
 
 
 
 <p>
 The following code, taken from the article
-"A Scheme for native threads&nbsp;[<a class=citation href="./bibliography.html#g167">10</a>],"
+"A Scheme for native threads&nbsp;[<a class=citation href="./bibliography.html#g170">10</a>],"
 implements a bounded queue using many of the
 thread-system features.
 A bounded queue has a fixed number of available slots.  
@@ -1065,7 +1065,7 @@ Adding&nbsp;job&nbsp;#9&nbsp;=&nbsp;(lambda&nbsp;()&nbsp;(fib&nbsp;26))<br>
 ...</tt>
 <p>Additional examples, including definitions of suspendable threads and
 threads that automatically terminate when they become inaccessible, are
-given in "A Scheme for native threads&nbsp;[<a class=citation href="./bibliography.html#g167">10</a>]."
+given in "A Scheme for native threads&nbsp;[<a class=citation href="./bibliography.html#g170">10</a>]."
 
 
 <p>
@@ -1076,10 +1076,10 @@ given in "A Scheme for native threads&nbsp;[<a class=citation href="./bibliograp
 <hr class=copyright align=left>
 <p>
 <a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
-Copyright &copy; 2024 Cisco Systems, Inc.<br>
+Copyright &copy; 2025 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised February 2024 for Chez Scheme Version 10.0.0<br>
+Revised October 2025 for Chez Scheme Version 10.3.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

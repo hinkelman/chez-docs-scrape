@@ -8,7 +8,7 @@
 <link href="csug.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<a name="g131"></a>
+<a name="g134"></a>
 <a name="./smgmt:h0"></a>
 
 <h1>Chapter 13. Storage Management<a name="CHPTSMGMT"></a></h1>
@@ -23,7 +23,7 @@ procedures that may be used to control its operation.
 
 <p>
 
-<h3><a name="g132"></a><a name="./smgmt:h1"></a>Section 13.1. Garbage Collection<a name="SECTSMGMTGC"></a></h3>
+<h3><a name="g135"></a><a name="./smgmt:h1"></a>Section 13.1. Garbage Collection<a name="SECTSMGMTGC"></a></h3>
 
 
 
@@ -72,7 +72,7 @@ which storage is never reclaimed.
 Objects are placed into the static generation only
 when a heap is compacted (see
 <a name="./smgmt:s6"></a><tt>Scompact_heap</tt> in
-Section&nbsp;<a href="./foreign.html#g35">4.9</a>) or when an explicitly specified
+Section&nbsp;<a href="./foreign.html#g37">4.9</a>) or when an explicitly specified
 target-generation is the symbol <tt>static</tt>.
 This is primarily useful after an application's permanent code and data
 structures have been loaded and initialized, to reduce the overhead of
@@ -148,7 +148,7 @@ that period of time.
 <p>
 Additional information on <i>Chez&nbsp;Scheme</i>'s collector can be found in the
 report "Don't stop the BiBOP:  Flexible and efficient
-storage management for dynamically typed languages"&nbsp;[<a class=citation href="./bibliography.html#g170">13</a>].
+storage management for dynamically typed languages"&nbsp;[<a class=citation href="./bibliography.html#g173">13</a>].
 
 
 <p>
@@ -462,7 +462,7 @@ remains in place.
 
 <p>
 
-<h3><a name="g133"></a><a name="./smgmt:h2"></a>Section 13.2. Weak Pairs, Ephemeron Pairs, and Guardians<a name="SECTGUARDWEAKPAIRS"></a></h3>
+<h3><a name="g136"></a><a name="./smgmt:h2"></a>Section 13.2. Weak Pairs, Ephemeron Pairs, and Guardians<a name="SECTGUARDWEAKPAIRS"></a></h3>
 
 
 
@@ -498,8 +498,8 @@ actions can be performed using the data stored within the objects.
 
 <p>
 The implementation of guardians and weak pairs used by <i>Chez&nbsp;Scheme</i>
-is described in&nbsp;[<a class=citation href="./bibliography.html#g169">12</a>]. Ephemerons are described
-in&nbsp;[<a class=citation href="./bibliography.html#g180">23</a>], but the implementation in <i>Chez&nbsp;Scheme</i>
+is described in&nbsp;[<a class=citation href="./bibliography.html#g172">12</a>]. Ephemerons are described
+in&nbsp;[<a class=citation href="./bibliography.html#g183">23</a>], but the implementation in <i>Chez&nbsp;Scheme</i>
 avoids quadratic-time worst-case behavior.
 
 <p>
@@ -1132,12 +1132,12 @@ explicit calls to <tt>collect</tt>.
 <p><tt>unregister-guardian</tt> can also be used to unregister ftype
 pointers registered with guardians created by
 <a name="./smgmt:s38"></a><tt>ftype-guardian</tt>
-(Section&nbsp;<a href="./threads.html#g148">15.6</a>).
+(Section&nbsp;<a href="./threads.html#g151">15.6</a>).
 
 
 <p>
 
-<h3><a name="g134"></a><a name="./smgmt:h3"></a>Section 13.3. Locking Objects<a name="SECTSMGMTLOCKING"></a></h3>
+<h3><a name="g137"></a><a name="./smgmt:h3"></a>Section 13.3. Locking Objects<a name="SECTSMGMTLOCKING"></a></h3>
 
 
 
@@ -1147,7 +1147,7 @@ should generally be discarded before entry (or reentry) into Scheme.
 When this guideline cannot be followed, the object may be
 <i>locked</i> via <tt>lock-object</tt> or via the equivalent
 C library procedure <a name="./smgmt:s39"></a><tt>Slock_object</tt>
-(Section&nbsp;<a href="./foreign.html#g35">4.9</a>).
+(Section&nbsp;<a href="./foreign.html#g37">4.9</a>).
 
 <p>
 <a name="./smgmt:s40"></a><span class=formdef><b>procedure</b>: <tt>(lock-object&nbsp;<i>obj</i>)</tt></span>
@@ -1213,7 +1213,7 @@ booleans, and characters, and objects that have been made static.
 
 <p>
 
-<h3><a name="g135"></a><a name="./smgmt:h4"></a>Section 13.4. Immobile Objects<a name="SECTSMGMTIMMOBILE"></a></h3>
+<h3><a name="g138"></a><a name="./smgmt:h4"></a>Section 13.4. Immobile Objects<a name="SECTSMGMTIMMOBILE"></a></h3>
 
 
 
@@ -1262,7 +1262,7 @@ in memory by the storage management system until it is reclaimed.
 
 <p>
 
-<h3><a name="g136"></a><a name="./smgmt:h5"></a>Section 13.5. Phantom Bytevectors<a name="SECTSMGMTPHANTOM"></a></h3>
+<h3><a name="g139"></a><a name="./smgmt:h5"></a>Section 13.5. Phantom Bytevectors<a name="SECTSMGMTPHANTOM"></a></h3>
 
 
 
@@ -1354,10 +1354,10 @@ is deallocated, then <tt><i>pbv</i></tt>'s length should be set to <tt>0</tt>.
 <hr class=copyright align=left>
 <p>
 <a class=plain href="index.html">Chez Scheme Version 10 User's Guide</a><br>
-Copyright &copy; 2024 Cisco Systems, Inc.<br>
+Copyright &copy; 2025 Cisco Systems, Inc.<br>
 Licensed under the <a href="http://www.apache.org/licenses/LICENSE-2.0">Apache License Version 2.0</a>
 (<a class=plain href="canned/copyright.html">full copyright notice.</a>).</br>
-Revised February 2024 for Chez Scheme Version 10.0.0<br>
+Revised October 2025 for Chez Scheme Version 10.3.0<br>
 <a class=plain href="canned/about.html">about this book</a>
 </tr></table>
 </body>

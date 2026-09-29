@@ -3,7 +3,7 @@
 (import (chez-docs-scrape)
         (only (wak htmlprag) html->sxml))
 
-(define csug-base "https://cisco.github.io/ChezScheme/csug10.0/")
+(define csug-base "https://cisco.github.io/ChezScheme/csug10.3.0/")
 (download-pages
  csug-base
  "html-csug"
