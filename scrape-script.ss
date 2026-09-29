@@ -21,7 +21,8 @@
 
 (define unique-categories (extract-unique-categories summary-rows))
 
-(define summary (map extract-row-data summary-rows))
+(define summary
+  (map (lambda (row) (extract-row-data row csug-base)) summary-rows))
 
 ;; alias appears twice in CSUG as both a procedure and keyword for `import`
 ;; choosing to drop the keyword version (syntax:s22)

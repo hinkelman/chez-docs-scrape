@@ -103,7 +103,7 @@
   ;; https://lists.gnu.org/archive/html/guile-user/2012-01/msg00049.html
   (define summary-matcher (sxpath '(// html body p table tr)))
 
-  (define (extract-row-data row)
+  (define (extract-row-data row base)
     (let* ([tds (sxml:content row)]
            [row0 (list-ref tds 0)]
            [form (extract-form (list-ref row0 2))]
@@ -111,7 +111,7 @@
            [a-tag (assoc 'a (sxml:content (list-ref tds 2)))]
            [page (list-ref a-tag 2)]
            [url-raw (cadadr (list-ref a-tag 1))]
-           [url (expand-url url-raw)]
+           [url (expand-url url-raw base)]
            [source (if (irregex-search "/tspl4/" url-raw) "tspl" "csug")]
            [anchor (extract-anchor url)])
       (list source key anchor url)))
@@ -132,10 +132,9 @@
            [key1 (irregex-replace/all '(or #\( #\)) key0 "")])
       (if key1 key1 key0)))
 
-  (define (expand-url url)
-    (let* ([expand-text "https://cisco.github.io/ChezScheme/csug10.0"]
-           ;; bos = beginning of string; colon creates sre 
-           [url-expand (irregex-replace '(: bos #\.) url expand-text)])
+  (define (expand-url url base)
+    ;; base ends in "/", so replace the leading "./" rather than just "."
+    (let ([url-expand (irregex-replace '(: bos "./") url base)])
       (if url-expand url-expand url)))
 
   (define (extract-anchor url)
@@ -182,9 +181,13 @@
   ;; treating them as siblings. the two-pass fix below inserts the missing
   ;; </dt>, then cleans up any </dt></dt> double-close that results from the
   ;; well-formed cases that already had an explicit </dt>.
+  ;; step0 removes a stray <p> before an anchored list item, e.g.,
+  ;; <p><a name="g32"></a><li>, which otherwise leaves the <li> unclosed and
+  ;; nests the rest of the page inside it (foreign.html in CSUG 10.3).
   (define (read-and-clean path)
     (let* ([raw     (call-with-input-file path get-string-all)]
-           [step1   (irregex-replace/all "<p>[ \t\r\n]*(?=<(p|li|ul)>)" raw "")]
+           [step0   (irregex-replace/all "<p>[ \t\r\n]*(?=<a name=\"[^\"]*\"></a><li>)" raw "")]
+           [step1   (irregex-replace/all "<p>[ \t\r\n]*(?=<(p|li|ul)>)" step0 "")]
            [step2   (irregex-replace/all "<dd>" step1 "</dt><dd>")]
            [step3   (irregex-replace/all "</dt></dt>" step2 "</dt>")])
       (open-string-input-port step3)))
