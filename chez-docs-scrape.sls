@@ -16,20 +16,17 @@
    process-html-file
    get-p-list
    read-and-clean
-   process-p-list
-   process-p-elem
+   group-formdefs
    extract-p-anchor
    check-formdef
    check-headers
    check-footer
    flatten
    normalize-children
-   render-sxml
-   render-children
+   sxml->doc
    render-entity
    render-gif
    attr-value
-   normalize-children
    strip-embedded-newlines
    collapse-br-clusters
    drop-leading-noise
@@ -163,8 +160,14 @@
             (apply append (map (lambda (file) (process-html-file dir file))
                                (sort string<? (directory-list dir))))))
 
+  ;; each entry is (anchor para ...) where para is a non-empty list of doc
+  ;; nodes (see sxml->doc); paragraphs with no content are dropped
   (define (process-html-file dir file)
-    (process-p-list (get-p-list dir file)))
+    (map (lambda (entry)
+           (cons (car entry)
+                 (filter pair? (map (lambda (p) (doc-children (list p)))
+                                    (cdr entry)))))
+         (group-formdefs (get-p-list dir file))))
 
   (define (get-p-list dir file)
     (p-matcher
@@ -192,41 +195,26 @@
            [step3   (irregex-replace/all "</dt></dt>" step2 "</dt>")])
       (open-string-input-port step3)))
   
-  ;; process-p-list goes through all elements in a p-list and
-  ;; throws away elements that won't be served up as part of chez-docs
-  ;; creates sublists where the first element is the p-anchor (e.g., objects:s0) that can be looked up with assoc
-  ;; combines all the elements that are associated with a formdef into one sublist for display
-  (define (process-p-list p-list)
+  ;; group-formdefs goes through all elements in a p-list and
+  ;; throws away elements that won't be served up as part of chez-docs.
+  ;; returns sublists where the first element is the p-anchor (e.g., objects:s0)
+  ;; that can be looked up with assoc, followed by the formdef p-elem and all
+  ;; p-elems that follow it up to the next formdef, header, or footer
+  (define (group-formdefs p-list)
     (let loop ([lst p-list]
-               [flag 0]      ;; indicates if content in p-elem is part of a formdef
-               [tmp '()]     ;; accumulate components of a formdef into a tmp list
-               [final '()]) 
-      (cond [(null? lst)
-             (reverse final)]
-            [(and (= flag 0) (check-formdef (car lst)))
-             ;; start of new formdef
-             ;; start new tmp list of lists
-             (loop (cdr lst) 1 (list (process-p-elem (car lst) #t)) final)]
-            [(and (= flag 1) (check-formdef (car lst)))
-             ;; last p-elem was a formdef (= flag 1)
-             ;; and current p-elem is a formdef
-             ;; start a new tmp list of lists
-             ;; cons the previous tmp list to final
-             ;; and keep flag as one to indicate still in a formdef (but a new one)
-             (loop (cdr lst)
-                   1
-                   (list (process-p-elem (car lst) #t))
-                   (cons (apply append (reverse tmp)) final))]
-            [(and (= flag 1) (or (check-headers (car lst)) (check-footer (car lst))))
-             ;; if last p-elem was part of a formdef and then encounter header or footer
-             ;; add tmp to final and set flag to 0 and set tmp to empty list
-             (loop (cdr lst) 0 '() (cons (apply append (reverse tmp)) final))]
-            [(= flag 1)
-             ;; continue to collect p-elems that are part of a formdef in tmp
-             (loop (cdr lst) flag (cons (process-p-elem (car lst) #f) tmp) final)]
-            [else
-             ;; skip over any elements that aren't being retained for display
-             (loop (cdr lst) flag tmp final)])))
+               [cur #f]      ;; reversed p-elems of the current formdef, or #f
+               [final '()])
+      (define (flush) (if cur (cons (reverse cur) final) final))
+      (cond
+       [(null? lst) (reverse (flush))]
+       [(check-formdef (car lst))
+        ;; start of new formdef; anchor goes last because cur is reversed
+        (loop (cdr lst) (list (car lst) (extract-p-anchor (car lst))) (flush))]
+       [(and cur (or (check-headers (car lst)) (check-footer (car lst))))
+        (loop (cdr lst) #f (flush))]
+       [cur (loop (cdr lst) (cons (car lst) cur) final)]
+       ;; skip over any elements that aren't part of a formdef
+       [else (loop (cdr lst) cur final)])))
 
   (define (check-formdef p-elem)
     (member "formdef" (flatten p-elem)))
@@ -246,50 +234,10 @@
   (define (check-footer p-elem)
     (member "Copyright " (flatten p-elem)))
 
-  (define (process-p-elem p-elem formdef?)
-    (let* ([str1 (render-sxml p-elem)]
-           [str2 (if (string=? str1 "") str1 (string-append str1 "\n\n"))])
-      (if formdef?
-          (list (extract-p-anchor p-elem) str2)
-          (list str2))))
-
   (define (extract-p-anchor p-elem)
     (let* ([name-matcher (sxpath '(// a ^ name))]
            [name (cadar (name-matcher p-elem))])
       (strip-dotslash name)))
-
-  (define (render-sxml node)
-    (cond
-     [(symbol? node) (render-entity node)]
-     ;; hex codes, e.g., &#x130 -> 304, are translated into integers by html->sxml
-     [(number? node) (string (integer->char node))]
-     [(pair? node)
-      (let ([tag (car node)])
-        (cond
-         [(symbol=? tag '&)
-          (render-entity (cadr node))]
-         [(symbol=? tag '^) ""]  ;; attribute subtree — skip
-         [(symbol=? tag 'table) "[table not shown]"]
-         [(symbol=? tag 'br) "\n"]
-         [(symbol=? tag 'ul)   ;; unordered list
-          (string-append "\n" (render-children (normalize-children (sxml:content node))) "\n")]
-         [(symbol=? tag 'li)   ;; list element
-          (string-append "\n* " (render-children (normalize-children (sxml:content node))))]
-         [(symbol=? tag 'dt)   ;; definition term
-          (string-append "\n" (render-children (sxml:content node)))]
-         [(symbol=? tag 'dd)   ;; definition detail
-          (string-append "\n    " (render-children (normalize-children (sxml:content node))))] 
-         [(symbol=? tag 'sup)
-          (string-append "^" (render-children (sxml:content node)))]
-         [(symbol=? tag 'img)
-          ;; htmlprag form: (img (^ (src "...") (alt "...") ...))
-          (let ([src (attr-value node 'src)])
-            (if src (render-gif src) ""))]
-         [else
-          ;; generic passthrough: p, span, a, b, i, ...
-          (render-children (normalize-children (sxml:content node)))]))]
-     ;; anything that reaches here should be a bare string
-     [else node]))
 
   (define (attr-value node attr-name)
     (let ([rest (cdr node)])
@@ -340,12 +288,103 @@
       ("math/tspl/15.gif"          . "+\x3C0;")  ; positive pi
       ("gifs/ghostRightarrow.gif"  . "  ")))
 
-  (define (render-children kids)
-    (apply string-append
-           (map (lambda (k) (render-sxml k)) kids)))
+  ;; Doc tree ---------------------------------------------------------------------
+  ;; sxml->doc converts htmlprag SXML into a small semantic tree that keeps the
+  ;; markup worth rendering (code, metavariables, bold, links, etc.) and drops
+  ;; everything else. Rendering (plain text, ANSI, ...) happens in chez-docs.
+  ;; A doc node is either a string or one of:
+  ;;   (code node ...)         <tt>
+  ;;   (var node ...)          <i>, <it> (metavariables)
+  ;;   (bold node ...)         <b>
+  ;;   (sub node ...)          <sub>
+  ;;   (sup node ...)          <sup>
+  ;;   (link href node ...)    <a href=...>
+  ;;   (math string)           gif images and <=, >= entities
+  ;;   (br)                    <br>
+  ;;   (ul node ...)           <ul>
+  ;;   (li node ...)           <li>
+  ;;   (dt node ...)           <dt>
+  ;;   (dd node ...)           <dd>
+  ;;   (table row ...)         <table>, where row is (row cell ...)
+  ;;                           and cell is (cell node ...)
+  ;; Tags not listed above (p, span, div, ...) are spliced into their parent.
+  ;; code, var, bold, and sub nodes with no content are dropped.
+
+  (define (sxml->doc node)
+    ;; returns a list of doc nodes so passthrough tags can splice
+    (cond
+     [(symbol? node) (entity->doc node)]
+     [(number? node) (list (string (integer->char node)))]
+     [(pair? node)
+      (let ([tag (car node)])
+        (case tag
+          [(&) (entity->doc (cadr node))]
+          [(^) '()]
+          [(table) (list (table->doc node))]
+          [(br) (list '(br))]
+          ;; sup and dt children are not normalized; normalizing them would
+          ;; change the plain rendering from the original string-based scrape
+          [(tt) (wrap 'code (normalize-children (sxml:content node)))]
+          [(i it) (wrap 'var (normalize-children (sxml:content node)))]
+          [(b) (wrap 'bold (normalize-children (sxml:content node)))]
+          [(sub) (wrap 'sub (normalize-children (sxml:content node)))]
+          [(sup dt) (wrap tag (sxml:content node))]
+          [(ul li dd) (wrap tag (normalize-children (sxml:content node)))]
+          [(img)
+           (let ([src (attr-value node 'src)])
+             (if src (list (list 'math (render-gif src))) '()))]
+          [(a)
+           (let ([href (attr-value node 'href)]
+                 [kids (doc-children (normalize-children (sxml:content node)))])
+             (if (and href (pair? kids))
+                 (list (cons* 'link href kids))
+                 kids))]
+          [else (doc-children (normalize-children (sxml:content node)))]))]
+     [else (list node)]))
+
+  (define (wrap tag kids)
+    (let ([doc (doc-children kids)])
+      (if (and (null? doc) (memq tag '(code var bold sub)))
+          '()
+          (list (cons tag doc)))))
+
+  (define (doc-children kids)
+    (merge-strings (apply append (map sxml->doc kids))))
+
+  ;; join adjacent strings so the tree stays compact
+  (define (merge-strings nodes)
+    (let loop ([lst nodes] [acc '()])
+      (cond
+       [(null? lst) (reverse acc)]
+       [(and (string? (car lst)) (string=? (car lst) ""))
+        (loop (cdr lst) acc)]
+       [(and (string? (car lst)) (pair? acc) (string? (car acc)))
+        (loop (cdr lst) (cons (string-append (car acc) (car lst)) (cdr acc)))]
+       [else (loop (cdr lst) (cons (car lst) acc))])))
+
+  (define (entity->doc sym)
+    (case sym
+      [(le) (list '(math "<="))]
+      [(ge) (list '(math ">="))]
+      [else (let ([s (render-entity sym)])
+              (if (string=? s "") '() (list s)))]))
+
+  (define table-row-matcher (sxpath '(// tr)))
+
+  (define (table->doc node)
+    (cons 'table
+          (map (lambda (tr)
+                 (cons 'row
+                       (map (lambda (td)
+                              (cons 'cell (doc-children
+                                           (normalize-children (sxml:content td)))))
+                            (filter (lambda (x)
+                                      (and (pair? x) (memq (car x) '(td th))))
+                                    (sxml:content tr)))))
+               (table-row-matcher node))))
 
   ;; normalize-children: clean up whitespace/newline noise in a children list
-  ;; so that render-children can be a simple walk with no lookahead or state
+  ;; so that sxml->doc can be a simple walk with no lookahead or state
 
   (define (normalize-children children)
     (let* ([step1 (strip-embedded-newlines children)]

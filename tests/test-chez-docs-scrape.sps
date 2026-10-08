@@ -254,89 +254,95 @@
 (test-end "render-gif")
 
 ;; ---------------------------------------------------------------------------
-;; render-sxml
+;; sxml->doc
 ;; ---------------------------------------------------------------------------
 
-(test-begin "render-sxml")
+(test-begin "sxml->doc")
 
 (test-equal "bare string passes through"
-  "hello"
-  (render-sxml "hello"))
-(test-equal "integer renders as char"
-  (string (integer->char 304))
-  (render-sxml 304))
-(test-equal "unknown bare symbol returns empty string"
-  ""
-  (render-sxml 'bogus))
-(test-equal "(& nbsp) renders as space"
-  " "
-  (render-sxml '(& nbsp)))
-(test-equal "(& le) renders as <="
-  "<="
-  (render-sxml '(& le)))
-(test-equal "^ node returns empty string"
-  ""
-  (render-sxml '(^ (class "formdef"))))
-(test-equal "br renders as newline"
-  "\n"
-  (render-sxml '(br)))
-(test-equal "table renders as placeholder"
-  "[table not shown]"
-  (render-sxml '(table (tr (td "a")))))
-(test-equal "sup renders with caret"
-  "^6"
-  (render-sxml '(sup "6")))
-(test-equal "img with known gif"
-  "=>"
-  (render-sxml '(img (^ (src "math/csug/0.gif") (alt "<graphic>")))))
+  '("hello")
+  (sxml->doc "hello"))
+(test-equal "integer becomes char"
+  (list (string (integer->char 304)))
+  (sxml->doc 304))
+(test-equal "unknown bare symbol drops out"
+  '()
+  (sxml->doc 'bogus))
+(test-equal "(& nbsp) becomes space"
+  '(" ")
+  (sxml->doc '(& nbsp)))
+(test-equal "(& le) becomes math"
+  '((math "<="))
+  (sxml->doc '(& le)))
+(test-equal "^ node drops out"
+  '()
+  (sxml->doc '(^ (class "formdef"))))
+(test-equal "br"
+  '((br))
+  (sxml->doc '(br)))
+(test-equal "table keeps rows and cells"
+  '((table (row (cell (code "ptr")) (cell "any object"))))
+  (sxml->doc '(table (tr (td (tt "ptr")) (td "any object")))))
+(test-equal "sup"
+  '((sup "6"))
+  (sxml->doc '(sup "6")))
+(test-equal "img with known gif becomes math"
+  '((math "=>"))
+  (sxml->doc '(img (^ (src "math/csug/0.gif") (alt "<graphic>")))))
 (test-equal "img with unknown gif"
-  "[image not available]"
-  (render-sxml '(img (^ (src "math/csug/9999.gif") (alt "<graphic>")))))
+  '((math "[image not available]"))
+  (sxml->doc '(img (^ (src "math/csug/9999.gif") (alt "<graphic>")))))
 (test-equal "ul with li items"
-  "\n\n* item1\n* item2\n"
-  (render-sxml '(ul (li "item1") (li "item2"))))
-(test-equal "dt renders with no newline prefix"
-  "\nterm"
-  (render-sxml '(dt "term")))
-(test-equal "dd renders with indent"
-  "\n    detail"
-  (render-sxml '(dd "detail")))
-(test-equal "b tag passes through"
-  "bold"
-  (render-sxml '(b "bold")))
-(test-equal "i tag passes through"
-  "italic"
-  (render-sxml '(i "italic")))
-(test-equal "tt with nbsp"
-  "(eq? x)"
-  (render-sxml '(tt "(eq?" (& nbsp) "x)")))
-(test-equal "a anchor tag produces no text"
-  ""
-  (render-sxml '(a (^ (name "./objects:s0")))))
-(test-equal "span passes through content"
-  "procedure: (foo x)"
-  (render-sxml '(span (^ (class "formdef")) (b "procedure") ": " (tt "(foo x)"))))
+  '((ul (li "item1") (li "item2")))
+  (sxml->doc '(ul (li "item1") (li "item2"))))
+(test-equal "dt"
+  '((dt "term"))
+  (sxml->doc '(dt "term")))
+(test-equal "dd"
+  '((dd "detail"))
+  (sxml->doc '(dd "detail")))
+(test-equal "b becomes bold"
+  '((bold "returns: "))
+  (sxml->doc '(b "returns: ")))
+(test-equal "i becomes var"
+  '((var "italic"))
+  (sxml->doc '(i "italic")))
+(test-equal "empty tt drops out"
+  '()
+  (sxml->doc '(tt)))
+(test-equal "tt with nbsp and metavariable"
+  '((code "(quote " (var "obj") ")"))
+  (sxml->doc '(tt "(quote" (& nbsp) (i "obj") ")")))
+(test-equal "link keeps href"
+  '((link "./io.html#g1" "7"))
+  (sxml->doc '(a (^ (href "./io.html#g1")) "7")))
+(test-equal "empty named anchor drops out"
+  '()
+  (sxml->doc '(a (^ (name "./objects:s0")))))
+(test-equal "span is spliced into parent"
+  '((bold "procedure") ": " (code "(foo x)"))
+  (sxml->doc '(span (^ (class "formdef")) (b "procedure") ": " (tt "(foo x)"))))
 
 ;; normalization via passthrough
 (test-equal "trailing newlines in p dropped"
-  "some text"
-  (render-sxml '(p "some text" "\n" "\n")))
+  '("some text")
+  (sxml->doc '(p "some text" "\n" "\n")))
 (test-equal "mid-prose embedded newline becomes space"
-  "foo bar"
-  (render-sxml '(p "foo\n" "bar")))
-(test-equal "br with adjacent newline noise renders as single newline"
-  "returns: #t\nlibraries: (chezscheme)"
-  (render-sxml '(p (b "returns: ") (tt "#t") "\n" (br) "\n"
-                   (b "libraries: ") (tt "(chezscheme)") "\n" "\n")))
-(test-equal "double br renders as blank line"
-  "line1\n\nline2"
-  (render-sxml '(p "line1" (br) "\n" (br) "\n" "line2")))
+  '("foo bar")
+  (sxml->doc '(p "foo\n" "bar")))
+(test-equal "br with adjacent newline noise becomes single br"
+  '((bold "returns: ") (code "#t") (br) (bold "libraries: ") (code "(chezscheme)"))
+  (sxml->doc '(p (b "returns: ") (tt "#t") "\n" (br) "\n"
+                 (b "libraries: ") (tt "(chezscheme)") "\n" "\n")))
+(test-equal "double br kept as blank line"
+  '("line1" (br) (br) "line2")
+  (sxml->doc '(p "line1" (br) "\n" (br) "\n" "line2")))
 (test-equal "multiline tt indentation preserved"
-  "(define f\n  (lambda (x) x))"
-  (render-sxml '(p (tt "(define" (& nbsp) "f" (br) "\n" "\n"
-                        (& nbsp) (& nbsp) "(lambda" (& nbsp) "(x)" (& nbsp) "x))"))))
+  '((code "(define f" (br) "  (lambda (x) x))"))
+  (sxml->doc '(p (tt "(define" (& nbsp) "f" (br) "\n" "\n"
+                      (& nbsp) (& nbsp) "(lambda" (& nbsp) "(x)" (& nbsp) "x))"))))
 
-(test-end "render-sxml")
+(test-end "sxml->doc")
 
 ;; ---------------------------------------------------------------------------
 ;; extract-p-anchor
@@ -356,10 +362,10 @@
 (test-end "extract-p-anchor")
 
 ;; ---------------------------------------------------------------------------
-;; process-p-list
+;; group-formdefs
 ;; ---------------------------------------------------------------------------
 
-(test-begin "process-p-list")
+(test-begin "group-formdefs")
 
 (define formdef-p
   '(p (a (^ (name "./test:s0")))
@@ -386,22 +392,44 @@
   '(p "Copyright " "2024"))
 
 (test-assert "prose-only p-list produces empty result"
-  (null? (process-p-list (list prose-p))))
+  (null? (group-formdefs (list prose-p))))
 
-(let ([result (process-p-list (list formdef-p footer-p))])
-  (test-assert "single formdef before footer retained"
-    (= (length result) 1))
-  (test-assert "entry anchor is a string"
-    (string? (caar result))))
+(test-equal "single formdef before footer retained"
+  (list (list "test:s0" formdef-p))
+  (group-formdefs (list formdef-p footer-p)))
 
-(let ([result (process-p-list (list formdef-p formdef-p2 footer-p))])
-  (test-assert "two consecutive formdefs both retained"
-    (= (length result) 2)))
+(test-equal "two consecutive formdefs both retained"
+  (list (list "test:s0" formdef-p) (list "test:s1" formdef-p2))
+  (group-formdefs (list formdef-p formdef-p2 footer-p)))
 
-(let ([result (process-p-list (list formdef-p prose-p footer-p))])
-  (test-assert "formdef followed by prose and footer: one entry retained"
-    (= (length result) 1)))
+(test-equal "prose following a formdef is grouped with it"
+  (list (list "test:s0" formdef-p prose-p))
+  (group-formdefs (list formdef-p prose-p footer-p)))
 
-(test-end "process-p-list")
+(test-equal "prose before any formdef is dropped"
+  (list (list "test:s0" formdef-p))
+  (group-formdefs (list prose-p formdef-p footer-p)))
+
+(test-end "group-formdefs")
+
+;; ---------------------------------------------------------------------------
+;; process-html-file
+;; ---------------------------------------------------------------------------
+
+(test-begin "process-html-file")
+
+(let ([entries (process-html-file "html-tspl" "objects.html")])
+  (test-equal "quote entry header"
+    '((bold "syntax") ": " (code "(quote " (var "obj") ")") (br)
+      (bold "syntax") ": " (code "'" (var "obj")) (br)
+      (bold "returns: ") (code (var "obj")) (br)
+      (bold "libraries: ") (code "(rnrs base)") ", " (code "(rnrs)"))
+    (cadr (assoc "objects:s2" entries)))
+  (test-assert "every entry has an anchor and at least one paragraph"
+    (for-all (lambda (e) (and (string? (car e)) (pair? (cdr e)))) entries))
+  (test-assert "no empty paragraphs"
+    (for-all (lambda (e) (for-all pair? (cdr e))) entries)))
+
+(test-end "process-html-file")
 
 (exit (if (zero? (test-runner-fail-count (test-runner-get))) 0 1))
